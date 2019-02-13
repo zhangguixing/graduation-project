@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>教室信息列表</title>
+<link rel="stylesheet" href="../../../plugin/layui/css/layui.css" />
+<script src="../../../plugin/layui/layui.js"></script>
+<script src="../../../plugin/jquery/jquery.js"></script>
+<script src="../../../plugin/jquery/jquery.serializejson.js"></script>
+<script src="../../../plugin/jsrender/jsrender.js"></script>
+</head>
+
+<body>
+  <div class="layui-container" style="width:100%;">
+    <table class="layui-table">
+      <thead>
+        <tr>
+          <th>教室ID</th>
+          <th>教室编号</th>
+          <th>教室名称</th>
+          <th>教室类型</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody id="roomList">
+      </tbody>
+    </table>
+    <div class="layui-input-inline">
+      <button class="layui-btn" onclick="goBack()">返回</button>
+      <button class="layui-btn" onclick="goCreate()">新增</button>
+    </div>
+  </div>
+  <script id="tmpl-roomList" type="text/x-jsrender">
+    <tr>
+      <td>{{:roomId}}</td>
+      <td>{{:roomNo}}</td>
+	  <td>{{:name}}</td>
+      <td>{{:type}}</td>
+      <td>
+        <button class="layui-btn layui-btn-sm" onclick="goModify('{{:roomId}}')">修改</button>
+        <button class="layui-btn layui-btn-sm" onclick="remove('{{:roomId}}')">删除</button>
+      </td>
+    </tr>
+  </script>
+  <script>
+    $(document).ready(function() {
+      list();
+    })
+  
+    function goCreate() {
+      layui.use('layer', function() {
+        var layer = layui.layer;
+        layer.open({
+          type : 2,
+          id : 'create',
+          title : '新增教室信息',
+          content : '/html/information/room/create.html',
+          area : [ '500px', '300px' ],
+          shade : 0.5,
+          closeBtn : false
+        });
+      });
+    }
+  
+    function goModify(roomId) {
+      sessionStorage.setItem('currentRoomId', roomId);
+      layui.use('layer', function() {
+        var layer = layui.layer;
+        layer.open({
+          type : 2,
+          id : 'modify',
+          title : '修改教室信息',
+          content : '/html/information/room/modify.html',
+          area : [ '500px', '300px' ],
+          shade : 0.5,
+          closeBtn : false,
+        });
+      });
+    }
+
+    function remove(roomId) {
+      layer.confirm('确认要删除吗？',
+        {title : '删除教室信息'},
+        function(index) {
+          $.ajax({
+            async : false,
+            type : 'DELETE',
+            url : '/room/delete/' + roomId,
+            success : function() {
+              layer.close(index);
+              list();
+            }
+          });
+        });
+    }
+
+    function list() {
+      $.ajax({
+        async : false,
+        type : 'GET',
+        url : '/room/list',
+        success : function(roomList) {
+          $('#roomList').html($.templates('#tmpl-roomList').render(roomList));
+        }
+      });
+    }
+  
+    function goBack() {
+      jump('html/information/room/list.html');
+    }
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>修改课时信息</title>
+<link rel="stylesheet" href="/layui/css/layui.css" />
+<script src="/layui/layui.all.js"></script>
+<script src="/plugin/jquery/jquery.js"></script>
+<script src="/plugin/jquery/jquery.serializejson.js"></script>
+<script src="/plugin/jsrender/jsrender.js"></script>
+</head>
+
+<body>
+  <div class="layui-container" style="margin:30px;">
+    <form class="layui-form layui-form-pane" id="period" method="post">
+      <div class="layui-form-item">
+        <label class="layui-form-label">课时ID:</label>
+        <div class="layui-input-block">
+          <input class="layui-input" name="periodId" id="periodId" type="text" />
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label class="layui-form-label">课时编号:</label>
+        <div class="layui-input-block">
+          <input class="layui-input" name="periodNo" id="periodNo" type="text" />
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label class="layui-form-label">周几:</label>
+        <div class="layui-input-block">
+          <input class="layui-input" name="dayOfWeek" id="dayOfWeek" type="text" />
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label class="layui-form-label">第几节:</label>
+        <div class="layui-input-block">
+          <input class="layui-input" name="orderOfDay" id="orderOfDay" type="text" />
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <div class="layui-input-block">
+          <button class="layui-btn" type="button" onclick="modify()">保存</button>
+          <button class="layui-btn" type="button" onclick="cancel()">取消</button>
+        </div>
+      </div>
+    </form>
+  </div>
+  <script>
+    $(document).ready(function() {
+      var periodId = sessionStorage.getItem('currentPeriodId');
+      $('#periodId').attr('value', periodId);
+      $.ajax({
+        async : false,
+        type : 'GET',
+        url : '/period/find/' + periodId,
+        success : function(period) {
+          $('#periodNo').attr('value', period.periodNo);
+          $('#dayOfWeek').attr('value', period.dayOfWeek);
+          $('#orderOfDay').attr('value', period.orderOfDay);
+        }
+      });
+      layui.use('form', function() {
+        layui.form.render();
+      });
+    });
+  
+    function modify() {
+      $.ajax({
+        async : false,
+        url : '/period/modify',
+        type : 'POST',
+        dataType : 'json',
+        contentType : 'application/json',
+        data : JSON.stringify($('#period').serializeJSON()),
+        success : function(result) {
+          var index = parent.layer.getFrameIndex(window.name);
+          parent.layer.close(index);
+          parent.list();
+        }
+      });
+    }
+  
+    function cancel() {
+      var index = parent.layer.getFrameIndex(window.name);
+      parent.layer.close(index);
+    }
+  </script>
+</body>
+
+</html>

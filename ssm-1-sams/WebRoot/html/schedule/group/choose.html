@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>选择年级课程信息</title>
+<link rel="stylesheet" href="/plugin/layui/css/layui.css" />
+<script src="/plugin/layui/layui.all.js"></script>
+<script src="/plugin/jquery/jquery.js"></script>
+<script src="/plugin/jquery/jquery.serializejson.js"></script>
+<script src="/plugin/jsrender/jsrender.js"></script>
+</head>
+
+<body>
+  <div class="layui-container" style="margin:30px;">
+    <form class="layui-form layui-form-pane" id="group" method="post">
+      <!-- 隐藏年级组ID -->        
+          <input class="layui-input" name="groupId" id="groupId" type="hidden" />       
+      
+      <div class="layui-form-item" pane="" id="courseList">        
+      </div>      
+      <div class="layui-form-item">
+        <div class="layui-input-block">
+          <button class="layui-btn" type="button" onclick="choose()">添加</button>
+          <button class="layui-btn" type="button" onclick="cancel()">取消</button>
+        </div>
+      </div>
+    </form>
+  </div>  
+  <script id="tmpl-courseList" type="text/x-jsrender">
+     <label class="layui-form-label">课程信息</label>
+     <div class="layui-input-block">
+          <input type="checkbox" name="course"  value="{{:courseId}}" title="{{:name}}" >
+     </div>
+  </script>
+  
+  <script>
+    $(document).ready(function() {
+      var groupId = sessionStorage.getItem('currentGroupId');
+      $('#groupId').attr('value', groupId);  
+     list();//放到下个函数后面就显示不出来，函数的执行是按照顺序执行的
+     // $("input[name='course'][value='groupCourseList[i].courseId']").attr("checked","true");//支持多条件操作
+     
+      
+      $.ajax({
+        async : false,
+        url : '/relation/find/' + groupId,
+        type : 'GET',
+        dataType:'json',   
+        success : function(groupCourseList) {
+            alert('获取groupCourseList成功');
+            //console.log(groupCourseList);//在网页 （按F12）中显示信息
+            for(var i=0;i<groupCourseList.length;i++){
+                //console.log(groupCourseList[i]);
+                console.log(groupCourseList[i].courseId);
+                //$("input[name='course',value='groupCourseList[i].courseId']").prop('checked',true);
+                //$("input[value='groupCourseList[i].courseId']").attr('checked','checked');
+                //$("input[value='groupCourseList[i].courseId']").prop('checked',true);
+                $("input[name='course'][value='"+groupCourseList[i].courseId+"']").prop('checked',true);
+            }   
+                  
+        }
+      });    
+      
+       layui.use('form', function() {
+        layui.form.render();
+      });    
+     
+    });
+  
+  
+    function choose(){
+    
+       var groupid=$("#groupId").attr("value");//right
+      // var id=$("input:hidden").val();      
+       var id_array =[];
+       $('input[name="course"]:checked').each(function(){  
+          id_array.push($(this).val());//向数组中添加元素  
+       });       
+       $.ajax({
+         async:false,
+         url:'/relation/choose',
+         type:'POST',
+         dataType:'json',
+         data:{"groupId":groupid,"IdArray":id_array},
+         contentType : 'application/x-www-form-urlencoded',//传json数据（用requstbody接受）时用'application/json',//传普通数据（用requstparam接受）时用'application/x-www-form-urlencoded',
+         traditional:true,
+         success: function(result){
+            var index = parent.layer.getFrameIndex(window.name);
+            parent.layer.close(index);  
+            alert('添加课程成功');
+            parent.list();      
+         }
+       });
+            
+    }
+    
+    function list() {
+      $.ajax({
+        async : false,
+        type : 'GET',
+        url : '/course/list',
+        success : function(courseList) {
+          $('#courseList').html($.templates('#tmpl-courseList').render(courseList));
+          alert('获取courseList成功');
+        }
+      });
+    }
+   
+    function cancel() {
+      var index = parent.layer.getFrameIndex(window.name);
+      parent.layer.close(index);
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>调整信息列表</title>
+<link rel="stylesheet" href="/plugin/layui/css/layui.css" />
+<script src="/plugin/jquery/jquery.js"></script>
+<script src="/plugin/jquery/jquery.serializejson.js"></script>
+<script src="/plugin/jsrender/jsrender.js"></script>
+</head>
+
+<body>
+  <div class="layui-container" style="width:100%;">
+    <table class="layui-table">
+      <thead>
+        <tr>
+          <th>调整ID</th>
+          <th>课表ID</th>
+          <th>起始教学周</th>
+          <th>持续周数</th>
+          <th>类型</th>
+          <th>甲ID</th>
+          <th>乙ID</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody id="adjustmentList">
+      </tbody>
+    </table>
+    <div class="layui-input-inline">
+      <button class="layui-btn" onclick="goBack()">返回</button>
+      <button class="layui-btn" onclick="goCreate()">新增</button>
+    </div>
+  </div>
+  <script id="tmpl-adjustmentList" type="text/x-jsrender">
+    <tr>
+      <td>{{:adjustmentId}}</td>
+      <td>{{:scheduleId}}</td>
+      <td>{{:startWeek}}</td>
+      <td>{{:duration}}</td>
+      <td>{{:type}}</td>
+      <td>{{:firstId}}</td>
+      <td>{{:secondId}}</td>
+      <td>
+        <button class="layui-btn layui-btn-sm" onclick="goModify('{{:adjustmentId}}')">修改</button>
+        <button class="layui-btn layui-btn-sm" onclick="remove('{{:adjustmentId}}')">删除</button>
+	  </td>
+    </tr>
+  </script>
+  <script>
+    var layer = layui.layer;
+  
+    $(document).ready(function() {
+      list();
+    })
+  
+    function goCreate() {
+      layer.open({
+        type : 2,
+        id : 'create',
+        title : '新增调整信息',
+        content : '/html/schedule/adjustment/create.html',
+        area : [ '700px', '500px' ],
+        shade : 0.5,
+        closeBtn : false
+      });
+    }
+  
+    function goModify(adjustmentId) {
+      sessionStorage.setItem('currentAdjustmentId', adjustmentId);
+      layer.open({
+        type : 2,
+        id : 'modify',
+        title : '修改调整信息',
+        content : '/html/schedule/adjustment/modify.html',
+        area : [ '700px', '500px' ],
+        shade : 0.5,
+        closeBtn : false,
+      });
+    }
+  
+    function remove(adjustmentId) {
+      layer.confirm('确认要删除吗？',
+        {
+          title : '删除调整信息'
+        },
+        function(index) {
+          $.ajax({
+            type : 'DELETE',
+            url : '/adjustments/' + adjustmentId,
+            success : function(response) {
+              layer.close(index);
+              list();
+            }
+          });
+        });
+    }
+  
+    function choose(adjustmentId) {
+      sessionStorage.setItem('currentAdjustmentId', adjustmentId)
+    }
+  
+    function list() {
+      $.ajax({
+        type : 'GET',
+        url : '/adjustments/',
+        success : function(response) {
+          $('#adjustmentList').html($.templates('#tmpl-adjustmentList').render(response.data));
+        }
+      });
+    }
+  
+    function goBack() {
+      jump('html/schedule/adjustment/list.html');
+    }
+  </script>
+</body>
+
+</html>

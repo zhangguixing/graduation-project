@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>新增教室信息</title>
+<link rel="stylesheet" href="/layui/css/layui.css" />
+<script src="/layui/layui.all.js"></script>
+<script src="/plugin/jquery/jquery.js"></script>
+<script src="/plugin/jquery/jquery.serializejson.js"></script>
+<script src="/plugin/jsrender/jsrender.js"></script>
+</head>
+
+<body>
+  <div class="layui-container" style="margin:30px;">
+    <form class="layui-form layui-form-pane" id="room" method="post">
+      <div class="layui-form-item">
+        <label class="layui-form-label">教室编号:</label>
+        <div class="layui-input-block">
+          <input class="layui-input" name="roomNo" id="roomNo" type="text" />
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label class="layui-form-label">教室名称:</label>
+        <div class="layui-input-block">
+          <input class="layui-input" name="name" id="name" type="text" />
+        </div>
+      </div>
+      <div class="layui-form-item" pane="">
+        <label class="layui-form-label">教室类型:</label>
+        <div class="layui-input-block">
+          <input type="radio" name="type" id="type" value="0" title="普通教室" checked="">
+          <input type="radio" name="type" id="type" value="1" title="专业教室">
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <div class="layui-input-block">
+          <button class="layui-btn" type="button" onclick="create()">新增</button>
+          <button class="layui-btn" type="button" onclick="cancel()">取消</button>
+        </div>
+      </div>
+    </form>
+  </div>
+  <script>
+    $(document).ready(function() {
+      layui.use('form', function() {
+        layui.form.render();
+      });
+    });
+  
+    function create() {
+      $.ajax({
+        async : false,
+        url : '/room/create',
+        type : 'POST',
+        dataType : 'json',
+        contentType : 'application/json',
+        data : JSON.stringify($('#room').serializeJSON()),
+        success : function(roomId) {
+          var index = parent.layer.getFrameIndex(window.name);
+          parent.layer.close(index);
+          parent.list();
+        }
+      });
+    }
+  
+    function cancel() {
+      var index = parent.layer.getFrameIndex(window.name);
+      parent.layer.close(index);
+    }
+  </script>
+</body>
+
+</html>
