@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>教师信息列表</title>
+<link rel="stylesheet" href="/plugin/layui/css/layui.css" />
+<script src="/plugin/layui/layui.js"></script>
+<script src="/plugin/jquery/jquery.js"></script>
+<script src="/plugin/jquery/jquery.serializejson.js"></script>
+<script src="/plugin/jsrender/jsrender.js"></script>
+</head>
+
+<body>
+  <div class="layui-container" style="width:100%;">
+    <table class="layui-table">
+      <thead>
+        <tr>
+          <th>教师ID</th>
+          <th>教师工号</th>
+          <th>教师姓名</th>
+          <th>教师类型</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody id="teacherList">
+      </tbody>
+    </table>
+    <div class="layui-input-inline">
+      <button class="layui-btn" onclick="goBack()">返回</button>
+      <button class="layui-btn" onclick="goCreate()">新增</button>
+    </div>
+  </div>
+  <script id="tmpl-teacherList" type="text/x-jsrender">
+    <tr>
+      <td>{{:teacherId}}</td>
+      <td>{{:teacherNo}}</td>
+      <td>{{:name}}</td>
+      <td>{{:type}}</td>
+      <td>
+        <button class="layui-btn layui-btn-sm" onclick="goModify('{{:teacherId}}')">修改</button>
+        <button class="layui-btn layui-btn-sm" onclick="remove('{{:teacherId}}')">删除</button>
+      </td>
+    </tr>
+  </script>
+  <script>
+    $(document).ready(function() {
+      list();
+    })
+  
+    function goCreate() {
+      layui.use('layer', function() {
+        var layer = layui.layer;
+        layer.open({
+          type : 2,
+          id : 'create',
+          title : '新增教师信息',
+          content : '/html/information/teacher/create.html',
+          area : [ '500px', '300px' ],
+          shade : 0.5,
+          closeBtn : false
+        });
+      });
+    }
+  
+    function goModify(teacherId) {
+      sessionStorage.setItem('currentTeacherId', teacherId);
+      layui.use('layer', function() {
+        var layer = layui.layer;
+        layer.open({
+          type : 2,
+          id : 'modify',
+          title : '修改教师信息',
+          content : '/html/information/teacher/modify.html',
+          area : [ '500px', '300px' ],
+          shade : 0.5,
+          closeBtn : false,
+        });
+      });
+    }
+
+    function remove(teacherId) {
+      layer.confirm('确认要删除吗？',
+        {title : '删除教师信息'},
+        function(index) {
+          $.ajax({
+            async : false,
+            type : 'DELETE',
+            url : '/teacher/delete/' + teacherId,
+            success : function() {
+              layer.close(index);
+              list();
+            }
+          });
+        });
+    }
+
+    function list() {
+      $.ajax({
+        async : false,
+        type : 'GET',
+        url : '/teacher/list',
+        success : function(teacherList) {
+          $('#teacherList').html($.templates('#tmpl-teacherList').render(teacherList));
+        }
+      });
+    }
+  
+    function goBack() {
+      jump('html/information/teacher/list.html');
+    }
+  </script>
+</body>
+
+</html>

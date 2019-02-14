@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>计划课时信息列表</title>
+<link rel="stylesheet" href="/plugin/layui/css/layui.css" />
+<script src="/plugin/jquery/jquery.js"></script>
+<script src="/plugin/jquery/jquery.serializejson.js"></script>
+<script src="/plugin/jsrender/jsrender.js"></script>
+</head>
+
+<body>
+  <div class="layui-container" style="width:100%;">
+    <table class="layui-table">
+      <thead>
+        <tr>
+          <th>计划课时ID</th>
+          <th>课表ID</th>
+          <th>课程ID</th>
+          <th>教室ID</th>
+          <th>班级ID</th>
+          <th>教师ID</th>
+          <th>计划课时数</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody id="planList">
+      </tbody>
+    </table>
+    <div class="layui-input-inline">
+      <button class="layui-btn" onclick="goBack()">返回</button>
+      <button class="layui-btn" onclick="goCreate()">新增</button>
+    </div>
+  </div>
+  <script id="tmpl-planList" type="text/x-jsrender">
+    <tr>
+      <td>{{:planId}}</td>
+      <td>{{:scheduleId}}</td>
+      <td>{{:courseId}}</td>
+      <td>{{:roomId}}</td>
+      <td>{{:tclassId}}</td>
+      <td>{{:teacherId}}</td>
+      <td>{{:periodNum}}</td>
+      <td>
+        <button class="layui-btn layui-btn-sm" onclick="goModify('{{:planId}}')">修改</button>
+        <button class="layui-btn layui-btn-sm" onclick="remove('{{:planId}}')">删除</button>
+      </td>
+    </tr>
+  </script>
+  <script>
+    $(document).ready(function() {
+      list();
+    })
+  
+    function goCreate() {
+      layui.use('layer', function() {
+        var layer = layui.layer;
+        layer.open({
+          type : 2,
+          id : 'create',
+          title : '新增计划课时信息',
+          content : '/html/schedule/plan/create.html',
+          area : [ '700px', '500px' ],
+          shade : 0.5,
+          closeBtn : false
+        });
+      });
+    }
+  
+    function goModify(planId) {
+      sessionStorage.setItem('currentPlanId', planId);
+      layui.use('layer', function() {
+        var layer = layui.layer;
+        layer.open({
+          type : 2,
+          id : 'modify',
+          title : '修改计划课时信息',
+          content : '/html/schedule/plan/modify.html',
+          area : [ '700px', '500px' ],
+          shade : 0.5,
+          closeBtn : false,
+        });
+      });
+    }
+
+    function remove(planId) {
+      layer.confirm('确认要删除吗？',
+        {title : '删除计划课时信息'},
+        function(index) {
+          $.ajax({
+            async : false,
+            type : 'DELETE',
+            url : '/plan/delete/' + planId,
+            success : function() {
+              layer.close(index);
+              list();
+            }
+          });
+        });
+    }
+
+    function choose(planId) {
+      sessionStorage.setItem('currentPlanId', planId)
+    }
+    
+    function list() {
+      $.ajax({
+        async : false,
+        type : 'GET',
+        url : '/plan/list',
+        success : function(planList) {
+          $('#planList').html($.templates('#tmpl-planList').render(planList));
+        }
+      });
+    }
+  
+    function goBack() {
+      jump('html/schedule/plan/list.html');
+    }
+  </script>
+</body>
+
+</html>

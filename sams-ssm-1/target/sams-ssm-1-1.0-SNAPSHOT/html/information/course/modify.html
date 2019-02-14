@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>修改课程信息</title>
+<link rel="stylesheet" href="/layui/css/layui.css" />
+<script src="/layui/layui.all.js"></script>
+<script src="/plugin/jquery/jquery.js"></script>
+<script src="/plugin/jquery/jquery.serializejson.js"></script>
+<script src="/plugin/jsrender/jsrender.js"></script>
+</head>
+
+<body>
+  <div class="layui-container" style="margin:30px;">
+    <form class="layui-form layui-form-pane" id="course" method="post">
+      <!-- 隐藏课程ID -->
+      <input class="layui-input" name="courseId" id="courseId" type="hidden" />
+      <div class="layui-form-item">
+        <label class="layui-form-label">课程编号:</label>
+        <div class="layui-input-block">
+          <input class="layui-input" name="courseNo" id="courseNo" type="text" />
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label class="layui-form-label">课程名称:</label>
+        <div class="layui-input-block">
+          <input class="layui-input" name="name" id="name" type="text" />
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label class="layui-form-label">课程简称:</label>
+        <div class="layui-input-block">
+          <input class="layui-input" name="shortName" id="shortName" type="text" />
+        </div>
+      </div>
+      <div class="layui-form-item" pane="">
+        <label class="layui-form-label">课程类型:</label>
+        <div class="layui-input-block">
+          <input type="radio" name="type" id="type" value="0" title="普通课" checked="">
+          <input type="radio" name="type" id="type" value="1" title="多教师课">
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <div class="layui-input-block">
+          <button class="layui-btn" type="button" onclick="modify()">保存</button>
+          <button class="layui-btn" type="button" onclick="cancel()">取消</button>
+        </div>
+      </div>
+    </form>
+  </div>
+  <script>
+    $(document).ready(function() {
+      var courseId = sessionStorage.getItem('currentCourseId');
+      $('#courseId').attr('value', courseId);
+      $.ajax({
+        async : false,
+        type : 'GET',
+        url : '/course/find/' + courseId,
+        success : function(course) {
+          $('#courseNo').attr('value', course.courseNo);
+          $('#name').attr('value', course.name);
+          $('#shortName').attr('value', course.shortName);
+          $(":radio[name='type'][value='" + course.type + "']").prop("checked", true);
+        }
+      });
+      layui.use('form', function() {
+        layui.form.render();
+      });
+    });
+  
+    function modify() {
+      $.ajax({
+        async : false,
+        url : '/course/modify',
+        type : 'POST',
+        dataType : 'json',
+        contentType : 'application/json',
+        data : JSON.stringify($('#course').serializeJSON()),
+        success : function(result) {
+          var index = parent.layer.getFrameIndex(window.name);
+          parent.layer.close(index);
+          parent.list();
+        }
+      });
+    }
+  
+    function cancel() {
+      var index = parent.layer.getFrameIndex(window.name);
+      parent.layer.close(index);
+    }
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>修改排课信息</title>
+<link rel="stylesheet" href="/plugin/layui/css/layui.css" />
+<script src="/plugin/layui/layui.all.js"></script>
+<script src="/plugin/jquery/jquery.js"></script>
+<script src="/plugin/jquery/jquery.serializejson.js"></script>
+<script src="/plugin/jsrender/jsrender.js"></script>
+</head>
+
+<body>
+  <div class="layui-container" style="margin:30px;">
+    <form class="layui-form layui-form-pane" id="arrangement" method="post">
+      <!-- 隐藏排课ID -->        
+          <input class="layui-input" name="arrangementId" id="arrangementId" type="hidden" />       
+      <div class="layui-form-item">
+        <label class="layui-form-label">课表ID:</label>
+        <div class="layui-input-block">
+          <input class="layui-input" name="scheduleId" id="scheduleId" type="text" />
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label class="layui-form-label">课时ID:</label>
+        <div class="layui-input-block">
+          <input class="layui-input" name="periodId" id="periodId" type="text" />
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label class="layui-form-label">课程ID:</label>
+        <div class="layui-input-block">
+          <input class="layui-input" name="courseId" id="courseId" type="text" />
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label class="layui-form-label">教室ID:</label>
+        <div class="layui-input-block">
+          <input class="layui-input" name="roomId" id="roomId" type="text" />
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label class="layui-form-label">班级ID:</label>
+        <div class="layui-input-block">
+          <input class="layui-input" name="tclassId" id="tclassId" type="text" />
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label class="layui-form-label">教师ID:</label>
+        <div class="layui-input-block">
+          <input class="layui-input" name="teacherId" id="teacherId" type="text" />
+        </div>
+      </div>
+      <div class="layui-form-item" pane="">
+        <label class="layui-form-label">排课优先级:</label>
+        <div class="layui-input-block">
+          <input type="radio" name="priority" id="priority" value="0" title="无">
+          <input type="radio" name="priority" id="priority" value="1" title="低">
+          <input type="radio" name="priority" id="priority" value="2" title="中"  checked="">
+          <input type="radio" name="priority" id="priority" value="3" title="高">
+          <input type="radio" name="priority" id="priority" value="4" title="必" >
+        </div>
+      </div>
+      <div class="layui-form-item" pane="">
+        <label class="layui-form-label">是否排课:</label>
+        <div class="layui-input-block">
+          <input type="radio" name="arranged" id="arranged" value="1" title="是" checked="">
+      	  <input type="radio" name="arranged" id="arranged" value="0" title="否">          
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <div class="layui-input-block">
+          <button class="layui-btn" type="button" onclick="modify()">保存</button>
+          <button class="layui-btn" type="button" onclick="cancel()">取消</button>
+        </div>
+      </div>
+    </form>
+  </div>  
+  <script>
+    $(document).ready(function() {
+      var arrangementId = sessionStorage.getItem('currentArrangementId');
+      $('#arrangementId').attr('value', arrangementId);
+      $.ajax({
+        async : false,
+        type : 'GET',
+        url : '/arrangement/find/' + arrangementId,
+        success : function(arrangement) {
+          $('#scheduleId').attr('value', arrangement.scheduleId);
+          $('#periodId').attr('value', arrangement.periodId);
+          $('#courseId').attr('value', arrangement.courseId);
+          $('#roomId').attr('value', arrangement.roomId);
+          $('#tclassId').attr('value', arrangement.tclassId);
+          $('#teacherId').attr('value', arrangement.teacherId);
+          $(":radio[name='priority'][value='"+arrangement.priority+"']").prop("checked","checked","checked","checked","checked");
+          $(":radio[name='arranged'][value='"+arrangement.arranged+"']").prop("checked","checked");
+        }
+      });
+      layui.use('form', function() {
+        layui.form.render();
+      });
+    });
+  
+    function modify() {
+      $.ajax({
+        async : false,
+        url : '/arrangement/modify',
+        type : 'POST',
+        dataType : 'json',
+        contentType : 'application/json',
+        data : JSON.stringify($('#arrangement').serializeJSON()),
+        success : function(result) {
+          var index = parent.layer.getFrameIndex(window.name);
+          parent.layer.close(index);
+          parent.list();
+        }
+      });
+    }
+  
+    function cancel() {
+      var index = parent.layer.getFrameIndex(window.name);
+      parent.layer.close(index);
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans.xsd">
+	<!-- web.xml中shiro的filter对应的bean -->
+	<!-- Shiro 的Web过滤器 -->
+	<!-- setter -->
+
+	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+		<!--  -->
+		<property name="securityManager" ref="securityManager"/>
+		<property name="loginUrl" value="/login.jsp"/>
+		<!-- 默认成功认证后，就是回到上次要访问地址 -->
+		<!-- 如果配置，成功认证后跳转到index.do地址，通常不配置  -->
+		<!-- <property name="successUrl" value="/sys/index"/> -->
+		<!-- 没有权限，跳转到refuse.do地址,注解无效  -->
+		<!-- <property name="unauthorizedUrl" value="/sys/refuse"/> -->
+		<property name="filterChainDefinitions">
+		<!-- 过滤器链
+		  认证：
+		     	1 在页面输入lisi 123 被loginInterceptor urlInterceptor放行
+		     	2 LogController中login方法收集页面表单中数据封装为User对象，调用service,调用dao来完成一个比对
+		     		收集和组织表单数据，进行比对
+			由多个过滤器构成，每个过滤器承担不同职责
+			
+			authc：认证过滤器-表单认证过滤器，收集表单数据，进行比对(CustomRealm中身份认证方法)
+			logout:注销过滤器，此拦截器设置的url可以不对应一个真实存在controller方法
+		 -->
+			<value>
+				/css/**=anon
+				/js/**=anon
+				/layui/**=anon
+				/sys/vcode=anon
+				/sys/getMenus=anon
+				/sys/login=anon
+				/sys/index=anon
+				/account/active=anon
+				/json/**=anon
+				/loginOut=logout
+				/**=authc
+			</value>
+		</property>
+	</bean>
+	
+	
+	
+	<!-- 安全管理器定义 -->
+	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+		<property name="realm" ref="customRealm"/>
+		<property name="cacheManager" ref="cacheManager" />
+		<!-- 注入session管理器 -->
+		<property name="sessionManager" ref="sessionManager" />
+	</bean>
+	
+	<!-- 会话管理器 -->
+    <bean id="sessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
+        <!-- session的失效时长，单位毫秒 -->
+        <property name="globalSessionTimeout" value="600000"/>
+        <!-- 删除失效的session -->
+        <property name="deleteInvalidSessions" value="true"/>
+		<property name="sessionIdCookie" ref="simpleCookie"/>
+    </bean>
+	
+	
+		<!-- 自定义Realm -->
+	<bean id="customRealm" class="com.jefflee.controller.shiro.CustomRealm">
+		<!-- 将凭证匹配器设置到realm中，realm按照凭证匹配器的要求进行散列 -->
+		<property name="credentialsMatcher" ref="credentialsMatcher"/>
+	</bean>
+	
+	
+		<!-- 缓存管理器
+			授权管理时候，每一次授权判断都会重新到数据库中查询一次用户对应button内心的权限
+		 -->
+	<!-- 缓存管理器 使用Ehcache实现-->
+	<bean id="cacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
+		<property name="cacheManagerConfigFile" value="classpath:shiro-ehcache.xml" />
+	</bean>
+	<!--<bean id="ehCacheManager" class ="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">-->
+		<!--<property name="configLocation" value="classpath:spring-ehcache.xml" />-->
+		<!--<property name="shared" value="true"></property>-->
+	<!--</bean>-->
+
+
+	<!-- 凭证匹配器 -->
+	<bean id="credentialsMatcher"
+		class="org.apache.shiro.authc.credential.HashedCredentialsMatcher">
+		<property name="hashAlgorithmName" value="md5" />
+		<property name="hashIterations" value="1" />
+	</bean>
+
+	<bean id="simpleCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
+		<constructor-arg name="name" value="shiro.sesssion"/>
+		<property name="path" value="/"/>
+	</bean>
+</beans>

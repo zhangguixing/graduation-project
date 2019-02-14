@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>选择年级教师信息</title>
+<link rel="stylesheet" href="/plugin/layui/css/layui.css" />
+<script src="/plugin/layui/layui.all.js"></script>
+<script src="/plugin/jquery/jquery.js"></script>
+<script src="/plugin/jquery/jquery.serializejson.js"></script>
+<script src="/plugin/jsrender/jsrender.js"></script>
+</head>
+
+<body>
+  <div class="layui-container" style="margin:30px;">
+    <form class="layui-form layui-form-pane" id="group" method="post">
+      <!-- 隐藏年级组ID -->        
+          <input class="layui-input" name="groupId" id="groupId" type="hidden" />       
+      
+      
+       <table class="layui-table">
+      <thead>
+        <tr>
+          <th>教师姓名</th>
+          <th>教师工号</th>      
+        </tr>
+      </thead>
+      <tbody id="teacherList">
+      </tbody>
+     </table>       
+          
+      <div class="layui-form-item">
+        <div class="layui-input-block">
+          <button class="layui-btn" type="button" onclick="choose()">添加</button>
+          <button class="layui-btn" type="button" onclick="cancel()">取消</button>
+        </div>
+      </div>
+    </form>
+  </div>  
+  <script id="tmpl-teacherList" type="text/x-jsrender">
+           
+    <tr>
+      <td><input type="checkbox" name="teacher"  value="{{:teacherId}}" title="{{:name}}" ></td>
+      <td><input type="text" class="layui-input"  name="gonghao"  value="{{:teacherNo}}"  readonly></td>
+     
+    </tr>  
+ 
+  </script>
+  
+  <script>
+    $(document).ready(function() {
+      var groupId = sessionStorage.getItem('currentGroupId');
+      $('#groupId').attr('value', groupId);  
+      list();//放到下个函数后面就显示不出来，函数的执行是按照顺序执行的
+     // $("input[name='course'][value='groupCourseList[i].courseId']").attr("checked","true");//支持多条件操作
+   //<td> <button class="layui-btn layui-btn-sm" type="button" onclick="checkNum('{{:teacherId}}')">查询工号</button> </td>
+      $.ajax({
+        async : false,
+        url : '/relat/find/' + groupId,
+        type : 'GET',
+        dataType:'json',   
+        success : function(groupTeacherList) {
+            alert('获取groupTeacherList成功');
+            //console.log(groupTeacherList[i]);//在网页 （按F12）中显示信息
+            for(var i=0;i<groupTeacherList.length;i++){
+                //console.log(groupCourseList[i]);
+                console.log(groupTeacherList[i].teacherId);
+                //$("input[name='course',value='groupCourseList[i].courseId']").prop('checked',true);
+                //$("input[value='groupCourseList[i].courseId']").attr('checked','checked');
+                //$("input[value='groupCourseList[i].courseId']").prop('checked',true);
+                $("input[name='teacher'][value='"+groupTeacherList[i].teacherId+"']").prop('checked',true);
+            }   
+                  
+        }
+      });    
+      
+       layui.use('form', function() {
+        layui.form.render();
+      });    
+     
+    });
+  
+  
+    function choose(){
+    
+       var groupid=$("#groupId").attr("value");//right
+      // var id=$("input:hidden").val();      
+       var id_array =[];
+       $('input[name="teacher"]:checked').each(function(){  
+          id_array.push($(this).val());//向数组中添加元素  
+       });       
+       $.ajax({
+         async:false,
+         url:'/relat/choose',
+         type:'POST',
+         dataType:'json',
+         data:{"groupId":groupid,"IdArray":id_array},
+         contentType : 'application/x-www-form-urlencoded',//传json数据（用requstbody接受）时用'application/json',//传普通数据（用requstparam接受）时用'application/x-www-form-urlencoded',
+         traditional:true,
+         success: function(result){
+            var index = parent.layer.getFrameIndex(window.name);
+            parent.layer.close(index);  
+            alert('添加教师成功');
+            parent.list();      
+         }
+       });
+            
+    }
+    
+    function list() {
+      $.ajax({
+        async : false,
+        type : 'GET',
+        url : '/teacher/list',
+        success : function(teacherList) {
+          $('#teacherList').html($.templates('#tmpl-teacherList').render(teacherList));
+          alert('获取teacherList成功');
+        }
+      });
+    }
+    
+    
+    function checkNum(teacherId) {
+      $.ajax({
+        async : false,
+        url : '/relat/check/' + teacherId,
+        type : 'GET',
+        dataType:'json',   
+        success : function(teacher) {
+            alert('获取teacher成功');
+            
+                            
+        }
+      });    
+    }
+   
+   
+    function cancel() {
+      var index = parent.layer.getFrameIndex(window.name);
+      parent.layer.close(index);
+    }
+  </script>
+</body>
+</html>

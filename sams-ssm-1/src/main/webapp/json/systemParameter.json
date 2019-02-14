@@ -1,0 +1,8 @@
+{
+    "version": "v1.0.0",
+    "author": "taogl3@163.com",
+    "homePage": "index.jsp",
+    "server": "Linux+Nginx+Tomcat",
+    "dataBase": "MySQL5.5",
+    "maxUpload": "5M"
+}

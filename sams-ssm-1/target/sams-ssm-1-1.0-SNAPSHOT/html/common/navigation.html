@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>导航栏</title>
+<link rel="stylesheet" href="/plugin/layui/css/layui.css" />
+<script src="/plugin/jquery/jquery.js"></script>
+<script src="/plugin/jsrender/jsrender.js"></script>
+</head>
+
+<body>
+  <div class="layui-bg-black">
+    <div class="layui-side-scroll">
+      <ul class="layui-nav layui-nav-tree layui-nav-side">
+
+        <li class="layui-nav-item">
+          <a href="javascript:;">
+            <img src="http://t.cn/RCzsdCq" class="layui-nav-img">
+            TGL
+          </a>
+          <dl class="layui-nav-child">
+            <dd><a href="">基本资料</a></dd>
+            <dd><a href="">安全设置</a></dd>
+            <dd><a href="">退出登录</a></dd>
+          </dl>
+        </li>
+        <li class="layui-nav-item" id="home">
+          <a href="javascript:;" onclick="jump('/html/common/home.html')" style="cursor:pointer">主页</a>
+        </li>
+        <li class="layui-nav-item" id="informationManagement">
+          <a href="javascript:;" style="cursor:pointer">信息管理</a>
+          <dl class="layui-nav-child">
+            <dd id="teacherInfo">
+              <a href="javascript:;" onclick="jump('/html/information/teacher/list.html')" style="cursor:pointer">教师信息</a>
+            </dd>
+            <dd id="courseInfo">
+              <a href="javascript:;" onclick="jump('/html/information/course/list.html')" style="cursor:pointer">课程信息</a>
+            </dd> 
+            <dd id="periodInfo">
+              <a href="javascript:;" onclick="jump('/html/information/period/list.html')" style="cursor:pointer">课时信息</a>
+            </dd> 
+            <dd id="roomInfo">
+              <a href="javascript:;" onclick="jump('/html/information/room/list.html')" style="cursor:pointer">教室信息</a>
+            </dd>
+            <dd id="tclassInfo">
+             <a href="javascript:;" onclick="jump('/html/information/tclass/list.html')" style="cursor:pointer">班级信息</a>
+            </dd>
+          </dl>
+        </li>
+        <li class="layui-nav-item" id="courseScheduling">
+          <a href="javascript:;" style="cursor:pointer">课程安排</a>
+          <dl class="layui-nav-child">
+            <dd id="listGroup">
+              <a href="javascript:;" onclick="jump('/html/schedule/group/list.html')" style="cursor:pointer">年级组信息</a>
+            </dd>
+            <dd id="listSchedule">
+              <a href="javascript:;" onclick="jump('/html/schedule/schedule/list.html')" style="cursor:pointer">课表信息</a>
+            </dd>
+            <dd id="listArrangement">
+              <a href="javascript:;" onclick="jump('/html/schedule/arrangement/list.html')" style="cursor:pointer">教学安排</a>
+            </dd>
+            <dd id="listPlan">
+              <a href="javascript:;" onclick="jump('/html/schedule/plan/list.html')" style="cursor:pointer">教学计划</a>
+            </dd>
+            <dd id="listAdjustment">
+              <a href="javascript:;" onclick="jump('/html/schedule/adjustment/list.html')" style="cursor:pointer">微调信息</a>
+            </dd>
+            <dd id="setPriority">
+              <a href="javascript:;" onclick="jump('/html/schedule/schedule/priority.html')" style="cursor:pointer">设置优先级</a>
+            </dd>
+            <dd id="displaySchedule">
+              <a href="javascript:;" onclick="jump('/html/schedule/schedule/display.html')" style="cursor:pointer">查看课表</a>
+            </dd>
+          </dl>
+        </li>
+
+      </ul>
+    </div>
+  </div>
+  <script>
+  layui.element.init();
+  </script>
+
+</body>
+
+</html>

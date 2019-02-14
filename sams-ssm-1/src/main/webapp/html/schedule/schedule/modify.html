@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>修改课表信息</title>
+<link rel="stylesheet" href="/plugin/layui/css/layui.css" />
+<script src="/plugin/layui/layui.all.js"></script>
+<script src="/plugin/jquery/jquery.js"></script>
+<script src="/plugin/jquery/jquery.serializejson.js"></script>
+<script src="/plugin/jsrender/jsrender.js"></script>
+</head>
+
+<body>
+  <div class="layui-container" style="margin:30px;">
+    <form class="layui-form layui-form-pane" id="schedule" method="post">
+       <!-- 隐藏课表ID -->        
+          <input class="layui-input" name="scheduleId" id="scheduleId" type="hidden" />
+      <div class="layui-form-item">
+        <label class="layui-form-label">年级组ID:</label>
+        <div class="layui-input-block">
+          <input class="layui-input" name="groupId" id="groupId" type="text" />
+        </div>
+      </div>
+      <div class="layui-form-item" pane="">
+        <label class="layui-form-label">上午课时数:</label>
+        <div class="layui-input-block">
+          <input type="radio" name="forenoon" id="forenoon" value="3" title="3节">
+          <input type="radio" name="forenoon" id="forenoon" value="4" title="4节">
+          <input type="radio" name="forenoon" id="forenoon" value="5" title="5节" checked="">
+          <input type="radio" name="forenoon" id="forenoon" value="6" title="6节">
+        </div>
+      </div>
+      <div class="layui-form-item" pane="">
+        <label class="layui-form-label">下午课时数:</label>
+        <div class="layui-input-block">         
+          <input type="radio" name="afternoon" id="afternoon" value="2" title="2节">
+          <input type="radio" name="afternoon" id="afternoon" value="3" title="3节" checked="">
+          <input type="radio" name="afternoon" id="afternoon" value="4" title="4节">
+          <input type="radio" name="afternoon" id="afternoon" value="5" title="5节">
+        </div>
+      </div>
+      <div class="layui-form-item" pane="">
+        <label class="layui-form-label">傍晚课时数:</label>
+        <div class="layui-input-block">          
+          <input type="radio" name="evening" id="evening" value="1" title="1节">
+          <input type="radio" name="evening" id="evening" value="2" title="2节">
+          <input type="radio" name="evening" id="evening" value="3" title="3节">
+          <input type="radio" name="evening" id="evening" value="0" title="无" checked="">
+        </div>
+      </div>
+      <div class="layui-form-item" pane="">
+        <label class="layui-form-label">每周天数:</label>
+        <div class="layui-input-block">         
+          <input type="radio" name="days" id="days" value="3" title="3天">
+          <input type="radio" name="days" id="days" value="4" title="4天">
+          <input type="radio" name="days" id="days" value="5" title="5天" checked="">
+          <input type="radio" name="days" id="days" value="6" title="6天">          
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label class="layui-form-label">起始教学周:</label>
+        <div class="layui-input-block">          
+          <input class="layui-input" type="text" name="startWeek" id="startWeek" lay-verify="required|number" autocomplete="off">
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <div class="layui-input-block">
+          <button class="layui-btn" type="button" onclick="modify()">保存</button>
+          <button class="layui-btn" type="button" onclick="cancel()">取消</button>
+        </div>
+      </div>
+    </form>
+  </div>
+  <script>
+    $(document).ready(function() {
+      var scheduleId = sessionStorage.getItem('currentScheduleId');
+      $('#scheduleId').attr('value', scheduleId);
+      $.ajax({
+        async : false,
+        type : 'GET',
+        url : '/schedule/find/' + scheduleId,
+        success : function(schedule) {
+          $('#groupId').attr('value', schedule.groupId);
+          $(":radio[name='forenoon'][value='"+schedule.forenoon+"']").prop("checked","checked","checked","checked");
+          $(":radio[name='afternoon'][value='"+schedule.afternoon+"']").prop("checked","checked","checked","checked");
+          $(":radio[name='evening'][value='"+schedule.evening+"']").prop("checked","checked","checked","checked");
+          $(":radio[name='days'][value='"+schedule.days+"']").prop("checked","checked","checked","checked");
+          $('#startWeek').attr('value', schedule.startWeek);
+        }
+      });
+      layui.use('form', function() {
+        layui.form.render();
+      });
+    });
+  
+    function modify() {
+      $.ajax({
+        async : false,
+        url : '/schedule/modify',
+        type : 'POST',
+        dataType : 'json',
+        contentType : 'application/json',
+        data : JSON.stringify($('#schedule').serializeJSON()),
+        success : function(result) {
+          var index = parent.layer.getFrameIndex(window.name);
+          parent.layer.close(index);
+          parent.list();
+        }
+      });
+    }
+  
+    function cancel() {
+      var index = parent.layer.getFrameIndex(window.name);
+      parent.layer.close(index);
+    }
+  </script>
+</body>
+
+</html>

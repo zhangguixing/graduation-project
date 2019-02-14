@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>修改调整信息</title>
+<link rel="stylesheet" href="/plugin/layui/css/layui.css" />
+<script src="/plugin/layui/layui.all.js"></script>
+<script src="/plugin/jquery/jquery.js"></script>
+<script src="/plugin/jquery/jquery.serializejson.js"></script>
+<script src="/plugin/jsrender/jsrender.js"></script>
+</head>
+
+<body>
+  <div class="layui-container" style="margin:30px;">
+    <form class="layui-form layui-form-pane" id="adjustment" method="post">
+      <div class="layui-form-item">
+        <label class="layui-form-label">调整ID</label>
+        <div class="layui-input-block">
+          <input class="layui-input" name="adjustmentId" id="adjustmentId" type="text" />       
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label class="layui-form-label">课表ID</label>
+        <div class="layui-input-block">
+          <input class="layui-input" name="scheduleId" id="scheduleId" type="text" />
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label class="layui-form-label">起始教学周</label>
+        <div class="layui-input-block">
+          <input class="layui-input" name="startWeek" id="startWeek" type="text" />
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label class="layui-form-label">持续周数</label>
+        <div class="layui-input-block">
+          <input class="layui-input" name="duration" id="duration" type="text" />
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label class="layui-form-label">类型</label>
+        <div class="layui-input-block">
+          <input class="layui-input" name="type" id="type" type="text" />
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label class="layui-form-label">甲ID</label>
+        <div class="layui-input-block">
+          <input class="layui-input" name="firstId" id="firstId" type="text" />
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label class="layui-form-label">乙ID</label>
+        <div class="layui-input-block">
+          <input class="layui-input" name="secondId" id="secondId" type="text" />
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <div class="layui-input-block">
+          <button class="layui-btn" type="button" onclick="modify()">保存</button>
+          <button class="layui-btn" type="button" onclick="cancel()">取消</button>
+        </div>
+      </div>
+    </form>
+  </div>  
+  <script>
+    $(document).ready(function() {
+      var adjustmentId = sessionStorage.getItem('currentAdjustmentId');
+      $('#adjustmentId').attr('value', adjustmentId);
+      $.ajax({
+        async : false,
+        type : 'GET',
+        url : '/adjustments/' + adjustmentId,
+        success : function(response) {
+          var adjustment = response.data;
+          $('#scheduleId').attr('value', adjustment.scheduleId);
+          $('#startWeek').attr('value', adjustment.startWeek);
+          $('#duration').attr('value', adjustment.duration);
+          $('#type').attr('value', adjustment.type);
+          $('#firstId').attr('value', adjustment.firstId);
+          $('#secondId').attr('value', adjustment.secondId);
+        }
+      });
+      layui.use('form', function() {
+        layui.form.render();
+      });
+    });
+  
+    function modify() {
+      $.ajax({
+        async : false,
+        url : '/adjustments',
+        type : 'PUT',
+        dataType : 'json',
+        contentType : 'application/json',
+        data : JSON.stringify($('#adjustment').serializeJSON()),
+        success : function(response) {
+          var index = parent.layer.getFrameIndex(window.name);
+          parent.layer.close(index);
+          parent.list();
+        }
+      });
+    }
+  
+    function cancel() {
+      var index = parent.layer.getFrameIndex(window.name);
+      parent.layer.close(index);
+    }
+  </script>
+</body>
+</html>
