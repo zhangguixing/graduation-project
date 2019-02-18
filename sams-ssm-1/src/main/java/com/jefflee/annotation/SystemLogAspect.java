@@ -26,7 +26,7 @@ import java.lang.reflect.Method;
  * @author Mr Du
  */
 @Aspect    
-//@Component
+@Component    
 public  class SystemLogAspect {    
     //注入Service用于把日志保存数据库    
     @Resource    

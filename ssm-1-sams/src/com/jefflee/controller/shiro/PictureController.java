@@ -1,5 +1,5 @@
 package com.jefflee.controller.shiro;
-;
+
 import com.jefflee.util.shiro.GlobalUtil;
 import com.jefflee.util.shiro.ResultUtil;
 import org.springframework.http.MediaType;
