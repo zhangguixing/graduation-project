@@ -12,7 +12,7 @@
 	<artifactId>sams</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>sams</name>
-	<description>成绩管理分析系统</description>
+	<description>分析型成绩管理系统</description>
 
 	<properties>
 		<java.version>1.8</java.version>
@@ -74,18 +74,18 @@
 		</dependency>
 
 		<!--dubbo-springBoot依赖 -->
-		<dependency>
+		<!--<dependency>
 			<groupId>io.dubbo.springboot</groupId>
 			<artifactId>spring-boot-starter-dubbo</artifactId>
 			<version>1.0.0</version>
-		</dependency>
+		</dependency>-->
 
 		<!--zookeeper依赖 -->
-		<dependency>
+		<!--<dependency>
 			<groupId>org.apache.zookeeper</groupId>
 			<artifactId>zookeeper</artifactId>
 			<version>3.4.8</version>
-		</dependency>
+		</dependency>-->
 
 		<!--热部署配置-->
 		<dependency>
@@ -119,6 +119,24 @@
 			<artifactId>lombok</artifactId>
 			<scope>provided</scope>
 		</dependency>
+
+        <!-- swagger -->
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>2.6.1</version>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>2.6.1</version>
+        </dependency>
+		<dependency>
+			<groupId>org.antlr</groupId>
+			<artifactId>antlr4</artifactId>
+			<version>4.7.1</version>
+		</dependency>
+
 
 	</dependencies>
 	<build>

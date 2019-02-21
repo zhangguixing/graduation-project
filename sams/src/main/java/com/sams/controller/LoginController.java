@@ -18,7 +18,7 @@ public class LoginController {
         String account = user.getAccount();
         if(StringUtils.isNotBlank(account)){
             String password = loginService.getPasswordByAccont(account);
-            if(StringUtils.isEmpty(password)){
+            if(StringUtils.isBlank(password)){
                 //TODO 账户名不存在
             }else if(password.equals(user.getPassword())) {
                 //TODO 登录成功
