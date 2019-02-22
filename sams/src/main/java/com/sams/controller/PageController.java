@@ -1,5 +1,6 @@
 package com.sams.controller;
 
+import com.sams.constant.Constants;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,11 +19,8 @@ import java.io.IOException;
 @RequestMapping("toPage")
 public class PageController {
 
-    @Value("${static-project-url}")
-    private String url;
-
     @GetMapping("/{page}")
     public void toPage(@PathParam("page") String page, HttpServletResponse response) throws IOException {
-        response.sendRedirect(url+"view/"+page);
+        response.sendRedirect(Constants.STATIC_PROJECT_URL+"view/"+page);
     }
 }

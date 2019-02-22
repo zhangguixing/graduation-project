@@ -2,6 +2,8 @@ package com.sams.dao;
 
 import com.sams.entity.SystemInfo;
 import com.sams.entity.Teacher;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Update;
 import tk.mybatis.mapper.common.Mapper;
 
 /**
@@ -11,4 +13,6 @@ import tk.mybatis.mapper.common.Mapper;
  */
 public interface SystemInfoDao extends Mapper<SystemInfo> {
 
+    @Update("update system set ${name}=#{value}")
+    void updateSystemInfo(@Param("name") String name,@Param("value") String value);
 }

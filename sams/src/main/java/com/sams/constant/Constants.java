@@ -1,7 +1,17 @@
 package com.sams.constant;
 
+import org.springframework.beans.factory.annotation.Value;
+
+/**
+ * 常量类
+ */
 public class Constants {
-    /*session 中用户*/
+    /*用户信息*/
     public static final String SESSION_USER = "sessionUser";
+    /*验证码*/
     public static final String SESSION_VCODE = "sessionVCode";
+    /*系统信息*/
+    public static final String SYSTEM_INFO = "systemInfo";
+    @Value("${static-project-url}")
+    public static String STATIC_PROJECT_URL;
 }

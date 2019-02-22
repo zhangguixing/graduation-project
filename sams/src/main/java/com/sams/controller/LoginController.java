@@ -1,16 +1,19 @@
 package com.sams.controller;
 
 import com.sams.constant.Constants;
+import com.sams.entity.SystemInfo;
 import com.sams.entity.User;
-import com.sams.exception.BusinessException;
 import com.sams.response.JsonResult;
 import com.sams.service.LoginService;
+import com.sams.service.SysteminfoService;
 import com.sams.util.StringUtils;
 import com.sams.util.VCodeGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.ContextLoader;
+import org.springframework.web.context.WebApplicationContext;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
@@ -23,6 +26,8 @@ public class LoginController {
 
     @Autowired
     private LoginService loginService;
+    @Autowired
+    private SysteminfoService systeminfoService;
 
     @PostMapping("login")
     public JsonResult login(User user, String vcode, HttpServletRequest request){
@@ -45,6 +50,11 @@ public class LoginController {
                     return JsonResult.generateResult("student");
                 }else if(resultUser.getType()==3) {
                     return JsonResult.generateResult("teacher");
+                }
+                SystemInfo systemInfo = (SystemInfo) request.getServletContext().getAttribute(Constants.SYSTEM_INFO);
+                if(systemInfo == null){
+                    systemInfo = systeminfoService.getSystemInfo();
+                    request.getServletContext().setAttribute(Constants.SYSTEM_INFO,systemInfo);
                 }
             }else {
                 return JsonResult.error("密码错误");
