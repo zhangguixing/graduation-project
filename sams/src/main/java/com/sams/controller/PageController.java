@@ -6,6 +6,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.websocket.server.PathParam;
 import java.io.IOException;
@@ -19,8 +21,8 @@ import java.io.IOException;
 @RequestMapping("toPage")
 public class PageController {
 
-    @GetMapping("/{page}")
-    public void toPage(@PathParam("page") String page, HttpServletResponse response) throws IOException {
-        response.sendRedirect(Constants.STATIC_PROJECT_URL+"view/"+page);
+    @GetMapping("/{folder}/{page}")
+    public void toPage(@PathParam("folder") String folder,@PathParam("page") String page, HttpServletRequest request,HttpServletResponse response) throws IOException, ServletException {
+        request.getRequestDispatcher(Constants.STATIC_PROJECT_URL+"view/"+folder+"/"+page).forward(request,response);
     }
 }

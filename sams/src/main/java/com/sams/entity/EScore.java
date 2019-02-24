@@ -25,6 +25,10 @@ public class EScore implements Serializable {
 	private Student student; //考试学生
 	
 	private int studentid; //学生ID
+
+	private int gradeid;
+
+	private Grade grade;
 	
 	private int score; //考试成绩
 
@@ -120,4 +124,19 @@ public class EScore implements Serializable {
 		this.score = score;
 	}
 
+	public int getGradeid() {
+		return gradeid;
+	}
+
+	public void setGradeid(int gradeid) {
+		this.gradeid = gradeid;
+	}
+
+	public Grade getGrade() {
+		return grade;
+	}
+
+	public void setGrade(Grade grade) {
+		this.grade = grade;
+	}
 }
