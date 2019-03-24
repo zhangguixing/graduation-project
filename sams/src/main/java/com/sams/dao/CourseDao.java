@@ -2,6 +2,7 @@ package com.sams.dao;
 
 import com.sams.entity.Course;
 import com.sams.entity.CourseItem;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Select;
 import tk.mybatis.mapper.common.Mapper;
 
@@ -19,4 +20,10 @@ public interface CourseDao extends Mapper<Course> {
 
     @Select("SELECT c.* FROM grade_course gc,  coursec WHERE gc.gradeid=#{value} AND gc.courseid=c.id")
     List<Course> findByGradeid(int gradeid);
+
+    @Delete("DELETE FROM clazz_course_teacher WHERE courseid=#{courseid}")
+    void deletelazzCourseTeacherByCourseid(Integer courseid);
+
+    @Delete("DELETE FROM grade_course WHERE courseid=#{courseid}")
+    void deleteGradeCourseByCourseid(Integer courseid);
 }

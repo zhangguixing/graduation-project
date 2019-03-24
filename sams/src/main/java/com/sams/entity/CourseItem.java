@@ -1,10 +1,13 @@
 package com.sams.entity;
 
+import com.baomidou.mybatisplus.annotations.TableName;
+
 import java.io.Serializable;
 
 /**
  * 教师与课程的具体对应
  */
+@TableName("clazz_course_teacher")
 public class CourseItem implements Serializable {
 	
 	private Clazz clazz; //班级

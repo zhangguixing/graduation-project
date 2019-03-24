@@ -1,9 +1,7 @@
 package com.sams.controller;
 
-import com.sams.entity.Course;
-import com.sams.entity.EScore;
-import com.sams.entity.Exam;
-import com.sams.entity.Student;
+import com.sams.constant.Constants;
+import com.sams.entity.*;
 import com.sams.response.JsonResult;
 import com.sams.service.CourseService;
 import com.sams.service.EScoreService;
@@ -16,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpSession;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -93,4 +92,19 @@ public class ExamController {
         }
         return JsonResult.error("添加失败!");
     }
+
+    @PostMapping("studentExamList")
+    public List<Exam> studentExamList(HttpSession session){
+        User user = (User) session.getAttribute(Constants.SESSION_USER);
+        String number = user.getAccount();
+        return examService.findByNumber(number);
+    }
+
+    @PostMapping("teacherExamList")
+    public List<Exam> teacherExamList(HttpSession session){
+        User user = (User) session.getAttribute(Constants.SESSION_USER);
+        String number = user.getAccount();
+        return examService.findByNumber(number);
+    }
+
 }
