@@ -13,4 +13,7 @@ public interface UserDao extends Mapper<User> {
 
     @Update("update user set password=#{password} where account=#{account}")
     void updatePasswordByAccount(@Param("account") String account,@Param("password") String password);
+
+    @Update("UPDATE user SET name=#{name} WHERE account=#{number}")
+    void updateNameByAccount(@Param("name") String name, @Param("number") String number);
 }

@@ -14,4 +14,6 @@ public class Constants {
     public static final String SYSTEM_INFO = "systemInfo";
     @Value("${static-project-url}")
     public static String STATIC_PROJECT_URL;
+    /*用户详细信息*/
+    public static final String USER_DETAIL = "userDetail";
 }

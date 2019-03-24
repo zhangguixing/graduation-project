@@ -2,6 +2,7 @@ package com.sams.dao;
 
 import com.sams.entity.EScore;
 import com.sams.entity.Page;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import tk.mybatis.mapper.common.Mapper;
