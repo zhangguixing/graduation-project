@@ -1,0 +1,135 @@
+[
+  {
+    "name": "系统管理 ",
+    "checked": true,
+    "pId": -1,
+    "id": 1,
+    "open": true
+  },
+  {
+    "name": "用户管理 ",
+    "checked": true,
+    "pId": 1,
+    "id": 2,
+    "open": true
+  },
+  {
+    "name": "查询用户 user:view",
+    "checked": true,
+    "pId": 2,
+    "id": 3,
+    "open": true
+  },
+  {
+    "name": "添加用户 user:add",
+    "checked": true,
+    "pId": 2,
+    "id": 4,
+    "open": true
+  },
+  {
+    "name": "修改用户 user:edit",
+    "checked": false,
+    "pId": 2,
+    "id": 5,
+    "open": true
+  },
+  {
+    "name": "删除用户 user:delete",
+    "checked": false,
+    "pId": 2,
+    "id": 6,
+    "open": true
+  },
+  {
+    "name": "角色管理 ",
+    "checked": true,
+    "pId": 1,
+    "id": 7,
+    "open": true
+  },
+  {
+    "name": "查询角色 role:view",
+    "checked": true,
+    "pId": 7,
+    "id": 8,
+    "open": true
+  },
+  {
+    "name": "添加角色 role:add",
+    "checked": true,
+    "pId": 7,
+    "id": 9,
+    "open": true
+  },
+  {
+    "name": "修改角色 role:edit",
+    "checked": false,
+    "pId": 7,
+    "id": 10,
+    "open": true
+  },
+  {
+    "name": "删除角色 role:delete",
+    "checked": false,
+    "pId": 7,
+    "id": 11,
+    "open": true
+  },
+  {
+    "name": "角色权限管理 role:auth",
+    "checked": false,
+    "pId": 7,
+    "id": 12,
+    "open": true
+  },
+  {
+    "name": "权限管理 ",
+    "checked": true,
+    "pId": 1,
+    "id": 13,
+    "open": true
+  },
+  {
+    "name": "查询权限 authorities:view",
+    "checked": true,
+    "pId": 13,
+    "id": 14,
+    "open": true
+  },
+  {
+    "name": "添加权限 authorities:add",
+    "checked": true,
+    "pId": 13,
+    "id": 15,
+    "open": true
+  },
+  {
+    "name": "修改权限 authorities:edit",
+    "checked": false,
+    "pId": 13,
+    "id": 16,
+    "open": true
+  },
+  {
+    "name": "删除权限 authorities:delete",
+    "checked": false,
+    "pId": 13,
+    "id": 17,
+    "open": true
+  },
+  {
+    "name": "登录日志 ",
+    "checked": true,
+    "pId": 1,
+    "id": 18,
+    "open": true
+  },
+  {
+    "name": "查询登录日志 loginRecord:view",
+    "checked": true,
+    "pId": 18,
+    "id": 19,
+    "open": true
+  }
+]

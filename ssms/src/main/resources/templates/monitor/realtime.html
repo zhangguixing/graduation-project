@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>分析型成绩管理系统</title>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="/assets/libs/layui/css/layui.css"/>
+    <link rel="stylesheet" href="/assets/css/admin.css"/>
+    <style>
+        .numberInfoSubTitle {
+            color: rgba(0, 0, 0, .45);
+            font-size: 14px;
+            height: 22px;
+            line-height: 22px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            word-break: break-all;
+        }
+
+        .numberInfoValue {
+            color: rgba(0, 0, 0, .85);
+            font-size: 24px;
+            margin-top: 10px;
+            height: 32px;
+            line-height: 32px;
+        }
+
+        .numberInfoSuffix {
+            color: rgba(0, 0, 0, .65);
+            font-size: 16px;
+            font-style: normal;
+            margin-left: 4px;
+            line-height: 32px;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- 加载动画，移除位置在common.js中 -->
+<div class="page-loading">
+    <div class="rubik-loader"></div>
+</div>
+
+<!-- 正文开始 -->
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+
+        <div class="layui-col-xs12 layui-col-md8">
+            <div class="layui-card">
+                <div class="layui-card-header">数据实时同步情况</div>
+                <div class="layui-card-body">
+                    <div class="layui-row">
+                        <div class="layui-col-xs6 layui-col-md4 text-center">
+                            <div class="numberInfoSubTitle">历史同步事务量</div>
+                            <div class="numberInfoValue">
+                                124,543,233
+                            </div>
+                        </div>
+                        <div class="layui-col-xs6 layui-col-md4 text-center">
+                            <div class="numberInfoSubTitle">今日同步事务量</div>
+                            <div class="numberInfoValue">1232</div>
+                        </div>
+                        <div class="layui-col-xs6 layui-col-md4 text-center">
+                            <div class="numberInfoSubTitle">昨日同步事务量</div>
+                            <div class="numberInfoValue">123,234</div>
+                        </div>
+                        <div class="layui-col-xs12 layui-col-md12 text-center">
+                          <div id="realtime-status" style='height: 450px; width: 100%'></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-col-xs12 layui-col-md4">
+            <div class="layui-card">
+                <div class="layui-card-header">同步成功率</div>
+                <div class="layui-card-body" style="height: 240px;overflow: hidden;">
+                    <div id="tbcgl" style="width: 100%;height: 260px;"></div>
+                </div>
+            </div>
+            <div class="layui-card">
+                <div class="layui-card-header">实时同步速度</div>
+                <div class="layui-card-body" style="height: 222px;overflow: hidden;">
+                    <div id="tbsd" style="width: 100%;height: 280px;margin-top: -20px;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-col-xs12">
+            <div class="layui-card">
+                <div class="layui-card-body">
+                     <div class="layui-row">
+                         <div class="layui-col-xs12 layui-col-md8">
+                             <div id="xse" style="height: 300px;margin-top: 20px;"></div>
+                         </div>
+                         <div class="layui-col-xs12 layui-col-md4" style="padding-left: 20px;">
+                             <table class="layui-table">
+                                 <colgroup>
+                                     <col width="50">
+                                     <col>
+                                     <col width="96">
+                                 </colgroup>
+                                 <thead>
+                                 <tr style="background: none;color: #333;">
+                                     <th colspan="3">今日同步数量排名</th>
+                                 </tr>
+                                 </thead>
+                                 <tbody>
+                                 <tr>
+                                     <td><span class="layui-badge layui-bg-cyan">1</span></td>
+                                     <td>工专路 0 号店</td>
+                                     <td>323,234</td>
+                                 </tr>
+                                 <tr>
+                                     <td><span class="layui-badge layui-bg-cyan">2</span></td>
+                                     <td>工专路 1 号店</td>
+                                     <td>323,234</td>
+                                 </tr>
+                                 <tr>
+                                     <td><span class="layui-badge layui-bg-cyan">3</span></td>
+                                     <td>工专路 2 号店</td>
+                                     <td>323,234</td>
+                                 </tr>
+                                 <tr>
+                                     <td><span class="layui-badge layui-bg-gray">4</span></td>
+                                     <td>工专路 4 号店</td>
+                                     <td>323,234</td>
+                                 </tr>
+                                 <tr>
+                                     <td><span class="layui-badge layui-bg-gray">5</span></td>
+                                     <td>工专路 5 号店</td>
+                                     <td>323,234</td>
+                                 </tr>
+                                 <tr>
+                                     <td><span class="layui-badge layui-bg-gray">6</span></td>
+                                     <td>工专路 6 号店</td>
+                                     <td>323,234</td>
+                                 </tr>
+                                 <tr>
+                                     <td><span class="layui-badge layui-bg-gray">7</span></td>
+                                     <td>工专路 7 号店</td>
+                                     <td>323,234</td>
+                                 </tr>
+                                 </tbody>
+                             </table>
+                         </div>
+                     </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- js部分 -->
+<script type="text/javascript" src="/assets/libs/layui/layui.js"></script>
+<script src="/assets/libs/echarts/echarts.min.js"></script>
+<script src="/assets/libs/echarts/echartsTheme.js"></script>
+<script src="/assets/libs/echarts/china.js"></script>
+<script src="/assets/libs/echarts/geoCityCountyData.js"></script>
+<script type="text/javascript" src="/assets/js/common.js"></script>
+
+<script>
+    layui.use(['layer', 'element'], function () {
+        var $ = layui.jquery;
+        var layer = layui.layer;
+        var element = layui.element;
+
+        // 渲染活动情况预测
+        var myCharts = echarts.init(document.getElementById('tbcgl'), myEchartsTheme);
+        var mData = [50, 100, 150, 80, 120, 150, 200, 250, 220, 250, 300, 350, 400, 380, 440, 450, 500, 550, 500];
+        var option = {
+            title: {
+                textStyle: {
+                    color: '#000'
+                }
+            },
+            tooltip: {
+                trigger: "axis"
+            },
+            xAxis: [{
+                type: "category",
+                boundaryGap: !1,
+                data: ["06:00", "06:30", "07:00", "07:30", "08:00", "08:30", "09:00", "09:30", "10:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00"]
+            }],
+            yAxis: [{
+                type: "value"
+            }],
+            series: [{
+                name: "百分比",
+                type: "line",
+                smooth: !0,
+                itemStyle: {
+                    normal: {
+                        areaStyle: {
+                            type: "default"
+                        }
+                    }
+                },
+                data: mData
+            }]
+        };
+        myCharts.setOption(option);
+
+        // 动态改变图表1数据
+        setInterval(function () {
+            for (var i = 0; i < mData.length; i++) {
+                mData[i] += (Math.random() * 50 - 25);
+                if (mData[i] < 0) {
+                    mData[i] = 0;
+                }
+            }
+            myCharts.setOption({
+                series: [{
+                    data: mData
+                }]
+            });
+        }, 1000);
+
+        // 渲染券核效率图表
+        var myCharts2 = echarts.init(document.getElementById('tbsd'), myEchartsTheme);
+        var option2 = {
+            tooltip: {
+                formatter: "{c}事务/分钟"
+            },
+            series: [
+                {
+                    type: 'gauge',
+                    detail: {formatter: '{value}'},
+                    max: 2000,
+                    data: [{value: 1550, name: '事务'}]
+                }
+            ]
+        };
+        myCharts2.setOption(option2);
+
+        // 动态改变图表1数据
+        setInterval(function () {
+            var data = [{value:  Math.ceil(Math.random() * 2000), name: '事务'}]
+            myCharts2.setOption({
+                series: [{
+                    data: data
+                }]
+            });
+        }, 2000);
+
+        // 渲染销售额图表
+        var myCharts3 = echarts.init(document.getElementById('xse'), myEchartsTheme);
+        var option3 = {
+            title: {
+                text: '同步数量统计',
+                textStyle: {
+                    color: '#000',
+                    fontSize: 14
+                }
+            },
+            tooltip: {},
+            grid: {
+                left: '0',
+                right: '0',
+                bottom: '0',
+                containLabel: true
+            },
+            xAxis: {
+                data: ['1月', '2月', '3月', '4月', '6月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
+            },
+            yAxis: {},
+            series: [{
+                type: 'bar',
+                data: [726, 1013, 690, 892, 982, 570, 536, 546, 988, 1002, 206, 506],
+                barMaxWidth: 45
+            }]
+        };
+        myCharts3.setOption(option3);
+
+        myCharts5 = echarts.init(document.getElementById("realtime-status"), myEchartsTheme);
+
+        /*
+        记录下起点城市和终点城市的名称，以及权重
+        数组第一位为终点城市，数组第二位为起点城市，以及该城市的权重，就是图上圆圈的大小
+	     */
+
+	    // 北京
+	    var BJData = [
+	        [{name: '北京'}, {name: "天津",value: 60}],
+	        [{name: '北京'}, {name: "西安",value: 90}],
+	        [{name: '北京'}, {name: "张掖",value: 90}]
+	    ];
+
+	    // 西宁
+	    var XAData = [
+	        [{name: '西安'}, {name: "西宁",value: 90}],
+	        [{name: '西安'}, {name: "成都",value: 90}],
+	    ];
+
+	    // 小飞机的图标，可以用其他图形替换
+	    var planePath = 'path://M1705.06,1318.313v-89.254l-319.9-221.799l0.073-208.063c0.521-84.662-26.629-121.796-63.961-121.491c-37.332-0.305-64.482,36.829-63.961,121.491l0.073,208.063l-319.9,221.799v89.254l330.343-157.288l12.238,241.308l-134.449,92.931l0.531,42.034l175.125-42.917l175.125,42.917l0.531-42.034l-134.449-92.931l12.238-241.308L1705.06,1318.313z';
+
+	    // 获取地图中起点和终点的坐标，以数组形式保存下来
+	    var convertData = function(data) {
+	        var res = [];
+	        for(var i = 0; i < data.length; i++) {
+	            var dataItem = data[i];
+	            var fromCoord = geoCityCountyPos[dataItem[1].name];
+	            var toCoord = geoCityCountyPos[dataItem[0].name];
+	            if(fromCoord && toCoord) {
+	                res.push([{
+	                    coord: fromCoord // 起点坐标
+	                }, {
+	                    coord: toCoord // 终点坐标
+	                }])
+	            }
+	        }
+	        return res;
+	    }
+
+	    var color  = ['#9ae5fc', '#dcbf71'];    // 自定义图中要用到的颜色
+	    var series = [];                        // 用来存储地图数据
+
+	    /*
+	        图中一共用到三种效果，分别为航线特效图、飞机航线图以及城市图标涟漪图。
+	        要用到setOption中的series属性，并且对每个城市都要进行三次设置。
+	    */
+	    [['北京', BJData], ['西安', XAData]].forEach(function(item, i) {
+	        series.push({
+	            // 白色航线特效图
+	            type: 'lines',
+	            zlevel: 1,                    // 用于分层，z-index的效果
+	            effect: {
+	                show: true,               // 动效是否显示
+	                period: 6,                // 特效动画时间
+	                trailLength: 0.7,         // 特效尾迹的长度
+	                color: 'blue',            // 特效颜色
+	                symbolSize: 3             // 特效大小
+	            },
+	            lineStyle: {
+	                normal: {                 // 正常情况下的线条样式
+	                    color: color[0],
+	                    width: 0,             // 因为是叠加效果，要是有宽度，线条会变粗，白色航线特效不明显
+	                    curveness: -0.2       // 线条曲度
+	                }
+	            },
+	            data: convertData(item[1])    // 特效的起始、终点位置
+	        }, {  // 小飞机航线效果
+	            type: 'lines',
+	            zlevel: 2,
+	            //symbol: ['none', 'arrow'],   // 用于设置箭头
+	            symbolSize: 10,
+	            effect: {
+	                show: true,
+	                period: 6,
+	                trailLength: 0,
+	                symbol: planePath,         // 特效形状，可以用其他svg pathdata路径代替
+	                symbolSize: 15
+	            },
+	            lineStyle: {
+	                normal: {
+	                    color: 'green',
+	                    width: 2,
+	                    opacity: 0.6,
+	                    curveness: -0.2
+	                }
+	            },
+	            data: convertData(item[1])     // 特效的起始、终点位置，一个二维数组，相当于coords: convertData(item[1])
+	        }, { // 散点效果
+	            type: 'effectScatter',
+	            coordinateSystem: 'geo',       // 表示使用的坐标系为地理坐标系
+	            zlevel: 3,
+	            rippleEffect: {
+	                brushType: 'stroke'        // 波纹绘制效果
+	            },
+	            label: {
+	                normal: {                  // 默认的文本标签显示样式
+	                    show: true,
+	                    position: 'left',      // 标签显示的位置
+	                    formatter: '{b}'       // 标签内容格式器
+	                }
+	            },
+	            itemStyle: {
+	                normal: {
+	                    color: '#000'
+	                },
+                        emphasis: {
+                            color: color[0]
+                        }
+	            },
+	            data: item[1].map(function(dataItem) {
+	                return {
+	                    name: dataItem[1].name,
+	                    value: geoCityCountyPos[dataItem[1].name],  // 起点的位置
+	                    symbolSize: dataItem[1].value / 8,  // 散点的大小，通过之前设置的权重来计算，val的值来自data返回的value
+	                };
+	            })
+	        });
+	    });
+
+	    // 显示终点位置,类似于上面最后一个效果，放在外面写，是为了防止被循环执行多次
+	    series.push({
+	        type: 'effectScatter',
+	        coordinateSystem: 'geo',
+	        zlevel: 3,
+	        rippleEffect: {
+	            brushType: 'stroke'
+	        },
+	        label: {
+	            normal: {
+	                show: true,
+	                position: 'left',
+	                formatter: '{b}'
+	            }
+	        },
+	        symbolSize: function(val) {
+	            return val[2] / 8;
+	        },
+            itemStyle: {
+                normal: {
+                    color: '#000'
+                },
+                emphasis: {
+                    color: color[0]
+                }
+            },
+	        data: [{
+	            // 这里面的数据，由于一开始就知道终点位置是什么，所以直接写死，如果通过ajax来获取数据的话，还要进行相应的处理
+	            name: "北京",
+	            value: [geoCityCountyPos['北京'][0], geoCityCountyPos['北京'][1], 60],
+	            label: {
+	                normal: {
+	                    position: 'top'
+	                }
+	            }
+	        }]
+	    });
+
+	    // 最后初始化世界地图中的相关数据
+	    myCharts5.setOption({
+	        geo: {
+	            map: 'china',       // 与引用进来的地图js名字一致
+	            roam: true,        // 禁止缩放平移
+                boundingCoords: [
+	                // 定位左上角经纬度
+	                geoCityCountyPos['乌鲁木齐'],
+	                // 定位右下角经纬度
+	                geoCityCountyPos['上海']
+	            ],
+	            itemStyle: {        // 每个区域的样式
+	                normal: {
+	                    areaColor: '#f5f5f5'
+	                }
+	            }
+	        },
+	        series: series,   // 将之前处理的数据放到这里
+	        textStyle: {
+	            fontSize: 12
+	        }
+	    });
+
+	    // 窗口大小改变事件
+	    window.onresize = function () {
+	        myCharts.resize();
+	        myCharts2.resize();
+	        myCharts3.resize();
+	        myCharts5.resize();
+	    };
+
+            var ecConfig = echarts.config;
+            myCharts5.on('click', function(params){
+                if(params.componentSubType == 'effectScatter'){
+                    $('.page-loading').show();
+                    $.post('node-status', {'name': params.data.name}, function(data){
+                        layer.open({
+                            title: "查看节点状态信息",
+                            content: data
+                        });
+                        $('.page-loading').hide();
+                    })
+                }
+            })
+    });
+</script>
+</body>
+
+</html>

@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>便签</title>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="/assets/libs/layui/css/layui.css"/>
+    <link rel="stylesheet" href="/assets/css/admin.css"/>
+    <style>
+        html, body {
+            background-color: #F8F8F8;
+        }
+
+        .note-wrapper {
+            padding-left: 15px;
+            padding-right: 15px;
+            padding-top: 20px;
+            margin-bottom: 10px;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+
+        .note-item {
+            width: calc(50% - 33px);
+            height: 100px;
+            margin: 0 0 15px 0;
+            padding: 13px;
+            border: 1px solid #dddddd;
+            border-radius: 8px;
+            background-color: #ffffff;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .note-item:hover {
+            background-color: #f1f1f1;
+        }
+
+        .note-item .note-item-content {
+            font-size: 14px;
+            color: #666666;
+            height: 78px;
+            overflow: hidden;
+            word-wrap: break-word;
+        }
+
+        .note-item .note-item-time {
+            font-size: 12px;
+            color: #999999;
+            margin-top: 10px;
+        }
+
+        .note-empty {
+            text-align: center;
+            color: rgba(0, 0, 0, .45);
+            padding: 73px 0 88px;
+            display: none;
+        }
+
+        .note-empty .layui-icon {
+            margin-bottom: 10px;
+            display: inline-block;
+            font-size: 60px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="note-wrapper">
+</div>
+
+<div class="note-empty">
+    <i class="layui-icon layui-icon-face-surprised"></i>
+    <div>没有便签</div>
+</div>
+
+<div class="btn-circle" id="btnAdd" title="添加便签"><i class="layui-icon layui-icon-add-1"></i></div>
+
+<script type="text/javascript" src="/assets/libs/layui/layui.js"></script>
+<script type="text/javascript" src="/assets/js/common.js"></script>
+<script>
+    var dataList = [];  // 标签列表
+
+    layui.use(['layer', 'form', 'util', 'dropdown'], function () {
+        var $ = layui.jquery;
+        var layer = layui.layer;
+        var util = layui.util;
+        var dropdown = layui.dropdown;
+
+        renderList();  // 渲染列表
+
+        // 添加
+        $('#btnAdd').click(function () {
+            showNote();
+        });
+
+        // 显示编辑弹窗
+        function showNote(object) {
+            var id, content = '';
+            if (object) {
+                id = object.id;
+                content = object.content;
+            }
+            top.layui.admin.open({
+                id: 'layer-note-item-edt',
+                title: '便签',
+                type: 1,
+                area: '300px',
+                offset: '50px',
+                shadeClose: true,
+                content: '<textarea id="edtNote" placeholder="请输入内容" style="width: 260px;height: 112px;border: none;color: #666666;word-wrap: break-word;padding: 10px 20px;resize: none;">' + content + '</textarea>',
+                success: function () {
+                    top.layui.jquery('#edtNote').change(function () {
+                        content = top.layui.jquery(this).val();
+                    });
+                },
+                end: function () {
+                    if (id != undefined) {
+                        if (!content) {
+                            dataList.splice(id, 1);
+                            for (var i = 0; i < dataList.length; i++) {
+                                dataList[i].id = i;
+                            }
+                        } else if (content != dataList[id].content) {
+                            dataList[id].content = content;
+                            dataList[id].time = util.toDateString(new Date(), 'yyyy/MM/dd HH:mm');
+                        }
+                    } else if (content) {
+                        dataList.push({
+                            id: dataList.length,
+                            unique: util.toDateString(new Date(), 'yyyyMMddHHmmss') + "/" + Math.random(),
+                            content: content,
+                            time: util.toDateString(new Date(), 'yyyy/MM/dd HH:mm')
+                        });
+                    }
+                    putDataList();
+                    renderList();
+                }
+            });
+        }
+
+        // 更新缓存
+        function putDataList() {
+            layui.data('easyweb', {
+                key: 'notes',
+                value: dataList
+            });
+        }
+
+        // 渲染列表
+        function renderList() {
+            $('.note-wrapper').empty();
+            dataList = layui.data('easyweb').notes;
+            if (dataList == undefined) {
+                dataList = [];
+            }
+            for (var i = 0; i < dataList.length; i++) {
+                var item = dataList[i];
+                var str = '<div class="note-item" data-anchor="top-center"  data-unique="' + item.unique + '"  data-id="' + item.id + '">' +
+                    '<span  data-unique="' + item.unique + '"  class="note-item-delete" style="position: absolute;right: -10px;top: -10px;z-index: 5;opacity: 0;display: none;"><i class="layui-icon layui-icon-close-fill" style="font-size: 25px;color: #009688;"></i></span>';
+                str += '<div class="note-item-content">' + item.content + '</div>';
+                str += '<div class="note-item-time">' + item.time + '</div>';
+                str += '</div>';
+                $('.note-wrapper').prepend(str);
+            }
+
+            function notEmpty(dataList) {
+                if (dataList.length === 0) {
+                    $('.note-empty').css('display', 'block');
+                } else {
+                    $('.note-empty').css('display', 'none');
+                }
+            }
+
+            notEmpty(dataList);
+
+            //修改
+            $('.note-item').click(function () {
+                var $this = $(this);
+                var unique = $this.attr('data-unique');
+                layui.each(dataList, function (index, item) {
+                    if (item.unique === unique) {
+                        showNote(item);
+                        return;
+                    }
+                })
+            }).hover(function () {
+                var $delete = $(this).find('.note-item-delete');
+                $delete.show();
+                $delete.animate({
+                    opacity: 1
+                }, 400, "linear");
+            }, function () {
+                var $delete = $(this).find('.note-item-delete');
+                $delete.animate({
+                    opacity: 0
+                }, 200, "swing", function () {
+                    $delete.hide();
+                });
+            });
+
+            //删除
+            $('.note-item-delete').click(function () {
+                var $this = $(this);
+                var unique = $this.attr('data-unique');
+                $this.parents('.note-item').remove();
+                layui.each(dataList, function (index, item) {
+                    if (item.unique === unique) {
+                        dataList.splice(index, 1);
+                        return;
+                    }
+                });
+                layui.data('easyweb', {
+                    key: "notes",
+                    value: dataList
+                });
+                notEmpty(dataList);
+            });
+        }
+    });
+</script>
+</body>
+</html>

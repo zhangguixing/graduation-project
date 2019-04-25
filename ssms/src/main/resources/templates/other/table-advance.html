@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>分析型成绩管理系统</title>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="/assets/libs/layui/css/layui.css"/>
+    <link rel="stylesheet" href="/assets/css/admin.css" media="all"/>
+</head>
+
+<body>
+
+<!-- 加载动画，移除位置在common.js中 -->
+<div class="page-loading">
+    <div class="rubik-loader"></div>
+</div>
+
+<!-- 正文开始 -->
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <div class="layui-form toolbar">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">账&emsp;&emsp;号：</label>
+                        <div class="layui-input-inline">
+                            <input class="layui-input" type="text" placeholder="输入账号"/>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">用&nbsp;&nbsp;户&nbsp;&nbsp;名：</label>
+                        <div class="layui-input-inline">
+                            <input class="layui-input" type="text" placeholder="输入用户名"/>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">手&nbsp;&nbsp;机&nbsp;&nbsp;号：</label>
+                        <div class="layui-input-inline">
+                            <input class="layui-input" type="text" placeholder="输入用户名"/>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">性&emsp;&emsp;别：</label>
+                        <div class="layui-input-inline">
+                            <select>
+                                <option value="">所有</option>
+                                <option value="male">男</option>
+                                <option value="female">女</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">状&emsp;&emsp;态：</label>
+                        <div class="layui-input-inline">
+                            <select>
+                                <option value="">所有</option>
+                                <option value="male">正常</option>
+                                <option value="female">冻结</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">注册时间：</label>
+                        <div class="layui-input-inline">
+                            <input id="dateRange02" class="layui-input date-icon" type="text"
+                                   placeholder="选择注册时间"/>
+                        </div>
+                    </div>
+                    <div class="layui-inline" style="padding-left: 20px;">
+                        <button class="layui-btn icon-btn">
+                            <i class="layui-icon">&#xe615;</i>搜索
+                        </button>
+                        <button class="layui-btn icon-btn">
+                            <i class="layui-icon">&#xe654;</i>添加
+                        </button>
+                        <button id="btnExport" class="layui-btn icon-btn">
+                            <i class="layui-icon">&#xe67d;</i>导出
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <table class="layui-table" id="user-table" lay-filter="user-table"></table>
+        </div>
+    </div>
+
+</div>
+
+<!-- 表格操作列 -->
+<script type="text/html" id="user-table-bar">
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="edit">修改</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+
+<!-- 表格状态列 -->
+<script type="text/html" id="user-tpl-state">
+    <input type="checkbox" lay-skin="switch" lay-text="正常|锁定" checked/>
+</script>
+
+<!-- js部分 -->
+<script type="text/javascript" src="/assets/libs/layui/layui.js"></script>
+<script type="text/javascript" src="/assets/js/common.js"></script>
+
+<script>
+    layui.use(['layer', 'form', 'table', 'util', 'laydate'], function () {
+        var $ = layui.jquery;
+        var layer = layui.layer;
+        var form = layui.form;
+        var table = layui.table;
+        var util = layui.util;
+        var laydate = layui.laydate;
+
+        form.render('select');
+
+        // 渲染表格
+        var ins1 = table.render({
+            elem: '#user-table',
+            url: '/json/user.json',
+            page: true,
+            cols: [[
+                {type: 'checkbox'},
+                {field: 'username', align: 'center', sort: true, title: '账号'},
+                {field: 'nickName', align: 'center', sort: true, title: '用户名'},
+                {field: 'phone', align: 'center', sort: true, title: '手机号'},
+                {field: 'sex', align: 'center', sort: true, title: '性别'},
+                {
+                    sort: true, align: 'center', templet: function (d) {
+                        return util.toDateString(d.createTime);
+                    }, title: '创建时间'
+                },
+                {field: 'state', align: 'center', sort: true, templet: '#user-tpl-state', title: '状态'},
+                {align: 'center', align: 'center', toolbar: '#user-table-bar', title: '操作'}
+            ]],
+            skin: 'line',
+            size: 'lg'
+        });
+
+        //监听工具条
+        table.on('tool(user-table)', function (obj) {
+            var data = obj.data; //获得当前行数据
+            var layEvent = obj.event; //获得 lay-event 对应的值
+
+            if (layEvent === 'edit') { //查看
+                layer.msg('点击了修改');
+            } else if (layEvent === 'del') { //删除
+                layer.msg('点击了删除');
+            }
+        });
+
+        // 渲染laydate
+        laydate.render({
+            elem: '#dateRange02'
+        });
+
+        // 导出excel
+        $('#btnExport').click(function () {
+            var checkRows = table.checkStatus('user-table');
+            if (checkRows.data.length == 0) {
+                layer.msg('请选择要导出的数据', {icon: 2});
+            } else {
+                table.exportFile(ins1.config.id, checkRows.data, 'xls');
+            }
+        });
+    });
+</script>
+</body>
+
+</html>

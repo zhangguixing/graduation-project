@@ -1,0 +1,355 @@
+{
+  "code": 0,
+  "msg": "",
+  "count": 30,
+  "data": [
+    {
+      "userId": 1,
+      "username": "superadmin",
+      "password": "bd6b5b654b42b8e3aa59f7be5c739cd1",
+      "nickName": "超级管理员",
+      "avatar": null,
+      "sex": "男",
+      "phone": "12345678901",
+      "email": null,
+      "emailVerified": null,
+      "personId": null,
+      "personType": null,
+      "state": 0,
+      "createTime": "2018/07/21 10:03:40",
+      "updateTime": "2018/07/21 10:55:02",
+      "roles": [
+        {
+          "roleId": 1,
+          "roleName": "超级管理员",
+          "comments": null,
+          "isDelete": null,
+          "createTime": null,
+          "updateTime": null
+        }
+      ]
+    },
+    {
+      "userId": 2,
+      "username": "admin",
+      "password": "3fed7a346e430ea4c2aa10250928f4de",
+      "nickName": "管理员",
+      "avatar": null,
+      "sex": "男",
+      "phone": "12345678901",
+      "email": null,
+      "emailVerified": null,
+      "personId": null,
+      "personType": null,
+      "state": 0,
+      "createTime": "2018/07/21 10:50:18",
+      "updateTime": "2018/07/31 15:53:12",
+      "roles": [
+        {
+          "roleId": 2,
+          "roleName": "管理员",
+          "comments": null,
+          "isDelete": null,
+          "createTime": null,
+          "updateTime": null
+        }
+      ]
+    },
+    {
+      "userId": 3,
+      "username": "demo",
+      "password": "180aca749787e2993b13e186d65a32f0",
+      "nickName": "测试账号",
+      "avatar": null,
+      "sex": "女",
+      "phone": "12345678901",
+      "email": null,
+      "emailVerified": null,
+      "personId": null,
+      "personType": null,
+      "state": 0,
+      "createTime": "2018/07/21 10:50:27",
+      "updateTime": "2018/07/21 10:55:09",
+      "roles": [
+        {
+          "roleId": 3,
+          "roleName": "普通用户",
+          "comments": null,
+          "isDelete": null,
+          "createTime": null,
+          "updateTime": null
+        }
+      ]
+    },
+    {
+      "userId": 5,
+      "username": "55",
+      "password": "7b2b0d9ea143977a7f31eda83060820d",
+      "nickName": "55",
+      "avatar": null,
+      "sex": "男",
+      "phone": "13578789900",
+      "email": null,
+      "emailVerified": null,
+      "personId": null,
+      "personType": null,
+      "state": 0,
+      "createTime": "2018/07/31 17:28:07",
+      "updateTime": "2018/07/31 17:28:07",
+      "roles": [
+        {
+          "roleId": 3,
+          "roleName": "普通用户",
+          "comments": null,
+          "isDelete": null,
+          "createTime": null,
+          "updateTime": null
+        }
+      ]
+    },
+    {
+      "userId": 6,
+      "username": "ggg",
+      "password": "e02967d55627bffb9e4d57e0114627f1",
+      "nickName": "ggg",
+      "avatar": null,
+      "sex": "男",
+      "phone": "11111111111",
+      "email": null,
+      "emailVerified": null,
+      "personId": null,
+      "personType": null,
+      "state": 0,
+      "createTime": "2018/08/01 16:12:12",
+      "updateTime": "2018/08/01 16:12:12",
+      "roles": [
+        {
+          "roleId": 4,
+          "roleName": "TEST",
+          "comments": null,
+          "isDelete": null,
+          "createTime": null,
+          "updateTime": null
+        }
+      ]
+    },
+    {
+      "userId": 7,
+      "username": "qwwww",
+      "password": "a3ed447094e6f31afdc44315fb02ce2b",
+      "nickName": "qwwww",
+      "avatar": null,
+      "sex": "男",
+      "phone": "11111111111",
+      "email": null,
+      "emailVerified": null,
+      "personId": null,
+      "personType": null,
+      "state": 0,
+      "createTime": "2018/08/01 16:12:49",
+      "updateTime": "2018/08/01 16:12:49",
+      "roles": [
+        {
+          "roleId": 3,
+          "roleName": "普通用户",
+          "comments": null,
+          "isDelete": null,
+          "createTime": null,
+          "updateTime": null
+        }
+      ]
+    },
+    {
+      "userId": 8,
+      "username": "aa",
+      "password": "e58cfef02dcb9ef60ae3ad808ac06d64",
+      "nickName": "aa",
+      "avatar": null,
+      "sex": "男",
+      "phone": "13665698989",
+      "email": null,
+      "emailVerified": null,
+      "personId": null,
+      "personType": null,
+      "state": 0,
+      "createTime": "2018/08/02 12:02:39",
+      "updateTime": "2018/08/02 12:02:39",
+      "roles": [
+        {
+          "roleId": 2,
+          "roleName": "管理员",
+          "comments": null,
+          "isDelete": null,
+          "createTime": null,
+          "updateTime": null
+        }
+      ]
+    },
+    {
+      "userId": 9,
+      "username": "aaa",
+      "password": "a20aca20d3d9f00efe2c4d7f3347182b",
+      "nickName": "aaa",
+      "avatar": null,
+      "sex": "女",
+      "phone": "18622222222",
+      "email": null,
+      "emailVerified": null,
+      "personId": null,
+      "personType": null,
+      "state": 0,
+      "createTime": "2018/08/03 14:36:42",
+      "updateTime": "2018/08/03 14:36:41",
+      "roles": [
+        {
+          "roleId": 2,
+          "roleName": "管理员",
+          "comments": null,
+          "isDelete": null,
+          "createTime": null,
+          "updateTime": null
+        },
+        {
+          "roleId": 3,
+          "roleName": "普通用户",
+          "comments": null,
+          "isDelete": null,
+          "createTime": null,
+          "updateTime": null
+        },
+        {
+          "roleId": 4,
+          "roleName": "TEST",
+          "comments": null,
+          "isDelete": null,
+          "createTime": null,
+          "updateTime": null
+        },
+        {
+          "roleId": 5,
+          "roleName": "test",
+          "comments": null,
+          "isDelete": null,
+          "createTime": null,
+          "updateTime": null
+        },
+        {
+          "roleId": 6,
+          "roleName": "TT",
+          "comments": null,
+          "isDelete": null,
+          "createTime": null,
+          "updateTime": null
+        }
+      ]
+    },
+    {
+      "userId": 10,
+      "username": "12",
+      "password": "9b4e129b4169de61079d4af3d999dc36",
+      "nickName": "12",
+      "avatar": null,
+      "sex": "男",
+      "phone": "12111111111",
+      "email": null,
+      "emailVerified": null,
+      "personId": null,
+      "personType": null,
+      "state": 0,
+      "createTime": "2018/08/03 14:37:49",
+      "updateTime": "2018/08/03 14:37:48",
+      "roles": [
+        {
+          "roleId": 2,
+          "roleName": "管理员",
+          "comments": null,
+          "isDelete": null,
+          "createTime": null,
+          "updateTime": null
+        }
+      ]
+    },
+    {
+      "userId": 11,
+      "username": "haha",
+      "password": "aa45ac78996c225c39ada2a1ae1cce76",
+      "nickName": "12",
+      "avatar": null,
+      "sex": "男",
+      "phone": "13512121212",
+      "email": null,
+      "emailVerified": null,
+      "personId": null,
+      "personType": null,
+      "state": 0,
+      "createTime": "2018/08/08 10:57:33",
+      "updateTime": "2018/08/08 10:57:32",
+      "roles": [
+        {
+          "roleId": 2,
+          "roleName": "管理员",
+          "comments": null,
+          "isDelete": null,
+          "createTime": null,
+          "updateTime": null
+        },
+        {
+          "roleId": 3,
+          "roleName": "普通用户",
+          "comments": null,
+          "isDelete": null,
+          "createTime": null,
+          "updateTime": null
+        },
+        {
+          "roleId": 4,
+          "roleName": "TEST",
+          "comments": null,
+          "isDelete": null,
+          "createTime": null,
+          "updateTime": null
+        },
+        {
+          "roleId": 5,
+          "roleName": "test",
+          "comments": null,
+          "isDelete": null,
+          "createTime": null,
+          "updateTime": null
+        },
+        {
+          "roleId": 6,
+          "roleName": "TT",
+          "comments": null,
+          "isDelete": null,
+          "createTime": null,
+          "updateTime": null
+        },
+        {
+          "roleId": 7,
+          "roleName": "ydf",
+          "comments": null,
+          "isDelete": null,
+          "createTime": null,
+          "updateTime": null
+        },
+        {
+          "roleId": 8,
+          "roleName": "12",
+          "comments": null,
+          "isDelete": null,
+          "createTime": null,
+          "updateTime": null
+        },
+        {
+          "roleId": 9,
+          "roleName": "客户经理",
+          "comments": null,
+          "isDelete": null,
+          "createTime": null,
+          "updateTime": null
+        }
+      ]
+    }
+  ]
+}

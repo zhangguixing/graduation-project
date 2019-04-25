@@ -1,0 +1,345 @@
+{
+  "code": 0,
+  "msg": "",
+  "count": 30,
+  "data": [
+    {
+      "taskId": 1,
+      "taskname": "superadmin",
+      "source": "超级管理员",
+      "avatar": null,
+      "description": "男",
+      "target": "12345678901",
+      "email": null,
+      "emailVerified": null,
+      "personId": null,
+      "personType": null,
+      "state": 0,
+      "createTime": "2018/07/21 10:03:40",
+      "updateTime": "2018/07/21 10:55:02",
+      "roles": [
+        {
+          "roleId": 1,
+          "roleName": "超级管理员",
+          "comments": null,
+          "isDelete": null,
+          "createTime": null,
+          "updateTime": null
+        }
+      ]
+    },
+    {
+      "taskId": 2,
+      "taskname": "admin",
+      "source": "管理员",
+      "avatar": null,
+      "description": "男",
+      "target": "12345678901",
+      "email": null,
+      "emailVerified": null,
+      "personId": null,
+      "personType": null,
+      "state": 0,
+      "createTime": "2018/07/21 10:50:18",
+      "updateTime": "2018/07/31 15:53:12",
+      "roles": [
+        {
+          "roleId": 2,
+          "roleName": "管理员",
+          "comments": null,
+          "isDelete": null,
+          "createTime": null,
+          "updateTime": null
+        }
+      ]
+    },
+    {
+      "taskId": 3,
+      "taskname": "demo",
+      "source": "测试账号",
+      "avatar": null,
+      "description": "女",
+      "target": "12345678901",
+      "email": null,
+      "emailVerified": null,
+      "personId": null,
+      "personType": null,
+      "state": 0,
+      "createTime": "2018/07/21 10:50:27",
+      "updateTime": "2018/07/21 10:55:09",
+      "roles": [
+        {
+          "roleId": 3,
+          "roleName": "普通用户",
+          "comments": null,
+          "isDelete": null,
+          "createTime": null,
+          "updateTime": null
+        }
+      ]
+    },
+    {
+      "taskId": 5,
+      "taskname": "55",
+      "source": "55",
+      "avatar": null,
+      "description": "男",
+      "target": "13578789900",
+      "email": null,
+      "emailVerified": null,
+      "personId": null,
+      "personType": null,
+      "state": 0,
+      "createTime": "2018/07/31 17:28:07",
+      "updateTime": "2018/07/31 17:28:07",
+      "roles": [
+        {
+          "roleId": 3,
+          "roleName": "普通用户",
+          "comments": null,
+          "isDelete": null,
+          "createTime": null,
+          "updateTime": null
+        }
+      ]
+    },
+    {
+      "taskId": 6,
+      "taskname": "ggg",
+      "source": "ggg",
+      "avatar": null,
+      "description": "男",
+      "target": "11111111111",
+      "email": null,
+      "emailVerified": null,
+      "personId": null,
+      "personType": null,
+      "state": 0,
+      "createTime": "2018/08/01 16:12:12",
+      "updateTime": "2018/08/01 16:12:12",
+      "roles": [
+        {
+          "roleId": 4,
+          "roleName": "TEST",
+          "comments": null,
+          "isDelete": null,
+          "createTime": null,
+          "updateTime": null
+        }
+      ]
+    },
+    {
+      "taskId": 7,
+      "taskname": "qwwww",
+      "source": "qwwww",
+      "avatar": null,
+      "description": "男",
+      "target": "11111111111",
+      "email": null,
+      "emailVerified": null,
+      "personId": null,
+      "personType": null,
+      "state": 0,
+      "createTime": "2018/08/01 16:12:49",
+      "updateTime": "2018/08/01 16:12:49",
+      "roles": [
+        {
+          "roleId": 3,
+          "roleName": "普通用户",
+          "comments": null,
+          "isDelete": null,
+          "createTime": null,
+          "updateTime": null
+        }
+      ]
+    },
+    {
+      "taskId": 8,
+      "taskname": "aa",
+      "source": "aa",
+      "avatar": null,
+      "description": "男",
+      "target": "13665698989",
+      "email": null,
+      "emailVerified": null,
+      "personId": null,
+      "personType": null,
+      "state": 0,
+      "createTime": "2018/08/02 12:02:39",
+      "updateTime": "2018/08/02 12:02:39",
+      "roles": [
+        {
+          "roleId": 2,
+          "roleName": "管理员",
+          "comments": null,
+          "isDelete": null,
+          "createTime": null,
+          "updateTime": null
+        }
+      ]
+    },
+    {
+      "taskId": 9,
+      "taskname": "aaa",
+      "source": "aaa",
+      "avatar": null,
+      "description": "女",
+      "target": "18622222222",
+      "email": null,
+      "emailVerified": null,
+      "personId": null,
+      "personType": null,
+      "state": 0,
+      "createTime": "2018/08/03 14:36:42",
+      "updateTime": "2018/08/03 14:36:41",
+      "roles": [
+        {
+          "roleId": 2,
+          "roleName": "管理员",
+          "comments": null,
+          "isDelete": null,
+          "createTime": null,
+          "updateTime": null
+        },
+        {
+          "roleId": 3,
+          "roleName": "普通用户",
+          "comments": null,
+          "isDelete": null,
+          "createTime": null,
+          "updateTime": null
+        },
+        {
+          "roleId": 4,
+          "roleName": "TEST",
+          "comments": null,
+          "isDelete": null,
+          "createTime": null,
+          "updateTime": null
+        },
+        {
+          "roleId": 5,
+          "roleName": "test",
+          "comments": null,
+          "isDelete": null,
+          "createTime": null,
+          "updateTime": null
+        },
+        {
+          "roleId": 6,
+          "roleName": "TT",
+          "comments": null,
+          "isDelete": null,
+          "createTime": null,
+          "updateTime": null
+        }
+      ]
+    },
+    {
+      "taskId": 10,
+      "taskname": "12",
+      "source": "12",
+      "avatar": null,
+      "description": "男",
+      "target": "12111111111",
+      "email": null,
+      "emailVerified": null,
+      "personId": null,
+      "personType": null,
+      "state": 0,
+      "createTime": "2018/08/03 14:37:49",
+      "updateTime": "2018/08/03 14:37:48",
+      "roles": [
+        {
+          "roleId": 2,
+          "roleName": "管理员",
+          "comments": null,
+          "isDelete": null,
+          "createTime": null,
+          "updateTime": null
+        }
+      ]
+    },
+    {
+      "taskId": 11,
+      "taskname": "haha",
+      "source": "12",
+      "avatar": null,
+      "description": "男",
+      "target": "13512121212",
+      "email": null,
+      "emailVerified": null,
+      "personId": null,
+      "personType": null,
+      "state": 0,
+      "createTime": "2018/08/08 10:57:33",
+      "updateTime": "2018/08/08 10:57:32",
+      "roles": [
+        {
+          "roleId": 2,
+          "roleName": "管理员",
+          "comments": null,
+          "isDelete": null,
+          "createTime": null,
+          "updateTime": null
+        },
+        {
+          "roleId": 3,
+          "roleName": "普通用户",
+          "comments": null,
+          "isDelete": null,
+          "createTime": null,
+          "updateTime": null
+        },
+        {
+          "roleId": 4,
+          "roleName": "TEST",
+          "comments": null,
+          "isDelete": null,
+          "createTime": null,
+          "updateTime": null
+        },
+        {
+          "roleId": 5,
+          "roleName": "test",
+          "comments": null,
+          "isDelete": null,
+          "createTime": null,
+          "updateTime": null
+        },
+        {
+          "roleId": 6,
+          "roleName": "TT",
+          "comments": null,
+          "isDelete": null,
+          "createTime": null,
+          "updateTime": null
+        },
+        {
+          "roleId": 7,
+          "roleName": "ydf",
+          "comments": null,
+          "isDelete": null,
+          "createTime": null,
+          "updateTime": null
+        },
+        {
+          "roleId": 8,
+          "roleName": "12",
+          "comments": null,
+          "isDelete": null,
+          "createTime": null,
+          "updateTime": null
+        },
+        {
+          "roleId": 9,
+          "roleName": "客户经理",
+          "comments": null,
+          "isDelete": null,
+          "createTime": null,
+          "updateTime": null
+        }
+      ]
+    }
+  ]
+}

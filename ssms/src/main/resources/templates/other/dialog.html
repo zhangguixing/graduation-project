@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>admin风格的弹窗</title>
+    <link rel="stylesheet" href="../../assets/libs/layui/css/layui.css"/>
+    <link rel="stylesheet" href="../../assets/css/admin.css"/>
+</head>
+<body>
+
+<!-- 正文开始 -->
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-body layui-form text-center" style="padding: 80px 20px;">
+
+            <button id="btn1" class="layui-btn">表单弹窗</button>
+
+            <button id="btn2" class="layui-btn">最大最小化</button>
+
+            <button id="btn3" class="layui-btn">确认弹窗</button>
+
+            <br><br><br>
+
+            <button id="btn4" class="layui-btn">更改主题弹窗标题颜色也会跟着变</button>
+
+        </div>
+    </div>
+</div>
+
+<!-- js部分 -->
+<script type="text/javascript" src="../../assets/libs/layui/layui.js"></script>
+<script type="text/javascript" src="../../assets/js/common.js"></script>
+<script>
+    layui.use(['layer', 'admin'], function () {
+        var $ = layui.jquery;
+        var layer = layui.layer;
+        var admin = layui.admin;
+
+        $('#btn1').click(function () {
+            top.layui.admin.open({
+                type: 2,
+                title: '修改密码',
+                shade: 0,
+                content: '/tpl/password'
+            });
+        });
+
+        $('#btn2').click(function () {
+            top.layui.admin.open({
+                type: 2,
+                title: '百度一下',
+                shade: 0,
+                maxmin: true,
+                content: 'http://baidu.com'
+            });
+        });
+
+        $('#btn3').click(function () {
+            top.layer.confirm('确认删除吗？', {
+                skin: 'layui-layer-admin'
+            }, function (index) {
+                top.layer.close(index);
+                layer.msg('点击了确定');
+            });
+        });
+
+        $('#btn4').click(function () {
+            top.layer.confirm('确认删除吗？', {
+                skin: 'layui-layer-admin',
+                shade: 0
+            }, function (index) {
+                top.layer.close(index);
+                layer.msg('点击了确定');
+            });
+        });
+
+    });
+</script>
+</body>
+</html>
