@@ -3,15 +3,20 @@ package com.ssms.model;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
+import lombok.Data;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
 /**
- * 用户表
+ * @Author Guixing
+ * @Date 2019/4/26 13:05
+ * @Description 用户表
  */
+@Data
 @TableName("sys_user")
-public class User {
+public class User implements Serializable {
     @TableId
     private Integer userId;  // 主键id
 
@@ -29,11 +34,15 @@ public class User {
 
     private String email;  // 邮箱
 
-    private Integer emailVerified;  // 邮箱是否验证
+    private Integer personType;  // 人员类型，比如：0超级管理员，1管理员，2教师，3学生
 
-    private Integer personId;  // 人员id，关联学生表和教师表
+    private Integer collegeId;  // 所属学院id
 
-    private Integer personType;  // 人员类型，比如：0学生，1教师
+    private Integer subjectId;  // 所属专业id
+
+    private Integer classId;  // 所属年级id
+
+    private Integer gradeId;  // 邮箱
 
     private Integer state;  // 用户状态，0正常，1锁定
 
@@ -43,124 +52,4 @@ public class User {
 
     @TableField(exist = false)
     private List<Role> roles;  //角色
-
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getNickName() {
-        return nickName;
-    }
-
-    public void setNickName(String nickName) {
-        this.nickName = nickName;
-    }
-
-    public String getAvatar() {
-        return avatar;
-    }
-
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
-    }
-
-    public String getSex() {
-        return sex;
-    }
-
-    public void setSex(String sex) {
-        this.sex = sex;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public Integer getEmailVerified() {
-        return emailVerified;
-    }
-
-    public void setEmailVerified(Integer emailVerified) {
-        this.emailVerified = emailVerified;
-    }
-
-    public Integer getPersonId() {
-        return personId;
-    }
-
-    public void setPersonId(Integer personId) {
-        this.personId = personId;
-    }
-
-    public Integer getPersonType() {
-        return personType;
-    }
-
-    public void setPersonType(Integer personType) {
-        this.personType = personType;
-    }
-
-    public Integer getState() {
-        return state;
-    }
-
-    public void setState(Integer state) {
-        this.state = state;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
-
-    public List<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(List<Role> roles) {
-        this.roles = roles;
-    }
 }

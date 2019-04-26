@@ -2,14 +2,19 @@ package com.ssms.model;
 
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
+import lombok.Data;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 权限表
+ * @Author Guixing
+ * @Date 2019/4/26 13:05
+ * @Description 权限表
  */
+@Data
 @TableName("sys_authorities")
-public class Authorities {
+public class Authorities implements Serializable {
     @TableId
     private Integer authorityId;  // 权限id
 
@@ -30,84 +35,4 @@ public class Authorities {
     private Date createTime;  // 创建时间
 
     private Date updateTime;  // 修改时间
-
-    public String getAuthority() {
-        return authority;
-    }
-
-    public void setAuthority(String authority) {
-        this.authority = authority;
-    }
-
-    public String getMenuUrl() {
-        return menuUrl;
-    }
-
-    public void setMenuUrl(String menuUrl) {
-        this.menuUrl = menuUrl;
-    }
-
-    public String getAuthorityName() {
-        return authorityName;
-    }
-
-    public void setAuthorityName(String authorityName) {
-        this.authorityName = authorityName;
-    }
-
-    public Integer getAuthorityId() {
-        return authorityId;
-    }
-
-    public void setAuthorityId(Integer authorityId) {
-        this.authorityId = authorityId;
-    }
-
-    public Integer getParentId() {
-        return parentId;
-    }
-
-    public void setParentId(Integer parentId) {
-        this.parentId = parentId;
-    }
-
-    public Integer getIsMenu() {
-        return isMenu;
-    }
-
-    public void setIsMenu(Integer isMenu) {
-        this.isMenu = isMenu;
-    }
-
-    public Integer getOrderNumber() {
-        return orderNumber;
-    }
-
-    public void setOrderNumber(Integer orderNumber) {
-        this.orderNumber = orderNumber;
-    }
-
-    public String getMenuIcon() {
-        return menuIcon;
-    }
-
-    public void setMenuIcon(String menuIcon) {
-        this.menuIcon = menuIcon;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
 }

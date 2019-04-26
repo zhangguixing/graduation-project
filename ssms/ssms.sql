@@ -1,4 +1,4 @@
-﻿/*
+/*
 Navicat MySQL Data Transfer
 
 Source Server         : mysql
@@ -10,10 +10,114 @@ Target Server Type    : MYSQL
 Target Server Version : 50562
 File Encoding         : 65001
 
-Date: 2019-04-25 16:34:18
+Date: 2019-04-26 14:37:03
 */
 
 SET FOREIGN_KEY_CHECKS=0;
+
+-- ----------------------------
+-- Table structure for info_college_subject_class
+-- ----------------------------
+DROP TABLE IF EXISTS `info_college_subject_class`;
+CREATE TABLE `info_college_subject_class` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '学院/专业/班级id',
+  `name` varchar(20) NOT NULL COMMENT '学院/专业/班级名称',
+  `parent_id` int(11) NOT NULL DEFAULT '0' COMMENT '父id，值为0表示学院，否则表示父id',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
+  `update_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '状态，0删除，1正常',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of info_college_subject_class
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for info_course
+-- ----------------------------
+DROP TABLE IF EXISTS `info_course`;
+CREATE TABLE `info_course` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '课程id',
+  `name` varchar(20) NOT NULL COMMENT '课程名称',
+  `class_time` varchar(255) DEFAULT NULL COMMENT '上课时间json串',
+  `room_id` int(11) NOT NULL DEFAULT '0' COMMENT '教室id',
+  `teacher_id` int(11) NOT NULL COMMENT '教师id',
+  `teacher_name` varchar(20) DEFAULT NULL COMMENT '教师名称',
+  `college_id` int(11) NOT NULL COMMENT '所属学院id',
+  `subject_id` int(11) NOT NULL COMMENT '所属专业id',
+  `class_id` int(11) NOT NULL COMMENT '所属班级id',
+  `grade_id` int(11) NOT NULL COMMENT '所属年级id',
+  `school_year` varchar(10) NOT NULL COMMENT '学年，2019-2020',
+  `semester` tinyint(1) NOT NULL COMMENT '学期，1上学期，2下学期',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
+  `update_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '状态，0删除，1正常',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of info_course
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for info_grade
+-- ----------------------------
+DROP TABLE IF EXISTS `info_grade`;
+CREATE TABLE `info_grade` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '年级id',
+  `name` varchar(20) NOT NULL COMMENT '年级名称',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
+  `update_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '状态，0删除，1正常',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of info_grade
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for info_room
+-- ----------------------------
+DROP TABLE IF EXISTS `info_room`;
+CREATE TABLE `info_room` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '教室id',
+  `name` varchar(20) NOT NULL COMMENT '教室名称',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
+  `update_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '状态，0删除，1正常',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of info_room
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for info_score
+-- ----------------------------
+DROP TABLE IF EXISTS `info_score`;
+CREATE TABLE `info_score` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '成绩id',
+  `score` decimal(5,2) DEFAULT NULL COMMENT '分数，保留两位小数',
+  `course_id` int(11) NOT NULL COMMENT '课程id',
+  `student_id` int(11) NOT NULL COMMENT '学生id',
+  `college_id` int(11) NOT NULL COMMENT '所属学院id',
+  `subject_id` int(11) NOT NULL COMMENT '所属专业id',
+  `class_id` int(11) NOT NULL COMMENT '所属班级id',
+  `grade_id` int(11) NOT NULL COMMENT '所属年级id',
+  `school_year` varchar(10) NOT NULL COMMENT '学年，2019-2020',
+  `semester` tinyint(1) NOT NULL COMMENT '学期，1上学期，2下学期',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
+  `update_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '状态，0删除，1正常',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of info_score
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for sys_authorities
@@ -73,6 +177,42 @@ INSERT INTO `sys_authorities` VALUES ('51', '下拉菜单', '', '/other/dropdown
 INSERT INTO `sys_authorities` VALUES ('52', '通知消息', '', '/other/notice', '50', '0', '2', '', '2018-11-20 14:09:28', '2018-11-20 14:09:28');
 INSERT INTO `sys_authorities` VALUES ('53', '风格弹窗', '', '/other/dialog', '50', '0', '3', '', '2018-11-20 14:09:58', '2018-11-20 14:09:58');
 INSERT INTO `sys_authorities` VALUES ('67', '调度管理', '', 'migration/dispatch', '47', '0', '3', '', '2019-03-15 13:57:16', '2019-03-15 13:57:16');
+
+-- ----------------------------
+-- Table structure for sys_information
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_information`;
+CREATE TABLE `sys_information` (
+  `id` int(11) NOT NULL COMMENT '系统信息id',
+  `message` varchar(50) DEFAULT NULL COMMENT '系统欢迎信息',
+  `school_name` varchar(20) DEFAULT NULL COMMENT '学校名称',
+  `developer_name` varchar(20) DEFAULT NULL COMMENT '系统开发者',
+  `information` text COMMENT '系统简介',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
+  `update_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of sys_information
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for sys_notice
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_notice`;
+CREATE TABLE `sys_notice` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '公告id',
+  `content` text COMMENT '公告内容',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
+  `update_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `status` tinyint(4) NOT NULL DEFAULT '1' COMMENT '内容状态，0删除，1正常',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of sys_notice
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for sys_role
@@ -200,9 +340,11 @@ CREATE TABLE `sys_user` (
   `sex` varchar(1) NOT NULL DEFAULT '男' COMMENT '性别',
   `phone` varchar(12) DEFAULT NULL COMMENT '手机号',
   `email` varchar(100) DEFAULT NULL COMMENT '邮箱',
-  `email_verified` int(11) DEFAULT NULL COMMENT '邮箱是否验证，0未验证，1已验证',
-  `person_id` varchar(8) DEFAULT NULL COMMENT '人员id,关联person表',
-  `person_type` int(11) DEFAULT NULL COMMENT '人员类型,比如:0学生,1教师',
+  `person_type` tinyint(11) DEFAULT NULL COMMENT '人员类型，比如：0超级管理员，1管理员，2教师，3学生',
+  `college_id` int(11) NOT NULL COMMENT '所属学院id',
+  `subject_id` int(11) NOT NULL COMMENT '所属专业id',
+  `class_id` int(11) NOT NULL COMMENT '所属班级id',
+  `grade_id` int(11) NOT NULL COMMENT '所属年级id',
   `state` int(1) NOT NULL DEFAULT '0' COMMENT '状态，0正常，1冻结',
   `create_time` datetime NOT NULL COMMENT '注册时间',
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
@@ -213,10 +355,10 @@ CREATE TABLE `sys_user` (
 -- ----------------------------
 -- Records of sys_user
 -- ----------------------------
-INSERT INTO `sys_user` VALUES ('1', 'superadmin', '2d4d426bb63055bfdc17bed0d10792b7', '超级管理员', null, '男', '12345678901', null, null, null, null, '0', '2018-07-21 10:03:40', '2019-02-21 18:58:05');
-INSERT INTO `sys_user` VALUES ('2', 'admin', '3fed7a346e430ea4c2aa10250928f4de', '管理员', null, '男', '12345678901', null, null, null, null, '0', '2018-07-21 10:50:18', '2018-07-21 10:55:05');
-INSERT INTO `sys_user` VALUES ('6', 'teacher', '629a1bf631c5ee1e898e1cd283e5c156', '教师账号', null, '女', '18849334210', null, null, null, null, '0', '2019-04-25 15:30:49', '2019-04-25 15:30:49');
-INSERT INTO `sys_user` VALUES ('7', 'student', '7b5470e577dc3c5750d1a9f49ae660a3', '学生账号', null, '男', '18849334210', null, null, null, null, '0', '2019-04-25 15:31:11', '2019-04-25 15:31:11');
+INSERT INTO `sys_user` VALUES ('1', 'superadmin', '2d4d426bb63055bfdc17bed0d10792b7', '超级管理员', null, '男', '12345678901', null, null, '0', '0', '0', '0', '0', '2018-07-21 10:03:40', '2019-02-21 18:58:05');
+INSERT INTO `sys_user` VALUES ('2', 'admin', '3fed7a346e430ea4c2aa10250928f4de', '管理员', null, '男', '12345678901', null, null, '0', '0', '0', '0', '0', '2018-07-21 10:50:18', '2018-07-21 10:55:05');
+INSERT INTO `sys_user` VALUES ('6', 'teacher', '629a1bf631c5ee1e898e1cd283e5c156', '教师账号', null, '女', '18849334210', null, null, '0', '0', '0', '0', '0', '2019-04-25 15:30:49', '2019-04-25 15:30:49');
+INSERT INTO `sys_user` VALUES ('7', 'student', '7b5470e577dc3c5750d1a9f49ae660a3', '学生账号', null, '男', '18849334210', null, null, '0', '0', '0', '0', '0', '2019-04-25 15:31:11', '2019-04-25 15:31:11');
 
 -- ----------------------------
 -- Table structure for sys_user_role
