@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ssms.dao.ScoreMapper">
+
+    <select id="listScore" resultType="java.util.HashMap">
+        SELECT
+            s.id,
+            s.college_id AS collegeId,
+            s.subject_id AS subjectId,
+            s.class_id AS classId,
+            u.username,
+            u.nick_name AS nickName,
+            sum(s.score) AS totalScore,
+            s.school_year AS schoolYear,
+            s.semester,
+            s.update_time AS updateTime
+        FROM
+            info_score s
+        LEFT JOIN sys_user u ON s.user_id = u.user_id
+        <where>
+            <if test="collegeId != null">
+                AND s.college_id=#{collegeId}
+            </if>
+            <if test="subjectId != null">
+                AND s.subject_id=#{subjectId}
+            </if>
+            <if test="classId != null">
+                AND s.class_id=#{classId}
+            </if>
+            <if test="schoolYear != null">
+                AND s.school_year=#{schoolYear}
+            </if>
+            <if test="semester != null">
+                AND s.semester=#{semester}
+            </if>
+            AND s.status=1 AND u.state=0
+        </where>
+        ORDER BY totalScore DESC
+    </select>
+
+    <select id="listDefaultScore" resultType="java.util.HashMap">
+        SELECT
+            s.id,
+            s.college_id AS collegeId,
+            s.subject_id AS subjectId,
+            s.class_id AS classId,
+            u.username,
+            u.nick_name AS nickName,
+            SUM(s.score) AS totalScore,
+            MAX(s.school_year) AS schoolYear,
+            s.semester,
+            s.update_time AS updateTime
+        FROM
+           info_score s
+        LEFT JOIN sys_user u ON s.user_id = u.user_id
+        <where>
+            <if test="collegeId != null">
+                AND s.college_id=#{collegeId}
+            </if>
+            <if test="subjectId != null">
+                AND s.subject_id=#{subjectId}
+            </if>
+            <if test="classId != null">
+                AND s.class_id=#{classId}
+            </if>
+            AND s.status=1 AND u.state=0
+        </where>
+        GROUP BY s.school_year
+        HAVING s.school_year=schoolYear
+        ORDER BY totalScore DESC
+    </select>
+</mapper>

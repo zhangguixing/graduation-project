@@ -17,6 +17,12 @@ import java.util.List;
 @Data
 @TableName("sys_user")
 public class User implements Serializable {
+
+    public static final Integer SUPER_ADMIN_TYPE = 0;     //超级管理员
+    public static final Integer ADMIN_TYPE = 1;     //管理员
+    public static final Integer TEACHER_TYPE = 2;   //教师
+    public static final Integer STUDENT_TYPE = 3;   //学生
+
     @TableId
     private Integer userId;  // 主键id
 

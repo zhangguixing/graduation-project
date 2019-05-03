@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>分析型成绩管理系统</title>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="/assets/libs/layui/css/layui.css"/>
+    <link rel="stylesheet" href="/assets/css/admin.css" media="all"/>
+</head>
+
+<body>
+
+<!-- 加载动画，移除位置在common.js中 -->
+<div class="page-loading">
+    <div class="rubik-loader"></div>
+</div>
+
+<!-- 正文开始 -->
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <div class="layui-form toolbar">
+                <div class="layui-form-item">
+                    <div class="layui-inline" style="padding-left: 20px;">
+                        <select id="collegeId" name="collegeId" lay-filter="collegeId">
+                            <option value="">请选择学院</option>
+                        </select>
+                    </div>
+                    <div class="layui-inline" style="padding-left: 20px;">
+                        <select id="subjectId" name="subjectId" lay-filter="subjectId">
+                            <option value="">请选择专业</option>
+                        </select>
+                    </div>
+                    <div class="layui-inline" style="padding-left: 20px;">
+                        <select id="classId" name="classId" lay-filter="classId">
+                            <option value="">请选择班级</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <table class="layui-table" id="score-table" lay-filter="score-table"></table>
+        </div>
+    </div>
+
+</div>
+
+<!-- js部分 -->
+<script type="text/javascript" src="/assets/libs/layui/layui.js"></script>
+<script type="text/javascript" src="/assets/js/common.js"></script>
+<script type="text/javascript" src="/assets/js/collegeSubjectClass.js"></script>
+
+<script>
+    layui.use(['layer', 'form', 'table', 'util', 'laydate', 'admin'], function () {
+        var $ = layui.jquery;
+        var layer = layui.layer;
+        var form = layui.form;
+        var table = layui.table;
+        var util = layui.util;
+        var laydate = layui.laydate;
+        var admin = layui.admin;
+
+        form.render('select');
+
+        // 渲染表格
+        var ins1 = table.render({
+            elem: '#score-table',
+            method: 'GET',
+            url: '/score/all',
+            page: true,
+            cols: [[
+                {type: 'checkbox'},
+                {field: 'id', hide: true},
+                {field: 'collegeId', hide: true},
+                {field: 'subjectId', hide: true},
+                {field: 'classId', hide: true},
+                {field: 'index', align: 'center', sort: true, title: '排名'},
+                {field: 'username', align: 'center', sort: true, title: '学号'},
+                {field: 'nickName', align: 'center', sort: true, title: '姓名'},
+                {field: 'totalScore', align: 'center', sort: true, title: '总成绩'},
+                {field: 'schoolYear', align: 'center', sort: true, title: '学年'},
+                {
+                    align: 'center', sort: true,templet:function (d) {
+                        if(d.semester==1){
+                            return '上学期';
+                        }else if(d.semester==2){
+                            return '下学期';
+                        }else {
+                            return '未知';
+                        }
+                    },title: '学期'
+                },
+                {field: 'updateTime', align: 'center', sort: true, title: '日期'},
+            ]],
+            skin: 'line',
+            size: 'lg',
+            response: {
+                statusCode: 200
+            },
+            parseData: function (res) {
+                return {
+                    "count": res.data.total,
+                    "code": res.code,
+                    "data": res.data.list
+                };
+            },
+            request: {
+                pageName: 'pageNum', // 页码的参数名称，默认：page
+                limitName: 'pageSize' // 每页数据量的参数名，默认：limit
+            }
+        });
+
+        //监听工具条
+        table.on('tool(score-table)', function (obj) {
+            var data = obj.data; //获得当前行数据
+            var layEvent = obj.event; //获得 lay-event 对应的值
+
+           if (layEvent === 'edit') {
+                //渲染下拉框，学院、专业、班级下拉框
+                renderCollegeList();
+                renderSubjectList(data.collegeId);
+                renderClassList(data.classId);
+                //回显数据
+                selectCollege(data);
+                selectSubject(data);
+                selectClass(data);
+                //展示数据
+                showEditModel(data);
+            } else if (layEvent === 'del') {
+                table.reload('score-table');
+                layer.msg("操作成功", {icon: 1});
+                $.ajax({
+                    type: 'delete',
+                    url: '/score/' + data.id,
+                    success: function (data) {
+                        layer.closeAll('loading');
+                        if (data.code == 200) {
+
+                        } else {
+                            layer.msg("操作失败", {icon: 2});
+                            $(obj.elem).prop('checked', !obj.elem.checked);
+                            form.render('checkbox');
+                        }
+                    }
+                });
+            }
+        });
+
+        //加载学院下拉框
+        renderCollegeList();
+
+        //选择学院触发时间
+        form.on('select(collegeId)', function (data) {
+            if ($("#collegeId option:selected").val() != "") {
+                renderSubjectList(data.value);
+                //TODO 查询学生信息
+            }
+        });
+        //选择学院触发时间
+        form.on('select(subjectId)', function (data) {
+            if ($("#subjectId option:selected").val() != "") {
+                renderClassList(data.value);
+                //TODO 查询学生信息
+            }
+        });
+        //选择学院触发时间
+        form.on('select(classId)', function (data) {
+            if ($("#classId option:selected").val() != "") {
+                //TODO 查询学生信息
+            }
+        });
+
+        // 选择数据源树取消按钮
+        $('.closeDialog').click(function () {
+            layer.close(index);
+        });
+    });
+
+</script>
+</body>
+</html>

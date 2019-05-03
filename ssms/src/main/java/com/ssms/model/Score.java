@@ -37,6 +37,8 @@ public class Score implements Serializable {
 
     private Integer semester;   //学期 1上学期，2下学期
 
+    private Integer userId;     //用户id
+
     private Date createTime;  // 创建时间
 
     private Date updateTime;  // 修改时间
