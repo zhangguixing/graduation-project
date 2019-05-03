@@ -1,10 +1,13 @@
 package com.ssms.util;
 
+import lombok.Data;
+
 import java.util.List;
 
 /**
  * 分页结果对象,这里以layui框架的table为标准
  */
+@Data
 public class PageResult<T> {
 
     private int code; //状态码, 0表示成功
@@ -32,37 +35,8 @@ public class PageResult<T> {
         this.msg = "";
     }
 
-    public int getCode() {
-        return code;
-    }
-
-    public void setCode(int code) {
-        this.code = code;
-    }
-
-    public String getMsg() {
-        return msg;
-    }
-
-    public void setMsg(String msg) {
-        this.msg = msg;
-    }
-
-    public long getCount() {
-        return count;
-    }
-
-    public void setCount(long count) {
-        this.count = count;
-    }
-
-    public List<T> getData() {
-        return data;
-    }
-
     public void setData(List<T> data) {
         this.data = data;
         this.count = data.size();
     }
-
 }

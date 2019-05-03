@@ -6,7 +6,8 @@ layui.config({
     treetable: 'treetable-lay/treetable',
     dropdown: 'dropdown/dropdown',
     notice: 'notice/notice',
-    step: 'step-lay/step'
+    step: 'step-lay/step',
+    collegeSelect:'collegeSelect'
 }).use(['layer'], function () {
     var $ = layui.jquery;
     var layer = layui.layer;

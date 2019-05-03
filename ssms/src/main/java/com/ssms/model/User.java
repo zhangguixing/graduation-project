@@ -3,6 +3,7 @@ package com.ssms.model;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -17,6 +18,12 @@ import java.util.List;
 @Data
 @TableName("sys_user")
 public class User implements Serializable {
+
+    public static final Integer SUPER_ADMIN_TYPE = 0;     //超级管理员
+    public static final Integer ADMIN_TYPE = 1;     //管理员
+    public static final Integer TEACHER_TYPE = 2;   //教师
+    public static final Integer STUDENT_TYPE = 3;   //学生
+
     @TableId
     private Integer userId;  // 主键id
 
@@ -46,8 +53,10 @@ public class User implements Serializable {
 
     private Integer state;  // 用户状态，0正常，1锁定
 
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     private Date createTime;  // 注册时间
 
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     private Date updateTime;  // 修改时间
 
     @TableField(exist = false)

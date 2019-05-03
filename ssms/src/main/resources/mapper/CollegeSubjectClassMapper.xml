@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ssms.dao.CollegeSubjectClassMapper">
+
+    <select id="findByParentId" parameterType="Integer" resultType="com.ssms.model.CollegeSubjectClass">
+        SELECT id,name,parent_id,type_number FROM info_college_subject_class WHERE parent_id=#{parentId}
+    </select>
+
+    <select id="listCollegeAndSubject" resultType="com.ssms.model.CollegeSubjectClass">
+        SELECT * FROM info_college_subject_class WHERE type_number IN (0,1)
+    </select>
+</mapper>
