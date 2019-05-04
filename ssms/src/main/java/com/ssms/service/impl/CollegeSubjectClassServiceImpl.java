@@ -1,17 +1,16 @@
 package com.ssms.service.impl;
 
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.ssms.dao.CollegeSubjectClassMapper;
-import com.ssms.exception.BusinessException;
-import com.ssms.model.Authorities;
-import com.ssms.model.CollegeSubjectClass;
-import com.ssms.model.RoleAuthorities;
-import com.ssms.service.CollegeSubjectClassService;
+import java.util.Date;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.ssms.dao.CollegeSubjectClassMapper;
+import com.ssms.exception.BusinessException;
+import com.ssms.model.CollegeSubjectClass;
+import com.ssms.service.CollegeSubjectClassService;
 
 @Service
 public class CollegeSubjectClassServiceImpl implements CollegeSubjectClassService {
@@ -53,5 +52,4 @@ public class CollegeSubjectClassServiceImpl implements CollegeSubjectClassServic
         }
         return true;
     }
-
 }

@@ -1,8 +1,9 @@
 package com.ssms.controller;
 
+import com.ssms.common.BaseController;
 import com.ssms.model.Authorities;
 import com.ssms.service.AuthoritiesService;
-import com.ssms.util.JsonResult;
+import com.ssms.common.JsonResult;
 import com.ssms.util.StringUtil;
 import com.wf.captcha.utils.CaptchaUtil;
 import org.apache.shiro.SecurityUtils;

@@ -13,7 +13,7 @@ import com.ssms.model.User;
 import com.ssms.model.UserRole;
 import com.ssms.service.UserService;
 import com.ssms.conifg.shiro.EndecryptUtil;
-import com.ssms.util.PageResult;
+import com.ssms.common.PageResult;
 import com.ssms.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

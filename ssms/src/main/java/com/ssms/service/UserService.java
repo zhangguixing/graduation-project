@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.service.IService;
 import com.ssms.exception.BusinessException;
 import com.ssms.exception.ParameterException;
 import com.ssms.model.User;
-import com.ssms.util.PageResult;
+import com.ssms.common.PageResult;
 
 public interface UserService extends IService<User> {
 

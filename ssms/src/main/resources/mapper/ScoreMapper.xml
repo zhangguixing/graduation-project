@@ -32,6 +32,16 @@
             <if test="semester != null">
                 AND s.semester=#{semester}
             </if>
+            <if test="searchKey != null">
+                <choose>
+                    <when test="searchKey == 'username'">
+                        AND u.username=#{searchValue}
+                    </when>
+                    <when test="searchKey == 'nick_name'">
+                        AND u.nick_name=#{searchValue}
+                    </when>
+                </choose>
+            </if>
             AND s.status=1 AND u.state=0
         </where>
         ORDER BY totalScore DESC
@@ -60,6 +70,16 @@
             </if>
             <if test="classId != null">
                 AND s.class_id=#{classId}
+            </if>
+            <if test="searchKey != null">
+                <choose>
+                    <when test="searchKey == 'username'">
+                        AND u.username=#{searchValue}
+                    </when>
+                    <when test="searchKey == 'nick_name'">
+                        AND u.nick_name=#{searchValue}
+                    </when>
+                </choose>
             </if>
             AND s.status=1 AND u.state=0
         </where>

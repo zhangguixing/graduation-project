@@ -1,10 +1,12 @@
 package com.ssms.controller;
 
+import com.ssms.common.BaseController;
+import com.ssms.common.CommonResponse;
+import com.ssms.common.ResponseUtil;
 import com.ssms.model.CollegeSubjectClass;
 import com.ssms.service.CollegeSubjectClassService;
-import com.ssms.util.JsonResult;
-import com.ssms.util.PageResult;
-import com.ssms.util.ResponseResult;
+import com.ssms.common.JsonResult;
+import com.ssms.common.PageResult;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -28,10 +30,11 @@ public class CollegeSubjectClassController extends BaseController {
     public String college(Model model){
         return "system/college.html";
     }
+
     @ResponseBody
     @GetMapping("getCollegeSubjectClassByParentId/{parentId}")
-    public ResponseResult getCollegeSubjectClassByParentId(@PathVariable Integer parentId){
-        return ResponseResult.ok(collegeSubjectClassService.getCollegeSubjectClassByParentId(parentId));
+    public CommonResponse getCollegeSubjectClassByParentId(@PathVariable Integer parentId){
+        return ResponseUtil.generateResponse(collegeSubjectClassService.getCollegeSubjectClassByParentId(parentId));
     }
 
     @GetMapping("editForm")
@@ -90,5 +93,4 @@ public class CollegeSubjectClassController extends BaseController {
         }
         return JsonResult.error("删除失败");
     }
-
 }

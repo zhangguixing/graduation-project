@@ -7,6 +7,21 @@ layui.define(["layer","jquery","form"],function (exports) {
     var $ = layui.jquery;
 
     var obj = {
+        //渲染年级下拉框
+        renderGradeList:function() {
+            $('#gradeId').html('<option value="">请选择年级</option>');
+            $.ajax({
+                url:'/grade/list',
+                type:'GET',
+                success:function(res){
+                    if(res.code == 200){
+                        $.each(res.data,function (index, grade) {
+                            $('#gradeId').append($('<option>').val(grade.id).text(grade.name))
+                        })
+                    }
+                }
+            });
+        },
         //渲染学院下拉框
         renderCollegeList:function() {
             $('#collegeId').html('<option value="" selected="selected">请选择学院</option>');

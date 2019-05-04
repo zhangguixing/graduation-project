@@ -1,4 +1,4 @@
-package com.ssms.controller;
+package com.ssms.common;
 
 import com.ssms.model.User;
 import org.apache.shiro.SecurityUtils;
@@ -6,7 +6,6 @@ import org.apache.shiro.subject.Subject;
 
 /**
  * Controller基类
- * Created by wangfan on 2018-02-22 上午 11:29
  */
 public class BaseController {
 

@@ -1,11 +1,12 @@
 package com.ssms.controller;
 
+import com.ssms.common.BaseController;
 import com.ssms.model.Authorities;
 import com.ssms.model.Role;
 import com.ssms.service.AuthoritiesService;
 import com.ssms.service.RoleService;
-import com.ssms.util.JsonResult;
-import com.ssms.util.PageResult;
+import com.ssms.common.JsonResult;
+import com.ssms.common.PageResult;
 import com.ssms.util.ReflectUtil;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;

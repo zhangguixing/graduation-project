@@ -1,8 +1,10 @@
 package com.ssms.controller;
 
+import com.ssms.common.BaseController;
+import com.ssms.common.CommonResponse;
+import com.ssms.common.ResponseUtil;
 import com.ssms.model.User;
 import com.ssms.service.ScoreService;
-import com.ssms.util.ResponseResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,6 +33,7 @@ public class ScoreController extends BaseController {
         if(loginUser.getPersonType().equals(User.STUDENT_TYPE)){
             //学生展示默认展示本班级成绩
             Map<String,Integer> collegeInfo = new HashMap<>();
+            collegeInfo.put("gradeId",loginUser.getGradeId());
             collegeInfo.put("collegeId",loginUser.getCollegeId());
             collegeInfo.put("subjectId",loginUser.getSubjectId());
             collegeInfo.put("classId",loginUser.getClassId());
@@ -41,7 +44,7 @@ public class ScoreController extends BaseController {
 
     @ResponseBody
     @GetMapping("all")
-    public ResponseResult all(Integer pageNum, Integer pageSize){
-        return ResponseResult.ok(scoreService.listScore(pageNum,pageSize,this.getLoginUser()));
+    public CommonResponse all(Integer pageNum, Integer pageSize,String searchKey,String searchValue){
+        return ResponseUtil.generateResponse(scoreService.listScore(pageNum,pageSize,this.getLoginUser(),searchKey,searchValue));
     }
 }
