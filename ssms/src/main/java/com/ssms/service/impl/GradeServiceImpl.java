@@ -17,6 +17,15 @@ public class GradeServiceImpl implements GradeService {
 
     @Override
     public List<Grade> list() {
-        return gradeMapper.selectList(new EntityWrapper<Grade>().orderBy("name",true));
+        return gradeMapper.selectList(new EntityWrapper<Grade>().setSqlSelect("id,name").orderBy("name",true).last("limit 5"));
+    }
+
+    @Override
+    public String findNameById(Integer gradeId) {
+        Grade grade = gradeMapper.selectById(gradeId);
+        if(grade != null){
+            return grade.getName();
+        }
+        return null;
     }
 }

@@ -7,4 +7,6 @@ import java.util.List;
 public interface GradeService{
 
     List<Grade> list();
+
+    String findNameById(Integer gradeId);
 }

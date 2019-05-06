@@ -44,6 +44,30 @@ layui.define(["layer","jquery","form"],function (exports) {
                 this.getCollegeSubjectClass($('#classId'),subjectId);
             }
         },
+        //渲染学年下拉框
+        renderSchoolYearByUser:function(){
+            $.ajax({
+                url:'/grade/personGrade',
+                type:'GET',
+                async:false,
+                success:function (res) {
+                    if(res.code == 200){
+                        if(res.data != null)
+                            this.renderSchoolYearList(res.data)
+                    }
+                }
+            });
+        },
+        //渲染学年下拉框
+        renderSchoolYearList:function(gradeName){
+            $('schoolYearId').append('<option value="">请选择学年</option>');
+            var grade = parseInt(gradeName.substring(0,gradeName.length-1));
+            var year = new Date().getFullYear();//获取当前年
+            for (var i=grade;i<year&&year-grade<4;i++){
+                var schoolYear = (i)+'-'+(i+1);
+                $('schoolYearId').append('<option value="'+schoolYear+'">'+schoolYear+'</option>')
+            }
+        },
         // 渲染select,获取列表信息
         getCollegeSubjectClass:function($select,parentId) {
             $.ajax({
