@@ -42,19 +42,19 @@ public class ScoreController extends BaseController {
         return "score/classScore.html";
     }
 
-    @GetMapping("personScore")
+    @GetMapping("person")
     public String personScore(Model model) {
         return "score/personScore.html";
     }
 
-    @GetMapping("scoreTrend")
+    @GetMapping("trend")
     public String scoreTrend(Model model) {
         model.addAttribute("loginUser", getLoginUser());
         return "score/scoreTrend.html";
     }
 
     @ResponseBody
-    @GetMapping("person")
+    @GetMapping("personScore")
     public CommonResponse getPersonScore(String schoolYear,Integer semester) {
         User user = this.getLoginUser();
         if (user.getPersonType() == User.STUDENT_TYPE) {

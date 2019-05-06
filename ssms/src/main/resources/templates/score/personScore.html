@@ -28,7 +28,7 @@
                             <option value="">请选择学年</option>
                         </select>
                     </div>
-                    <div class="layui-inline" style="padding-left: 20px;">
+                    <div id="semesterDiv" class="layui-inline" style="padding-left: 20px;display:none;">
                         <select id="semesterId" name="semesterId" lay-filter="semesterId">
                             <option value="">请选择学期</option>
                             <option value="1">上学期</option>
@@ -60,7 +60,7 @@
         var ins1 = table.render({
             elem: '#score-table',
             method: 'GET',
-            url: '/score/person',
+            url: '/score/personScore',
             cols: [[
                 {align: 'center',type: 'numbers'},
                 {field: 'scoreName', align: 'center', sort: true, title: '课程',fixed: 'left', totalRowText: '总成绩'},
@@ -81,7 +81,10 @@
         //选择学年触发事件
         form.on('select(schoolYearId)', function (data) {
             if ($("#schoolYearId option:selected").val() != "") {
+                $('#semesterDiv').show();
                 //TODO 查询学生成绩信息
+            }else {
+                $('#semesterDiv').hide();
             }
         });
         //选择学期触发事件

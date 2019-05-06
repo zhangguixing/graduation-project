@@ -1,4 +1,4 @@
-package com.ssms.util;
+package com.ssms.common.util;
 
 import java.util.UUID;
 

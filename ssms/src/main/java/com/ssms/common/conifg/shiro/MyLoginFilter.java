@@ -1,4 +1,4 @@
-package com.ssms.conifg.shiro;
+package com.ssms.common.conifg.shiro;
 
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.AccessControlFilter;

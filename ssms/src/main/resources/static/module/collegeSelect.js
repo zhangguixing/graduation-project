@@ -16,8 +16,9 @@ layui.define(["layer","jquery","form"],function (exports) {
                 success:function(res){
                     if(res.code == 200){
                         $.each(res.data,function (index, grade) {
-                            $('#gradeId').append($('<option>').val(grade.id).text(grade.name))
+                            $('#gradeId').append($('<option></option>').val(grade.id).text(grade.name))
                         })
+                        form.render("select");
                     }
                 }
             });
@@ -41,32 +42,42 @@ layui.define(["layer","jquery","form"],function (exports) {
         renderClassList:function(subjectId) {
             $('#classId').html('<option value="" selected="selected">请选择班级</option>');
             if(subjectId!=""){
+                $('#schoolYearId').show();
                 this.getCollegeSubjectClass($('#classId'),subjectId);
+            }else {
+                $('#schoolYearId').hide();
             }
         },
         //渲染学年下拉框
         renderSchoolYearByUser:function(){
+            var gradeName = null;
             $.ajax({
                 url:'/grade/personGrade',
                 type:'GET',
                 async:false,
                 success:function (res) {
                     if(res.code == 200){
-                        if(res.data != null)
-                            this.renderSchoolYearList(res.data)
+                        if(res.data != null){
+                            gradeName = res.data;
+                        }
                     }
                 }
             });
+            if(gradeName != null){
+                this.renderSchoolYearList(gradeName);
+                form.render('select');
+            }
         },
         //渲染学年下拉框
         renderSchoolYearList:function(gradeName){
-            $('schoolYearId').append('<option value="">请选择学年</option>');
+            $('#schoolYearId').html('<option value="">请选择学年</option>');
             var grade = parseInt(gradeName.substring(0,gradeName.length-1));
             var year = new Date().getFullYear();//获取当前年
-            for (var i=grade;i<year&&year-grade<4;i++){
+            for (var i=grade;i<year&&i-grade<4;i++){
                 var schoolYear = (i)+'-'+(i+1);
-                $('schoolYearId').append('<option value="'+schoolYear+'">'+schoolYear+'</option>')
+                $('#schoolYearId').append('<option value="'+schoolYear+'">'+schoolYear+'</option>')
             }
+            form.render('select');
         },
         // 渲染select,获取列表信息
         getCollegeSubjectClass:function($select,parentId) {
@@ -111,7 +122,7 @@ layui.define(["layer","jquery","form"],function (exports) {
                     return false;
                 }
             });
-        },
+        }
         //获取用户列表
         // getUserList:function(collegeId,subjectId,classId,personType){
         //     var data;

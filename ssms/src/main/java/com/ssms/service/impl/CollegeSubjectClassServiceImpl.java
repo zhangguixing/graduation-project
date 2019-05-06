@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.ssms.dao.CollegeSubjectClassMapper;
-import com.ssms.exception.BusinessException;
+import com.ssms.common.exception.BusinessException;
 import com.ssms.model.CollegeSubjectClass;
 import com.ssms.service.CollegeSubjectClassService;
 

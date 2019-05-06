@@ -1,4 +1,4 @@
-package com.ssms.conifg;
+package com.ssms.common.conifg;
 
 import com.baomidou.mybatisplus.mapper.ISqlInjector;
 import com.baomidou.mybatisplus.mapper.LogicSqlInjector;

@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.ssms.dao.RoleAuthoritiesMapper;
 import com.ssms.dao.RoleMapper;
-import com.ssms.exception.ParameterException;
+import com.ssms.common.exception.ParameterException;
 import com.ssms.model.Role;
 import com.ssms.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;

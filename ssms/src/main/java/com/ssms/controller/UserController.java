@@ -1,15 +1,15 @@
 package com.ssms.controller;
 
 import com.ssms.common.BaseController;
-import com.ssms.exception.ParameterException;
+import com.ssms.common.exception.ParameterException;
 import com.ssms.model.Role;
 import com.ssms.model.User;
 import com.ssms.service.RoleService;
 import com.ssms.service.UserService;
-import com.ssms.conifg.shiro.EndecryptUtil;
+import com.ssms.common.conifg.shiro.EndecryptUtil;
 import com.ssms.common.JsonResult;
 import com.ssms.common.PageResult;
-import com.ssms.util.StringUtil;
+import com.ssms.common.util.StringUtil;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

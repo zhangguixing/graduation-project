@@ -1,4 +1,4 @@
-package com.ssms.conifg.shiro;
+package com.ssms.common.conifg.shiro;
 
 import com.ssms.model.Authorities;
 import com.ssms.model.Role;
@@ -6,7 +6,7 @@ import com.ssms.model.User;
 import com.ssms.service.AuthoritiesService;
 import com.ssms.service.RoleService;
 import com.ssms.service.UserService;
-import com.ssms.util.StringUtil;
+import com.ssms.common.util.StringUtil;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;

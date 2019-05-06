@@ -33,23 +33,25 @@
                             <option value="">请选择学院</option>
                         </select>
                     </div>
-                    <div class="layui-inline" style="padding-left: 20px;">
+                    <div id="subjectDiv" class="layui-inline" style="padding-left: 20px;display:none;">
                         <select id="subjectId" name="subjectId" lay-filter="subjectId">
                             <option value="">请选择专业</option>
                         </select>
                     </div>
-                    <div class="layui-inline" style="padding-left: 20px;">
+                </div>
+                <div class="layui-form-item">
+                    <div id="classDiv" class="layui-inline" style="padding-left: 20px;display:none;">
                         <select id="classId" name="classId" lay-filter="classId">
                             <option value="">请选择班级</option>
                         </select>
                     </div>
-                    <div class="layui-inline" style="padding-left: 20px;">
+                    <div id="schoolYearDiv" class="layui-inline" style="padding-left: 20px;display:none;">
                         <select id="schoolYearId" name="schoolYearId" lay-filter="schoolYearId">
                             <option value="">请选择学年</option>
                         </select>
                     </div>
-                    <div class="layui-inline" style="padding-left: 20px;">
-                        <select id="semester" name="semester" lay-filter="semester">
+                    <div id="semesterDiv" class="layui-inline" style="padding-left: 20px;display:none;">
+                        <select id="semesterId" name="semesterId" lay-filter="semesterId">
                             <option value="">请选择学期</option>
                             <option value="1">上学期</option>
                             <option value="2">下学期</option>
@@ -85,14 +87,11 @@
 <script type="text/javascript" src="/assets/js/common.js"></script>
 
 <script>
-    layui.use(['layer', 'form', 'table', 'util', 'laydate', 'admin','collegeSelect'], function () {
+    layui.use(['layer', 'form', 'table', 'collegeSelect'], function () {
         var $ = layui.jquery;
         var layer = layui.layer;
         var form = layui.form;
         var table = layui.table;
-        var util = layui.util;
-        var laydate = layui.laydate;
-        var admin = layui.admin;
         var collegeSelect = layui.collegeSelect;
 
         form.render('select');
@@ -189,31 +188,69 @@
 
         //选择年级触发事件
         form.on('select(gradeId)', function (data) {
-            collegeSelect.renderSchoolYearList(data.text);
-            form.render('select');
-            if ($("#schoolYearId option:selected").val() != "") {
-                //TODO 查询学生信息
+            var optionText = data.text;
+            if(optionText != ''){
+                form.render('select');
+                if ($("#schoolYearId option:selected").val() != "") {
+                    //TODO 查询学生信息
+                }
             }
         });
         //选择学院触发事件
         form.on('select(collegeId)', function (data) {
-            collegeSelect.renderSubjectList(data.value);
-            form.render('select');
             if ($("#collegeId option:selected").val() != "") {
+                $('#subjectDiv').show();
+                collegeSelect.renderSubjectList(data.value);
+                form.render('select');
                 //TODO 查询学生信息
+
+            }else {
+                $('#subjectDiv').hide();
+                $('#classDiv').hide();
+                $('#schoolYearDiv').hide();
+                $('#semesterDiv').hide();
             }
         });
-        //选择学院触发时间
+        //选择专业触发事件
         form.on('select(subjectId)', function (data) {
-            collegeSelect.renderClassList(data.value);
-            form.render('select');
             if ($("#subjectId option:selected").val() != "") {
+                collegeSelect.renderClassList(data.value);
+                form.render('select');
+                $('#classDiv').show();
                 //TODO 查询学生信息
+            }else {
+                $('#classDiv').hide();
+                $('#schoolYearDiv').hide();
+                $('#semesterDiv').hide();
             }
         });
-        //选择学院触发时间
+        //选择班级触发事件
         form.on('select(classId)', function (data) {
             if ($("#classId option:selected").val() != "") {
+                var gradeName = $("#gradeId option:selected").text();
+                if(gradeName != ""){
+                    collegeSelect.renderSchoolYearList(gradeName);
+                    form.render('select')
+                    $('#schoolYearDiv').show();
+                    //TODO 查询学生信息
+                }
+            }else {
+                $('#schoolYearDiv').hide();
+                $('#semesterDiv').hide();
+            }
+        });
+        //选择学年触发事件
+        form.on('select(schoolYearId)', function (data) {
+            if ($("#schoolYearId option:selected").val() != "") {
+                $('#semesterDiv').show();
+                //TODO 查询学生信息
+            }else {
+                $('#semesterDiv').hide();
+            }
+        });
+        //选择学期触发事件
+        form.on('select(semesterId)', function (data) {
+            if ($("#semesterId option:selected").val() != "") {
                 //TODO 查询学生信息
             }
         });

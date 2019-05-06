@@ -3,7 +3,7 @@ package com.ssms.service.impl;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.ssms.dao.AuthoritiesMapper;
 import com.ssms.dao.RoleAuthoritiesMapper;
-import com.ssms.exception.BusinessException;
+import com.ssms.common.exception.BusinessException;
 import com.ssms.model.Authorities;
 import com.ssms.model.RoleAuthorities;
 import com.ssms.service.AuthoritiesService;

@@ -1,4 +1,4 @@
-package com.ssms.exception;
+package com.ssms.common.exception;
 
 /**
  * 自定义异常基类

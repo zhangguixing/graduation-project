@@ -28,7 +28,7 @@
                             <option value="">请选择学年</option>
                         </select>
                     </div>
-                    <div class="layui-inline" style="padding-left: 20px;">
+                    <div id="semesterDiv" class="layui-inline" style="padding-left: 20px;display:none;">
                         <select id="semesterId" name="semesterId" lay-filter="semesterId">
                             <option value="">请选择学期</option>
                             <option value="1">上学期</option>
@@ -40,8 +40,8 @@
             <div class="layui-form-item">
                 <div class="layui-card">
                     <div class="layui-card-header">${loginUser.nickName!}-成绩趋势</div>
-                    <div class="layui-card-body" style="height: 240px;overflow: hidden;">
-                        <div id="trendId" style="width: 100%;height: 260px;"></div>
+                    <div class="layui-card-body" style="height: 416px;overflow: hidden;">
+                        <div id="trendId" style="width: 100%;height:100%;"></div>
                     </div>
                 </div>
             </div>
@@ -112,7 +112,10 @@
         //选择学年触发事件
         form.on('select(schoolYearId)', function (data) {
             if ($("#schoolYearId option:selected").val() != "") {
+                $('#semesterDiv').show();
                 //TODO 查询指定格式学生成绩信息
+            }else {
+                $('#semesterDiv').hide();
             }
         });
         //选择学期触发事件

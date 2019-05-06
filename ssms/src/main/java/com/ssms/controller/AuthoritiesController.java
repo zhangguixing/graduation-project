@@ -7,7 +7,7 @@ import com.ssms.service.AuthoritiesService;
 import com.ssms.service.RoleService;
 import com.ssms.common.JsonResult;
 import com.ssms.common.PageResult;
-import com.ssms.util.ReflectUtil;
+import com.ssms.common.util.ReflectUtil;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

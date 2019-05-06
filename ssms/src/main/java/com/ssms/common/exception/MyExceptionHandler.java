@@ -1,4 +1,4 @@
-package com.ssms.exception;
+package com.ssms.common.exception;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.UnauthorizedException;

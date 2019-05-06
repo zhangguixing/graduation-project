@@ -1,4 +1,4 @@
-package com.ssms.conifg.shiro;
+package com.ssms.common.conifg.shiro;
 
 import org.apache.shiro.crypto.hash.Md5Hash;
 

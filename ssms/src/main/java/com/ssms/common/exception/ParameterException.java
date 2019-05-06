@@ -1,4 +1,4 @@
-package com.ssms.exception;
+package com.ssms.common.exception;
 
 /**
  * 参数异常

@@ -18,7 +18,7 @@
  * 16.得到下月的第一天 getFirstDayOfNextMonth()
  * 17.根据生日获取年龄 getAgeByBirthDate()
  */
-package com.ssms.util;
+package com.ssms.common.util;
 
 import java.text.DateFormat;
 import java.text.ParseException;

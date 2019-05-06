@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.plugins.pagination.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.ssms.dao.ScoreMapper;
 import com.ssms.service.ScoreService;
-import com.ssms.util.StringUtil;
+import com.ssms.common.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
