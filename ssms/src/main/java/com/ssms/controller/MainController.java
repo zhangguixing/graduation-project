@@ -115,6 +115,11 @@ public class MainController extends BaseController implements ErrorController {
         }
     }
 
+    @RequestMapping("system/platformInfo")
+    public String platformInfo(){
+        return "system/platformInfo.html";
+    }
+
     /**
      * 控制台
      */

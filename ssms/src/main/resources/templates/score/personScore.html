@@ -82,7 +82,7 @@
         form.on('select(schoolYearId)', function (data) {
             if ($("#schoolYearId option:selected").val() != "") {
                 $('#semesterDiv').show();
-                //TODO 查询学生成绩信息
+                searchScoreList();
             }else {
                 $('#semesterDiv').hide();
             }
@@ -90,9 +90,21 @@
         //选择学期触发事件
         form.on('select(semesterId)', function (data) {
             if ($("#semesterId option:selected").val() != "") {
-                //TODO 查询学生成绩信息
+                searchScoreList();
             }
         });
+
+        //根据条件获取成绩列表
+        function searchScoreList() {
+            var schoolYearId = $('#schoolYearId option:selected').val();
+            var semesterId = $('#semesterId option:selected').val();
+            table.reload('score-table', {
+                where: {
+                    schoolYear:schoolYearId,
+                    semester:semesterId
+                }
+            });
+        }
     });
 
 </script>

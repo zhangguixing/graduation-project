@@ -54,6 +54,12 @@ public class ScoreController extends BaseController {
     }
 
     @ResponseBody
+    @GetMapping("chartsData")
+    public CommonResponse getChartsData(){
+        return ResponseUtil.generateResponse(scoreService.getChartsData(getLoginUserId()));
+    }
+
+    @ResponseBody
     @GetMapping("personScore")
     public CommonResponse getPersonScore(String schoolYear,Integer semester) {
         User user = this.getLoginUser();

@@ -42,10 +42,7 @@ layui.define(["layer","jquery","form"],function (exports) {
         renderClassList:function(subjectId) {
             $('#classId').html('<option value="" selected="selected">请选择班级</option>');
             if(subjectId!=""){
-                $('#schoolYearId').show();
                 this.getCollegeSubjectClass($('#classId'),subjectId);
-            }else {
-                $('#schoolYearId').hide();
             }
         },
         //渲染学年下拉框

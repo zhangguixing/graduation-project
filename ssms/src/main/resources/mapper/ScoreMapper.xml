@@ -4,39 +4,39 @@
 
     <select id="listScore" resultType="java.util.HashMap">
         SELECT
-            s.id,
-            s.college_id AS collegeId,
-            s.subject_id AS subjectId,
-            s.class_id AS classId,
-            s.student_id AS studentId,
-            u.username,
-            u.nick_name AS nickName,
-            sum(s.score) AS totalScore,
-            s.school_year AS schoolYear,
-            s.semester
+        s.id,
+        s.college_id AS collegeId,
+        s.subject_id AS subjectId,
+        s.class_id AS classId,
+        s.student_id AS studentId,
+        u.username,
+        u.nick_name AS nickName,
+        sum(s.score) AS totalScore,
+        s.school_year AS schoolYear,
+        s.semester
         FROM
-            info_score s
+        info_score s
         LEFT JOIN sys_user u ON s.student_id = u.user_id
         <where>
-            <if test="gradeId != null">
+            <if test="gradeId != null and gradeId != ''">
                 AND s.grade_id=#{gradeId}
             </if>
-            <if test="collegeId != null">
+            <if test="collegeId != null and collegeId != ''">
                 AND s.college_id=#{collegeId}
             </if>
-            <if test="subjectId != null">
+            <if test="subjectId != null and subjectId != ''">
                 AND s.subject_id=#{subjectId}
             </if>
-            <if test="classId != null">
+            <if test="classId != null and classId != ''">
                 AND s.class_id=#{classId}
             </if>
-            <if test="schoolYear != null">
+            <if test="schoolYear != null and schoolYear != ''">
                 AND s.school_year=#{schoolYear}
             </if>
-            <if test="semester != null">
+            <if test="semester != null and semester != ''">
                 AND s.semester=#{semester}
             </if>
-            <if test="searchKey != null">
+            <if test="searchKey != null and searchKey != '' and searchValue != null and searchValue != ''">
                 <choose>
                     <when test="searchKey == 'username'">
                         AND u.username=#{searchValue}
@@ -60,13 +60,28 @@
             AND c.subject_id=#{subjectId}
             AND c.class_id=#{classId}
             AND s.student_id=#{studentId}
-            <if test="schoolYear != null">
+            <if test="schoolYear != null and schoolYear != ''">
                 AND s.school_year=#{schoolYear}
             </if>
-            <if test="semester != null">
+            <if test="semester != null and semester != ''">
                 AND c.semester=#{semester}
             </if>
         </where>
+        ORDER BY s.create_time
+    </select>
+
+    <select id="getChartsData" resultType="java.util.HashMap">
+        SELECT
+            s.school_year AS schoolYear,
+            s.semester,
+            sum(s.score) AS yData
+        FROM
+            info_score s
+        WHERE
+            s.student_id = 1
+        GROUP BY
+            s.school_year,
+            s.semester
         ORDER BY s.create_time
     </select>
 </mapper>

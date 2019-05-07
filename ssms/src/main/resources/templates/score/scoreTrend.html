@@ -21,22 +21,6 @@
 <div class="layui-fluid">
     <div class="layui-card">
         <div class="layui-card-body">
-            <div class="layui-form toolbar">
-                <div class="layui-form-item">
-                    <div class="layui-inline" style="padding-left: 20px;">
-                        <select id="schoolYearId" name="schoolYearId" lay-filter="schoolYearId">
-                            <option value="">请选择学年</option>
-                        </select>
-                    </div>
-                    <div id="semesterDiv" class="layui-inline" style="padding-left: 20px;display:none;">
-                        <select id="semesterId" name="semesterId" lay-filter="semesterId">
-                            <option value="">请选择学期</option>
-                            <option value="1">上学期</option>
-                            <option value="2">下学期</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
             <div class="layui-form-item">
                 <div class="layui-card">
                     <div class="layui-card-header">${loginUser.nickName!}-成绩趋势</div>
@@ -57,18 +41,16 @@
 <script type="text/javascript" src="/assets/js/common.js"></script>
 
 <script>
-    layui.use(['form', 'table','collegeSelect'], function () {
+    layui.use(['form'], function () {
         var $ = layui.jquery;
         var form = layui.form;
-        var table = layui.table;
-        var collegeSelect = layui.collegeSelect;
 
         form.render('select');
 
         //渲染趋势图
         var trendCharts = echarts.init(document.getElementById('trendId'), myEchartsTheme);
-        var xData = ["06:00", "06:30", "07:00", "07:30", "08:00", "08:30", "09:00", "09:30", "10:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00"];
-        var yData = [50, 100, 150, 80, 120, 150, 200, 250, 220, 250, 300, 350, 400, 380, 440, 450, 500, 550, 500];
+        var xData = ["2015-2016学年上学期", "2015-2016学年下学期", "2016-2017学年上学期", "2016-2017学年下学期", "2017-2018学年上学期", "2017-2018学年下学期", "2018-2019学年上学期", "2018-2019学年下学期"];
+        var yData = [350, 400, 450, 550, 620, 650, 680, 700];
         var option = {
             title: {
                 textStyle: {
@@ -79,15 +61,17 @@
                 trigger: "axis"
             },
             xAxis: [{
+                name:'考试学期',
                 type: "category",
                 boundaryGap: !1,
                 data: xData
             }],
             yAxis: [{
+                name:'总成绩',
                 type: "value"
             }],
             series: [{
-                name: "百分比",
+                name: "总成绩",
                 type: "line",
                 smooth: !0,
                 itemStyle: {
@@ -106,22 +90,18 @@
             trendCharts.resize();
         }
 
-        //渲染学年下拉框
-        collegeSelect.renderSchoolYearByUser();
-
-        //选择学年触发事件
-        form.on('select(schoolYearId)', function (data) {
-            if ($("#schoolYearId option:selected").val() != "") {
-                $('#semesterDiv').show();
-                //TODO 查询指定格式学生成绩信息
-            }else {
-                $('#semesterDiv').hide();
-            }
-        });
-        //选择学期触发事件
-        form.on('select(semesterId)', function (data) {
-            if ($("#semesterId option:selected").val() != "") {
-                //TODO 查询指定格式学生成绩信息
+        //查询指定格式学生成绩信息
+        $.ajax({
+            url:'/score/chartsData',
+            type:'GET',
+            success:function (res) {
+                if(res.code == 200){
+                    var data = res.data;
+                    if(data != null){
+                        xData = data.xData;
+                        yData = data.yData;
+                    }
+                }
             }
         });
     });
