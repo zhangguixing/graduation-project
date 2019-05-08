@@ -1,10 +1,13 @@
 package com.ssms.controller;
 
 import com.ssms.common.BaseController;
-import com.ssms.model.Authorities;
-import com.ssms.service.AuthoritiesService;
 import com.ssms.common.JsonResult;
 import com.ssms.common.util.StringUtil;
+import com.ssms.common.util.UserAgentGetter;
+import com.ssms.model.Authorities;
+import com.ssms.model.LoginRecord;
+import com.ssms.service.AuthoritiesService;
+import com.ssms.service.LoginRecordService;
 import com.wf.captcha.utils.CaptchaUtil;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
@@ -32,6 +35,8 @@ import java.util.Map;
 public class MainController extends BaseController implements ErrorController {
     @Autowired
     private AuthoritiesService authoritiesService;
+    @Autowired
+    private LoginRecordService loginRecordService;
 
     /**
      * 主页
@@ -72,6 +77,7 @@ public class MainController extends BaseController implements ErrorController {
         try {
             UsernamePasswordToken token = new UsernamePasswordToken(username, password);
             SecurityUtils.getSubject().login(token);
+            addLoginRecord(getLoginUserId(), request);
             return JsonResult.ok("登录成功");
         } catch (IncorrectCredentialsException ice) {
             return JsonResult.error("密码错误");
@@ -101,6 +107,21 @@ public class MainController extends BaseController implements ErrorController {
             }
         }
         return list;
+    }
+
+    /**
+     * 添加登录日志
+     */
+    private void addLoginRecord(Integer userId, HttpServletRequest request) {
+        UserAgentGetter agentGetter = new UserAgentGetter(request);
+        // 添加到登录日志
+        LoginRecord loginRecord = new LoginRecord();
+        loginRecord.setUserId(userId);
+        loginRecord.setOsName(agentGetter.getOS());
+        loginRecord.setDevice(agentGetter.getDevice());
+        loginRecord.setBrowserType(agentGetter.getBrowser());
+        loginRecord.setIpAddress(agentGetter.getIpAddr());
+        loginRecordService.add(loginRecord);
     }
 
     /**

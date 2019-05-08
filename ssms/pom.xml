@@ -96,17 +96,18 @@
             <version>1.4.0</version>
         </dependency>
 
-        <!--thymeleaf-->
-        <!--<dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-thymeleaf</artifactId>
-        </dependency>-->
-
         <!--模板引擎beetl -->
         <dependency>
             <groupId>com.ibeetl</groupId>
             <artifactId>beetl-framework-starter</artifactId>
             <version>1.1.48.RELEASE</version>
+        </dependency>
+
+        <!-- 从request获取设备信息 -->
+        <dependency>
+            <groupId>eu.bitwalker</groupId>
+            <artifactId>UserAgentUtils</artifactId>
+            <version>1.21</version>
         </dependency>
 
         <!-- 图形验证码 -->

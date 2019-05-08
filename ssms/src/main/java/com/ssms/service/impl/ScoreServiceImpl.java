@@ -42,19 +42,21 @@ public class ScoreServiceImpl implements ScoreService {
     }
 
     @Override
-    public List<Map<String, Object>> getChartsData(Integer studentId) {
+    public Map<String, Object> getChartsData(Integer studentId) {
         List<Map<String, Object>> maps = scoreMapper.getChartsData(studentId);
-        List<Map<String, Object>> chartsDatas = new ArrayList<>();
+        Map<String, Object> chartsDatas = new HashMap<>();
+        List<String> xData = new ArrayList<>();
+        List<BigDecimal> yData = new ArrayList<>();
         String[] semesterArray = {"上学期","下学期"};
         for (Map<String, Object> map:maps) {
             String schoolYear = map.get("schoolYear")==null?"":map.get("schoolYear").toString();
             Integer semester = map.get("semester")==null?1:Integer.valueOf(map.get("semester").toString());
-            BigDecimal yData = map.get("yData")==null?null:new BigDecimal(map.get("yData").toString());
-            Map<String,Object> chartsData = new HashMap<String,Object>();
-            chartsData.put("xData",schoolYear+"学年"+semesterArray[semester-1]);
-            chartsData.put("yData",yData);
-            chartsDatas.add(chartsData);
+            BigDecimal totalScore = map.get("yData")==null?null:new BigDecimal(map.get("yData").toString());
+            xData.add(schoolYear+"学年"+semesterArray[semester-1]);
+            yData.add(totalScore);
         }
+        chartsDatas.put("xData",xData);
+        chartsDatas.put("yData",yData);
         return chartsDatas;
     }
 }

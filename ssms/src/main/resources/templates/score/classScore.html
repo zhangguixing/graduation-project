@@ -218,8 +218,7 @@
                 collegeSelect.renderGradeList();
                 $('#gradeDiv').show();
                 searchScoreList();
-            }
-            else {
+            } else {
                 $('#gradeDiv').hide();
                 $('#schoolYearDiv').hide();
                 $('#semesterDiv').hide();
@@ -260,15 +259,18 @@
         $('#btnSearch').click(function () {
             var key = $('#sltKey').val();
             var value = $('#edtSearch').val();
-            if(key == 'username'){
-                if(/^[0-9]*$/.test(value)){
-                    searchScoreList();
-                }else {
-                    layer.msg("学号必须为数字", {icon: 2});
-                    $('#edtSearch').focus();
+            if (key != '' && value != '') {
+                if (key == 'username') {
+                    if (!/^[0-9]*$/.test(value)) {
+                        layer.msg("学号必须为数字", {icon: 2});
+                        $('#edtSearch').focus();
+                        return;
+                    }
                 }
+                searchScoreList();
             }
         });
+
         //根据条件获取成绩列表
         function searchScoreList() {
             var collegeId = $('#collegeId option:selected').val();
@@ -281,12 +283,12 @@
             var value = $('#edtSearch').val();
             table.reload('score-table', {
                 where: {
-                    collegeId:collegeId,
-                    subjectId:subjectId,
-                    classId:classId,
-                    gradeId:gradeId,
-                    schoolYear:schoolYearId,
-                    semester:semesterId,
+                    collegeId: collegeId,
+                    subjectId: subjectId,
+                    classId: classId,
+                    gradeId: gradeId,
+                    schoolYear: schoolYearId,
+                    semester: semesterId,
                     searchKey: key,
                     searchValue: value
                 }
