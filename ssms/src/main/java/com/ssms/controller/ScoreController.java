@@ -8,9 +8,7 @@ import com.ssms.service.ScoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,15 +28,15 @@ public class ScoreController extends BaseController {
     @GetMapping("class")
     public String classScore(Model model) {
         User loginUser = getLoginUser();
+        Map<String, Integer> collegeInfo = new HashMap<>();
         if (loginUser.getPersonType() != null && loginUser.getPersonType().equals(User.STUDENT_TYPE)) {
             //学生展示默认展示本班级成绩
-            Map<String, Integer> collegeInfo = new HashMap<>();
             collegeInfo.put("gradeId", loginUser.getGradeId());
             collegeInfo.put("collegeId", loginUser.getCollegeId());
             collegeInfo.put("subjectId", loginUser.getSubjectId());
             collegeInfo.put("classId", loginUser.getClassId());
-            model.addAttribute("collegeInfo", collegeInfo);
         }
+        model.addAttribute("collegeInfo", collegeInfo);
         return "score/classScore.html";
     }
 
@@ -52,6 +50,13 @@ public class ScoreController extends BaseController {
         model.addAttribute("loginUser", getLoginUser());
         return "score/scoreTrend.html";
     }
+
+    @ResponseBody
+    @DeleteMapping("delete/{id}")
+    public CommonResponse delete(@PathVariable Integer id){
+        return ResponseUtil.generateResponse(scoreService.delete(id));
+    }
+
 
     @ResponseBody
     @GetMapping("chartsData")
@@ -77,7 +82,7 @@ public class ScoreController extends BaseController {
 
     @ResponseBody
     @GetMapping("all")
-    public CommonResponse all(Integer pageNum, Integer pageSize, Integer gradeId, Integer collegeId, Integer subjectId, Integer classId, String schoolYear, Integer semester, String searchKey, String searchValue) {
+    public CommonResponse all(Model model,Integer pageNum, Integer pageSize, Integer gradeId, Integer collegeId, Integer subjectId, Integer classId, String schoolYear, Integer semester, String searchKey, String searchValue) {
         User user = this.getLoginUser();
         if (user.getPersonType() == User.STUDENT_TYPE) {
             //学生--查询所在班级

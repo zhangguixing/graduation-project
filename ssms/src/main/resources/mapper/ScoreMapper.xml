@@ -7,6 +7,7 @@
         s.id,
         s.college_id AS collegeId,
         s.subject_id AS subjectId,
+        csc.name AS subjectName,
         s.class_id AS classId,
         s.student_id AS studentId,
         u.username,
@@ -17,6 +18,7 @@
         FROM
         info_score s
         LEFT JOIN sys_user u ON s.student_id = u.user_id
+        LEFT JOIN info_college_subject_class csc ON s.subject_id = csc.id
         <where>
             <if test="gradeId != null and gradeId != ''">
                 AND s.grade_id=#{gradeId}

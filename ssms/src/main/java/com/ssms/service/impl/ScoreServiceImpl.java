@@ -59,4 +59,9 @@ public class ScoreServiceImpl implements ScoreService {
         chartsDatas.put("yData",yData);
         return chartsDatas;
     }
+
+    @Override
+    public boolean delete(Integer id) {
+        return scoreMapper.deleteById(id)>0;
+    }
 }

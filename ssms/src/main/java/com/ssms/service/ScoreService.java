@@ -12,4 +12,6 @@ public interface ScoreService {
     List<Map<String,Object>> getPersonScore(Integer gradeId, Integer collegeId, Integer subjectId, Integer classId, Integer studentId, String schoolYear, Integer semester);
 
     Map<String,Object> getChartsData(Integer studentId);
+
+    boolean delete(Integer id);
 }
