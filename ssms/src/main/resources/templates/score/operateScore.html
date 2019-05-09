@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>分析型成绩管理系统</title>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="/assets/libs/layui/css/layui.css"/>
+    <link rel="stylesheet" href="/assets/css/admin.css" media="all"/>
+    <style>
+        html, body {
+            width: 100%;
+            height: 100%;
+        }
+
+        .layui-form-item {
+            margin-bottom: 25px;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- 加载动画，移除位置在common.js中 -->
+<div class="page-loading">
+    <div class="rubik-loader"></div>
+</div>
+
+<!-- 正文开始 -->
+<div class="layui-fluid" style="height: 100%">
+    <div class="layui-card-body" style="padding-top: 40px; height: 90%">
+
+        <div class="layui-carousel" id="taskForm" lay-filter="taskForm"
+             style="margin: 0 auto;">
+            <div carousel-item>
+                <!--第一步-->
+                <div>
+                    <form class="layui-form" id="baseInfo"
+                          style="margin: 0 auto; max-width: 80%; padding-top: 30px;">
+                        <input name="id" type="hidden" value=""/>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">学院</label>
+                            <div class="layui-input-inline" style="padding-left: 20px;">
+                                <select id="collegeId" name="collegeId" lay-filter="collegeId">
+                                    <option value="">请选择学院</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div id="subjectDiv" class="layui-form-item" style="display:none;">
+                            <label class="layui-form-label">专业</label>
+                            <div class="layui-input-inline" style="padding-left: 20px;">
+                                <select id="subjectId" name="subjectId" lay-filter="subjectId">
+                                    <option value="">请选择专业</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div id="classDiv"  class="layui-form-item" style="display:none;">
+                            <label class="layui-form-label">班级</label>
+                            <div class="layui-input-inline" style="padding-left: 20px;">
+                                <select id="classId" name="classId" lay-filter="classId">
+                                    <option value="">请选择班级</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div id="gradeDiv" class="layui-form-item" style="display:none;">
+                            <label class="layui-form-label">年级</label>
+                            <div class="layui-input-inline" style="padding-left: 20px;">
+                                <select id="gradeId" name="gradeId" lay-filter="gradeId">
+                                    <option value="">请选择年级</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div id="schoolYearDiv" class="layui-form-item" style="display:none;">
+                            <label class="layui-form-label">学年</label>
+                            <div class="layui-input-inline" style="padding-left: 20px;">
+                                <select id="schoolYearId" name="schoolYearId" lay-filter="schoolYearId">
+                                    <option value="">请选择学年</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div id="semesterDiv" class="layui-form-item" style="display:none;">
+                            <label class="layui-form-label">学期</label>
+                            <div class="layui-input-inline" style="padding-left: 20px;">
+                                <select id="semesterId" name="semesterId" lay-filter="semesterId">
+                                    <option value="">请选择学期</option>
+                                    <option value="1">上学期</option>
+                                    <option value="2">下学期</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">学生姓名</label>
+                            <div class="layui-input-inline" style="padding-left: 20px;">
+                                <input name="name" id="jobName" placeholder="请输入名称"
+                                       type="text" class="layui-input" maxlength="20"
+                                       lay-verify="required|jobName" required value=""/>
+                            </div>
+                        </div>
+                        <!--<div class="layui-form-item">
+                            <label class="layui-form-label">描述</label>
+                            <div class="layui-input-block">
+										<textarea name="description" id="description"
+                                                  placeholder="请输入描述" class="layui-textarea"
+                                                  lay-verify="description" maxlength="50"></textarea>
+                            </div>
+                        </div>
+-->
+                        <div class="layui-form-item text-right"
+                             style="position: relative; bottom: 20%; right: 0%; margin-bottom: 0px">
+                            <div class="layui-input-block">
+                                <button class="layui-btn" lay-submit lay-filter="formStepOne">&emsp;下一步&emsp;
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!--第二步-->
+                <div>
+                    <form class="layui-form" id="dBTreeInfo"
+                          style="margin: 0 auto; max-width: 80%; padding-top: 30px;">
+
+                        <!--动态展示课程成绩-->
+
+                        <div class="layui-form-item">
+                            <div class="layui-input-block text-right"
+                                 style="position: relative; top:60px; bottom: 20%; right: 0%; margin-bottom: 0px">
+                                <button type="button" class="layui-btn layui-btn-primary pre">上一步</button>
+                                <button class="layui-btn" lay-filter="complete" lay-submit>完成</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!--第三步-->
+                <div>
+                    <div style="text-align: center; margin-top: 90px;">
+                        <i class="layui-icon layui-circle"
+                           style="color: white; font-size: 30px; font-weight: bold; background: #52C41A; padding: 20px; line-height: 80px;">&#xe605;</i>
+                        <div
+                                style="font-size: 24px; color: #333; font-weight: 500; margin-top: 30px;">操作成功
+                        </div>
+                        <div style="font-size: 14px; color: #666; margin-top: 20px;">请到成绩管理界面查看成绩</div>
+                    </div>
+                    <div style="text-align: center; margin-top: 50px;">
+                        <button class="layui-btn next" lay-submit lay-filter="againCreate">再次添加</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--<script id="tarCols" type="text/html">
+    <select name="tarColumn" lay-filter="tarColumn" class="tarColumn">
+        <option value=""></option>
+        {{# layui.each(d.targetColumnList, function(index, item){ }}
+        <option value={{item}}>{{item}}</option>
+        {{# }); }}
+    </select>
+</script>-->
+<!-- js部分 -->
+<script type="text/javascript" src="/assets/libs/layui/layui.js"></script>
+<script type="text/javascript" src="/assets/js/common.js"></script>
+<script>
+    layui.use(['layer', 'form', 'step'], function () {
+        var $ = layui.jquery;
+        var layer = layui.layer;
+        var form = layui.form;
+        var step = layui.step;
+
+        form.render('select');
+
+        step.render({
+            elem: '#taskForm',
+            filter: 'taskForm',
+            width: '100%', //设置容器宽度
+            stepWidth: '85%',
+            height: '100%',
+            stepItems: [{
+                title: '选择学生信息'
+            }, {
+                title: '填写学生成绩'
+            }, {
+                title: '完成'
+            }]
+        });
+
+        form.on('submit(formStepOne)', function (data) {
+            step.next('#taskForm');
+            return false;
+        });
+
+        $('.pre').click(function () {
+            step.pre('#taskForm');
+        });
+
+        form.on('submit(againCreate)', function (data) {
+            step.next('#taskForm');
+            location.reload(false);
+            return false;
+        });
+
+        //任务表单提交
+        form.on('submit(complete)', function (data) {
+            var field = data.field;
+
+            return false;
+        });
+
+        //自定义校验规则
+        form.verify({
+            jobName: function (value, item) { //value：表单的值、item：表单的DOM对象
+                if (value.length > 20) {
+                    return '名称长度不能超过20';
+                }
+            },
+            description: function (value, item) { //value：表单的值、item：表单的DOM对象
+                if (value.length > 20) {
+                    return '描述长度不能超过50';
+                }
+            }
+        });
+    });
+</script>
+</body>
+</html>

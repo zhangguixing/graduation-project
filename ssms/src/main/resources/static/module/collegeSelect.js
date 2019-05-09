@@ -13,10 +13,11 @@ layui.define(["layer","jquery","form"],function (exports) {
             $.ajax({
                 url:'/grade/list',
                 type:'GET',
+                async:false,
                 success:function(res){
                     if(res.code == 200){
                         $.each(res.data,function (index, grade) {
-                            $('#gradeId').append($('<option></option>').val(grade.id).text(grade.name))
+                            $('#gradeId').append($('<option>').val(grade.id).text(grade.name))
                         })
                         form.render("select");
                     }
@@ -34,14 +35,14 @@ layui.define(["layer","jquery","form"],function (exports) {
         renderSubjectList:function(collegeId) {
             $('#subjectId').html('<option value="" selected="selected">请选择专业</option>');
             $('#classId').html('<option value="" selected="selected">请选择班级</option>');
-            if(collegeId!=""){
+            if(collegeId!=undefined && collegeId!=""){
                 this.getCollegeSubjectClass($('#subjectId'),collegeId);
             }
         },
         //渲染班级下拉框
         renderClassList:function(subjectId) {
             $('#classId').html('<option value="" selected="selected">请选择班级</option>');
-            if(subjectId!=""){
+            if(subjectId!=undefined && subjectId!=""){
                 this.getCollegeSubjectClass($('#classId'),subjectId);
             }
         },
@@ -60,7 +61,7 @@ layui.define(["layer","jquery","form"],function (exports) {
                     }
                 }
             });
-            if(gradeName != null){
+            if(gradeName != null && gradeName != undefined){
                 this.renderSchoolYearList(gradeName);
                 form.render('select');
             }
@@ -119,6 +120,39 @@ layui.define(["layer","jquery","form"],function (exports) {
                     return false;
                 }
             });
+        },
+        //班级下拉框回显
+        selectGrade:function(gradeId) {
+            $.each($('#gradeId option'),function () {
+                if($(this).val() == gradeId){
+                    $(this).attr("selected", true);
+                    return false;
+                }
+            });
+        },
+        //回显学院、专业、班级、年级
+        reshowAll:function(collegeId,subjectId,classId,gradeId){
+            //回显学院
+            this.selectCollege(collegeId);
+            $('#collegeId').attr("disabled",true);
+            this.renderSubjectList(collegeId);
+            $('#subjectDiv').show();
+            //回显专业
+            this.selectSubject(subjectId);
+            this.renderClassList(subjectId);
+            $('#subjectId').attr("disabled",true);
+            $('#classDiv').show();
+            //回显班级
+            this.selectClass(classId);
+            this.renderGradeList(classId);
+            $('#classId').attr("disabled",true);
+            $('#gradeDiv').show();
+            //回显年级
+            this.selectGrade(gradeId);
+            this.renderSchoolYearByUser();
+            $('#gradeId').attr("disabled",true);
+            $('#schoolYearDiv').show();
+            form.render('select');
         }
         //获取用户列表
         // getUserList:function(collegeId,subjectId,classId,personType){

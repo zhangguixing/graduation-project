@@ -186,16 +186,14 @@
         collegeSelect.renderCollegeList();
 
         //学生登录回显
-        // var collegeInfo = '${collegeInfo!}';
-        // if (collegeInfo != '') {
-        //     var gradeId = collegeInfo.gradeId;
-        //     var collegeId = collegeInfo.collegeId;
-        //     var subjectId = collegeInfo.subjectId;
-        //     var classId = collegeInfo.classId;
-        //     console.info(collegeId);
-        //     form.val('collegeId',collegeId);
-        //     form.render('select');
-        // }
+        var collegeInfo = '${collegeInfo}';
+        if (collegeInfo != '{}') {
+            var collegeId = '${collegeInfo.collegeId}';
+            var subjectId = '${collegeInfo.subjectId}';
+            var classId = '${collegeInfo.classId}';
+            var gradeId = '${collegeInfo.gradeId}';
+            collegeSelect.reshowAll(collegeId,subjectId,classId,gradeId);
+        }
 
         //选择学院触发事件
         form.on('select(collegeId)', function (data) {
@@ -206,11 +204,13 @@
                 searchScoreList();
             } else {
                 $('#subjectDiv').hide();
-                $('#classDiv').hide();
-                $('#schoolYearDiv').hide();
-                $('#semesterDiv').hide();
             }
+            $('#classDiv').hide();
+            $('#gradeDiv').hide();
+            $('#schoolYearDiv').hide();
+            $('#semesterDiv').hide();
         });
+
         //选择专业触发事件
         form.on('select(subjectId)', function (data) {
             if ($("#subjectId option:selected").val() != "") {
@@ -220,9 +220,10 @@
                 searchScoreList();
             } else {
                 $('#classDiv').hide();
-                $('#schoolYearDiv').hide();
-                $('#semesterDiv').hide();
             }
+            $('#gradeDiv').hide();
+            $('#schoolYearDiv').hide();
+            $('#semesterDiv').hide();
         });
         //选择班级触发事件
         form.on('select(classId)', function (data) {
@@ -233,9 +234,9 @@
                 searchScoreList();
             } else {
                 $('#gradeDiv').hide();
-                $('#schoolYearDiv').hide();
-                $('#semesterDiv').hide();
             }
+            $('#schoolYearDiv').hide();
+            $('#semesterDiv').hide();
         });
         //选择年级触发事件
         form.on('select(gradeId)', function (data) {
@@ -249,8 +250,8 @@
                 }
             } else {
                 $('#schoolYearDiv').hide();
-                $('#semesterDiv').hide();
             }
+            $('#semesterDiv').hide();
         });
         //选择学年触发事件
         form.on('select(schoolYearId)', function (data) {

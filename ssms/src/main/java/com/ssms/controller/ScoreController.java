@@ -21,7 +21,17 @@ public class ScoreController extends BaseController {
     private ScoreService scoreService;
 
     @GetMapping("manage")
-    public String manage() {
+    public String manage(Model model) {
+        User loginUser = getLoginUser();
+        Map<String, Integer> collegeInfo = new HashMap<>();
+        if (loginUser.getPersonType() != null && loginUser.getPersonType().equals(User.TEACHER_TYPE)) {
+            //教师默认展示本班级成绩
+            collegeInfo.put("collegeId", loginUser.getCollegeId());
+            collegeInfo.put("subjectId", loginUser.getSubjectId());
+            collegeInfo.put("classId", loginUser.getClassId());
+            collegeInfo.put("gradeId", loginUser.getGradeId());
+        }
+        model.addAttribute("collegeInfo", collegeInfo);
         return "score/scoreManage.html";
     }
 
@@ -38,6 +48,15 @@ public class ScoreController extends BaseController {
         }
         model.addAttribute("collegeInfo", collegeInfo);
         return "score/classScore.html";
+    }
+
+    @GetMapping("operateScore")
+    public String operateScore(Model model,Integer id){
+        if(id != null){
+            //TODO 修改成绩，回显
+
+        }
+        return "score/operateScore.html";
     }
 
     @GetMapping("person")
