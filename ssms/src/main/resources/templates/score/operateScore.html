@@ -18,6 +18,10 @@
         .layui-form-item {
             margin-bottom: 25px;
         }
+
+        .layui-form-label {
+            width: 100px;
+        }
     </style>
 </head>
 
@@ -39,63 +43,83 @@
                 <div>
                     <form class="layui-form" id="baseInfo"
                           style="margin: 0 auto; max-width: 80%; padding-top: 30px;">
-                        <input name="id" type="hidden" value=""/>
+                        <input id="studentId" name="studentId" type="hidden" value="${collegeAndScore.studentId}"/>
                         <div class="layui-form-item">
-                            <label class="layui-form-label">学院</label>
-                            <div class="layui-input-inline" style="padding-left: 20px;">
-                                <select id="collegeId" name="collegeId" lay-filter="collegeId">
-                                    <option value="">请选择学院</option>
-                                </select>
+                            <div>
+                                <label class="layui-form-label">学院</label>
+                                <div class="layui-input-inline" style="padding-left: 20px;">
+                                    <select id="collegeId" name="collegeId" lay-verify="required"
+                                            lay-filter="collegeId">
+                                        <option value="">请选择学院</option>
+                                    </select>
+                                </div>
                             </div>
-                        </div>
-                        <div id="subjectDiv" class="layui-form-item" style="display:none;">
-                            <label class="layui-form-label">专业</label>
-                            <div class="layui-input-inline" style="padding-left: 20px;">
-                                <select id="subjectId" name="subjectId" lay-filter="subjectId">
-                                    <option value="">请选择专业</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div id="classDiv"  class="layui-form-item" style="display:none;">
-                            <label class="layui-form-label">班级</label>
-                            <div class="layui-input-inline" style="padding-left: 20px;">
-                                <select id="classId" name="classId" lay-filter="classId">
-                                    <option value="">请选择班级</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div id="gradeDiv" class="layui-form-item" style="display:none;">
-                            <label class="layui-form-label">年级</label>
-                            <div class="layui-input-inline" style="padding-left: 20px;">
-                                <select id="gradeId" name="gradeId" lay-filter="gradeId">
-                                    <option value="">请选择年级</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div id="schoolYearDiv" class="layui-form-item" style="display:none;">
-                            <label class="layui-form-label">学年</label>
-                            <div class="layui-input-inline" style="padding-left: 20px;">
-                                <select id="schoolYearId" name="schoolYearId" lay-filter="schoolYearId">
-                                    <option value="">请选择学年</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div id="semesterDiv" class="layui-form-item" style="display:none;">
-                            <label class="layui-form-label">学期</label>
-                            <div class="layui-input-inline" style="padding-left: 20px;">
-                                <select id="semesterId" name="semesterId" lay-filter="semesterId">
-                                    <option value="">请选择学期</option>
-                                    <option value="1">上学期</option>
-                                    <option value="2">下学期</option>
-                                </select>
+                            <div id="subjectDiv" style="display: none;">
+                                <label class="layui-form-label">专业</label>
+                                <div class="layui-input-inline" style="padding-left: 20px;">
+                                    <select id="subjectId" name="subjectId" lay-verify="required"
+                                            lay-filter="subjectId">
+                                        <option value="">请选择专业</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
                         <div class="layui-form-item">
-                            <label class="layui-form-label">学生姓名</label>
-                            <div class="layui-input-inline" style="padding-left: 20px;">
-                                <input name="name" id="jobName" placeholder="请输入名称"
-                                       type="text" class="layui-input" maxlength="20"
-                                       lay-verify="required|jobName" required value=""/>
+                            <div id="classDiv" style="display:none;">
+                                <label class="layui-form-label">班级</label>
+                                <div class="layui-input-inline" style="padding-left: 20px;">
+                                    <select id="classId" name="classId" lay-verify="required" lay-filter="classId">
+                                        <option value="">请选择班级</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div id="gradeDiv" style="display:none;">
+                                <label class="layui-form-label">年级</label>
+                                <div class="layui-input-inline" style="padding-left: 20px;">
+                                    <select id="gradeId" name="gradeId" lay-verify="required" lay-filter="gradeId">
+                                        <option value="">请选择年级</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div id="schoolYearDiv" style="display:none;">
+                                <label class="layui-form-label">学年</label>
+                                <div class="layui-input-inline" style="padding-left: 20px;">
+                                    <select id="schoolYearId" name="schoolYearId" lay-verify="required"
+                                            lay-filter="schoolYearId">
+                                        <option value="">请选择学年</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div id="semesterDiv" style="display:none;">
+                                <label class="layui-form-label">学期</label>
+                                <div class="layui-input-inline" style="padding-left: 20px;">
+                                    <select id="semesterId" name="semesterId" lay-verify="required"
+                                            lay-filter="semesterId">
+                                        <option value="">请选择学期</option>
+                                        <option value="1">上学期</option>
+                                        <option value="2">下学期</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div>
+                                <label class="layui-form-label">学生学号</label>
+                                <div class="layui-input-inline" style="padding-left: 20px;">
+                                    <input name="username" id="username" placeholder="请输入学号"
+                                           type="text" class="layui-input" maxlength="20"
+                                           lay-verify="required" required value="${collegeAndScore.username}"/>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="layui-form-label">学生姓名</label>
+                                <div class="layui-input-inline" style="padding-left: 20px;">
+                                    <input name="nickName" id="nickName" placeholder="请输入名称"
+                                           type="text" class="layui-input" maxlength="20"
+                                           lay-verify="required|studentName" required value="${collegeAndScore.nickName}"/>
+                                </div>
                             </div>
                         </div>
                         <!--<div class="layui-form-item">
@@ -108,7 +132,7 @@
                         </div>
 -->
                         <div class="layui-form-item text-right"
-                             style="position: relative; bottom: 20%; right: 0%; margin-bottom: 0px">
+                             style="position: relative; bottom: 20%; right: 20%; margin-bottom: 20px">
                             <div class="layui-input-block">
                                 <button class="layui-btn" lay-submit lay-filter="formStepOne">&emsp;下一步&emsp;
                                 </button>
@@ -119,10 +143,11 @@
 
                 <!--第二步-->
                 <div>
-                    <form class="layui-form" id="dBTreeInfo"
+                    <form class="layui-form" id="scoreInfo"
                           style="margin: 0 auto; max-width: 80%; padding-top: 30px;">
 
                         <!--动态展示课程成绩-->
+                        <div id="scoreDiv"></div>
 
                         <div class="layui-form-item">
                             <div class="layui-input-block text-right"
@@ -154,23 +179,35 @@
     </div>
 </div>
 
-<!--<script id="tarCols" type="text/html">
-    <select name="tarColumn" lay-filter="tarColumn" class="tarColumn">
-        <option value=""></option>
-        {{# layui.each(d.targetColumnList, function(index, item){ }}
-        <option value={{item}}>{{item}}</option>
-        {{# }); }}
-    </select>
-</script>-->
+<script id="scoreScript" type="text/html">
+    {{# layui.each(d.scoreList, function(index, item){ }}
+    <div class="layui-form-item">
+        <label class="layui-form-label">{{item.name}}</label>
+        <div class="layui-input-inline" style="padding-left: 20px;">
+            <input name="{{item.courseId}}" placeholder="请输入成绩"
+                   type="text" class="layui-input" maxlength="20"
+                   lay-verify="required|number" required value="{{item.score==undefined?'':item.score}}"/>
+        </div>
+    </div>
+    {{# });}}
+
+    {{#  if(d.scoreList==null || d.scoreList.length === 0){ }}
+    <div class="layui-form-item text-center">
+        暂无考试成绩！
+    </div>
+    {{#  } }}
+</script>
 <!-- js部分 -->
 <script type="text/javascript" src="/assets/libs/layui/layui.js"></script>
 <script type="text/javascript" src="/assets/js/common.js"></script>
 <script>
-    layui.use(['layer', 'form', 'step'], function () {
+    layui.use(['layer', 'form', 'laytpl', 'step', 'collegeSelect'], function () {
         var $ = layui.jquery;
         var layer = layui.layer;
         var form = layui.form;
         var step = layui.step;
+        var laytpl = layui.laytpl;
+        var collegeSelect = layui.collegeSelect;
 
         form.render('select');
 
@@ -189,6 +226,7 @@
             }]
         });
 
+        //下一步
         form.on('submit(formStepOne)', function (data) {
             step.next('#taskForm');
             return false;
@@ -204,24 +242,205 @@
             return false;
         });
 
-        //任务表单提交
+        //成绩表单提交
         form.on('submit(complete)', function (data) {
-            var field = data.field;
-
+            var collegeId = $('#collegeId option:selected').val();
+            var subjectId = $('#subjectId option:selected').val();
+            var classId = $('#classId option:selected').val();
+            var gradeId = $('#gradeId option:selected').val();
+            var schoolYear = $('#schoolYearId option:selected').val();
+            var semester = $('#semesterId option:selected').val();
+            var studentId = $('#studentId').val();
+            var inputs = $('#scoreInfo :input[type="text"]');
+            var scoreMap = {};
+            $.each(inputs, function () {
+                scoreMap[this.name] = this.value;
+            })
+            var jsonData = {
+                collegeId: collegeId,
+                subjectId: subjectId,
+                classId: classId,
+                gradeId: gradeId,
+                schoolYear: schoolYear,
+                semester: semester,
+                studentId: studentId,
+                scoreList:scoreMap
+            };
+            $.ajax({
+                url:'/score/add',
+                type:'POST',
+                contentType:'application/json;charset=utf-8',
+                dataType: "json",
+                data:JSON.stringify(jsonData),
+                success:function (res) {
+                    if(res.code == 200){
+                        top.layer.msg("操作成功", {icon: 1});
+                    }else {
+                        top.layer.msg("操作失败", {icon: 2});
+                    }
+                },
+                error:function () {
+                    top.layer.msg("操作失败", {icon: 2});
+                }
+            })
             return false;
         });
 
         //自定义校验规则
         form.verify({
-            jobName: function (value, item) { //value：表单的值、item：表单的DOM对象
-                if (value.length > 20) {
-                    return '名称长度不能超过20';
+            studentName: function (value, item) { //value：表单的值、item：表单的DOM对象
+                value = $.trim(value);
+                if (value.length > 4) {
+                    return '姓名长度不能超过4';
+                } else {
+                    //判断输入姓名是否合法
+                    var collegeId = $('#collegeId option:selected').val();
+                    var subjectId = $('#subjectId option:selected').val();
+                    var classId = $('#classId option:selected').val();
+                    var gradeId = $('#gradeId option:selected').val();
+                    var username = $('#username').val();
+                    var jsonData = {
+                        collegeId: collegeId,
+                        subjectId: subjectId,
+                        classId: classId,
+                        gradeId: gradeId,
+                        username: username,
+                        nickName: value
+                    };
+                    var isExists = false;
+                    $.ajax({
+                        url: '/system/user/existsName',
+                        type: 'GET',
+                        async: false,
+                        data: jsonData,
+                        success: function (res) {
+                            if (res.code == 200) {
+                                isExists = res.data.isExists;
+                                $('#studentId').val(res.data.userId);
+                            }
+                        }
+                    });
+                    if (isExists == false) {
+                        return '学号与姓名不匹配！';
+                    }
                 }
-            },
-            description: function (value, item) { //value：表单的值、item：表单的DOM对象
-                if (value.length > 20) {
-                    return '描述长度不能超过50';
+            }
+        });
+
+        //渲染学院下拉框
+        collegeSelect.renderCollegeList();
+
+        //编辑学生信息回显
+        var collegeAndScore = '${collegeAndScore}';
+        if (collegeAndScore != undefined && collegeAndScore != '' && collegeAndScore != '{}') {
+            var collegeId = '${collegeAndScore.collegeId}';
+            var subjectId = '${collegeAndScore.subjectId}';
+            var classId = '${collegeAndScore.classId}';
+            var gradeId = '${collegeAndScore.gradeId}';
+            var schoolYear = '${collegeAndScore.schoolYear}';
+            var semester = '${collegeAndScore.semester}';
+            collegeSelect.reshowAll(collegeId, subjectId, classId, gradeId,schoolYear,semester, false);
+        }
+        var scoreListTpl = JSON.parse('${collegeAndScore.scoreList}');
+        laytpl($("#scoreScript").html()).render(scoreListTpl, function (html) {
+            //得到的模板渲染到html
+            $('#scoreDiv').html(html);
+        });
+
+        //选择学院触发事件
+        form.on('select(collegeId)', function (data) {
+            if ($("#collegeId option:selected").val() != "") {
+                $('#subjectDiv').show();
+                collegeSelect.renderSubjectList(data.value);
+                form.render('select');
+            } else {
+                $('#subjectDiv').hide();
+            }
+            $('#classDiv').hide();
+            $('#gradeDiv').hide();
+            $('#schoolYearDiv').hide();
+            $('#semesterDiv').hide();
+        });
+
+        //选择专业触发事件
+        form.on('select(subjectId)', function (data) {
+            if ($("#subjectId option:selected").val() != "") {
+                collegeSelect.renderClassList(data.value);
+                form.render('select');
+                $('#classDiv').show();
+            } else {
+                $('#classDiv').hide();
+            }
+            $('#gradeDiv').hide();
+            $('#schoolYearDiv').hide();
+            $('#semesterDiv').hide();
+        });
+        //选择班级触发事件
+        form.on('select(classId)', function (data) {
+            if (data.value != "") {
+                //加载年级下拉框
+                collegeSelect.renderGradeList();
+                $('#gradeDiv').show();
+            } else {
+                $('#gradeDiv').hide();
+            }
+            $('#schoolYearDiv').hide();
+            $('#semesterDiv').hide();
+        });
+        //选择年级触发事件
+        form.on('select(gradeId)', function (data) {
+            if (data.value != "") {
+                var gradeName = $("#gradeId option:selected").text();
+                if (gradeName != "" && gradeName != undefined) {
+                    collegeSelect.renderSchoolYearList(gradeName);
+                    $('#schoolYearDiv').show();
+                    form.render('select')
                 }
+            } else {
+                $('#schoolYearDiv').hide();
+            }
+            $('#semesterDiv').hide();
+        });
+        //选择学年触发事件
+        form.on('select(schoolYearId)', function (data) {
+            if ($("#schoolYearId option:selected").val() != "") {
+                $('#semesterDiv').show();
+            } else {
+                $('#semesterDiv').hide();
+            }
+        });
+        //选择学期触发事件
+        form.on('select(semesterId)', function (data) {
+            if ($("#semesterId option:selected").val() != "") {
+                //查询课程列表
+                var collegeId = $('#collegeId option:selected').val();
+                var subjectId = $('#subjectId option:selected').val();
+                var classId = $('#classId option:selected').val();
+                var gradeId = $('#gradeId option:selected').val();
+                var schoolYear = $('#schoolYearId option:selected').val();
+                var semester = $('#semesterId option:selected').val();
+                var jsonData = {
+                    collegeId: collegeId,
+                    subjectId: subjectId,
+                    classId: classId,
+                    gradeId: gradeId,
+                    schoolYear: schoolYear,
+                    semester: semester
+                };
+                $.ajax({
+                    url: '/course/listByCollege',
+                    type: 'GET',
+                    data: jsonData,
+                    success: function (res) {
+                        if (res.code == 200) {
+                            console.info(res.data)
+                            laytpl($("#scoreScript").html()).render(res.data, function (html) {
+                                //得到的模板渲染到html
+                                $('#scoreDiv').html(html);
+                            });
+                        }
+                    }
+                })
             }
         });
     });

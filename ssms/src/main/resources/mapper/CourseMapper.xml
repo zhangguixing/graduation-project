@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ssms.dao.CourseMapper">
+    
+    <select id="listByCollege" resultType="java.util.HashMap">
+        SELECT
+            c.id AS courseId,
+            c. name,
+            s.score
+        FROM
+            info_course c
+          LEFT JOIN info_score s ON c.id = s.course_id
+        WHERE
+        c.college_id = #{collegeId}
+        AND c.subject_id = #{subjectId}
+        AND c.class_id = #{classId}
+        AND c.grade_id = #{gradeId}
+        AND c.school_year = #{schoolYear}
+        AND c.semester = #{semester}
+    </select>
+</mapper>

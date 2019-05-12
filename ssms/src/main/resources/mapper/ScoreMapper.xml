@@ -50,12 +50,13 @@
             </if>
             AND s.status=1 AND u.state=0
         </where>
+        GROUP BY s.school_year,s.semester,s.student_id
         ORDER BY totalScore DESC
     </select>
 
     <select id="getPersonScore" resultType="java.util.HashMap">
         SELECT c.name AS scoreName,s.score
-        FROM info_course c LEFT JOIN info_score s ON c.id=c.s.course_id
+        FROM info_course c LEFT JOIN info_score s ON c.id= s.course_id
         <where>
             c.grade_id=#{gradeId}
             AND c.college_id=#{collegeId}
@@ -80,10 +81,73 @@
         FROM
             info_score s
         WHERE
-            s.student_id = 1
+            s.student_id = #{studentId}
         GROUP BY
             s.school_year,
             s.semester
         ORDER BY s.create_time
     </select>
+
+    <select id="getCollegeInfoById" parameterType="java.lang.Integer" resultType="java.util.HashMap">
+        SELECT
+            s.college_id AS collegeId,
+            s.subject_id AS subjectId,
+            s.class_id AS classId,
+            s.grade_id AS gradeId,
+            s.school_year AS schoolYear,
+            s.semester AS semester,
+            s.student_id AS studentId,
+            u.nick_name AS nickName,
+            u.username AS username
+        FROM
+            info_score s
+        LEFT JOIN sys_user u ON s.student_id = u.user_id
+        WHERE
+            s.id = #{id}
+    </select>
+
+    <select id="getStudentScore" parameterType="Map" resultType="java.util.HashMap">
+        SELECT
+            s.course_id AS courseId,
+            c. name,
+            s.score
+        FROM
+            info_score s
+        LEFT JOIN info_course c ON s.course_id = c.id
+        WHERE
+            s.student_id = #{studentId}
+        AND s.college_id = #{collegeId}
+        AND s.subject_id = #{subjectId}
+        AND s.class_id = #{classId}
+        AND s.grade_id = #{gradeId}
+        AND s.school_year = #{schoolYear}
+        AND s.semester = #{semester}
+    </select>
+
+    <delete id="deleteByCollegeInfo">
+        DELETE FROM info_score
+        <where>
+            <if test="gradeId != null">
+                AND grade_id=#{gradeId}
+            </if>
+            <if test="collegeId != null">
+                AND college_id=#{collegeId}
+            </if>
+            <if test="subjectId != null">
+                AND subject_id=#{subjectId}
+            </if>
+            <if test="classId != null">
+                AND class_id=#{classId}
+            </if>
+            <if test="studentId != null">
+                AND student_id=#{studentId}
+            </if>
+            <if test="schoolYear != null">
+                AND school_year=#{schoolYear}
+            </if>
+            <if test="semester != null">
+                AND semester=#{semester}
+            </if>
+        </where>
+    </delete>
 </mapper>

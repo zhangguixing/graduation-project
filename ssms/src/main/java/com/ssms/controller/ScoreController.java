@@ -52,10 +52,11 @@ public class ScoreController extends BaseController {
 
     @GetMapping("operateScore")
     public String operateScore(Model model,Integer id){
+        Map<String,Object> collegeAndScore = new HashMap<>();
         if(id != null){
-            //TODO 修改成绩，回显
-
+            collegeAndScore = scoreService.getCollegeInfoById(id);
         }
+        model.addAttribute("collegeAndScore",collegeAndScore);
         return "score/operateScore.html";
     }
 
@@ -76,6 +77,11 @@ public class ScoreController extends BaseController {
         return ResponseUtil.generateResponse(scoreService.delete(id));
     }
 
+    @ResponseBody
+    @PostMapping("add")
+    public CommonResponse add(@RequestBody Map<String,Object> map){
+        return ResponseUtil.generateResponse(scoreService.saveOrUpdate(map));
+    }
 
     @ResponseBody
     @GetMapping("chartsData")

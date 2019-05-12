@@ -1,14 +1,12 @@
 package com.ssms.controller;
 
-import com.ssms.common.BaseController;
+import com.ssms.common.*;
 import com.ssms.common.exception.ParameterException;
 import com.ssms.model.Role;
 import com.ssms.model.User;
 import com.ssms.service.RoleService;
 import com.ssms.service.UserService;
 import com.ssms.common.conifg.shiro.EndecryptUtil;
-import com.ssms.common.JsonResult;
-import com.ssms.common.PageResult;
 import com.ssms.common.util.StringUtil;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +42,12 @@ public class UserController extends BaseController {
         List<Role> roles = roleService.list(false);
         model.addAttribute("roles", roles);
         return "system/userForm.html";
+    }
+
+    @ResponseBody
+    @RequestMapping("/existsName")
+    public CommonResponse existsName(Integer gradeId, Integer collegeId, Integer subjectId, Integer classId,String username,String nickName) {
+        return ResponseUtil.generateResponse(userService.existsName(gradeId,collegeId,subjectId,classId,username,nickName));
     }
 
     /**

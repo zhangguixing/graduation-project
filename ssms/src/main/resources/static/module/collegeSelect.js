@@ -130,28 +130,65 @@ layui.define(["layer","jquery","form"],function (exports) {
                 }
             });
         },
+        //学年下拉框回显
+        selectSchoolYear:function(schoolYear) {
+            $.each($('#schoolYearId option'),function () {
+                if($(this).val() == schoolYear){
+                    $(this).attr("selected", true);
+                    return false;
+                }
+            });
+        },
+        //学期下拉框回显
+        selectSemester:function(semester) {
+            $.each($('#semesterId option'),function () {
+                if($(this).val() == semester){
+                    $(this).attr("selected", true);
+                    return false;
+                }
+            });
+        },
         //回显学院、专业、班级、年级
-        reshowAll:function(collegeId,subjectId,classId,gradeId){
+        reshowAll:function(collegeId,subjectId,classId,gradeId,schoolYear,semester,isDisabled){
             //回显学院
             this.selectCollege(collegeId);
-            $('#collegeId').attr("disabled",true);
             this.renderSubjectList(collegeId);
             $('#subjectDiv').show();
             //回显专业
             this.selectSubject(subjectId);
             this.renderClassList(subjectId);
-            $('#subjectId').attr("disabled",true);
             $('#classDiv').show();
             //回显班级
             this.selectClass(classId);
             this.renderGradeList(classId);
-            $('#classId').attr("disabled",true);
             $('#gradeDiv').show();
             //回显年级
             this.selectGrade(gradeId);
-            this.renderSchoolYearByUser();
-            $('#gradeId').attr("disabled",true);
+            var gradeName = $('#gradeId option:selected').text();
+            this.renderSchoolYearList(gradeName);
             $('#schoolYearDiv').show();
+            if(schoolYear!=null){
+                //回显学年
+                this.selectSchoolYear(schoolYear);
+                $('#semesterDiv').show();
+                if(semester!=null){
+                    //回显学期
+                    this.selectSemester(semester);
+                }
+            }
+            //设置不可用
+            if(isDisabled == true){
+                $('#collegeId').attr("disabled",true);
+                $('#subjectId').attr("disabled",true);
+                $('#classId').attr("disabled",true);
+                $('#gradeId').attr("disabled",true);
+                if(schoolYear!=null){
+                    $('#schoolYearId').attr("disabled",true);
+                    if(semester!=null){
+                        $('#semesterId').attr("disabled",true);
+                    }
+                }
+            }
             form.render('select');
         }
         //获取用户列表

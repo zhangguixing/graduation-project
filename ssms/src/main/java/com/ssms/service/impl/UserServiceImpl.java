@@ -19,9 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
@@ -143,6 +141,26 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public boolean delete(Integer userId) {
         return baseMapper.deleteById(userId) > 0;
+    }
+
+    @Override
+    public Map<String, Object> existsName(Integer gradeId, Integer collegeId, Integer subjectId, Integer classId, String username, String nickName) {
+        User user = new User();
+        user.setGradeId(gradeId);
+        user.setCollegeId(collegeId);
+        user.setSubjectId(subjectId);
+        user.setClassId(classId);
+        user.setUsername(username);
+        user.setNickName(nickName);
+        Map<String,Object> result = new HashMap<>();
+        User one = baseMapper.selectOne(user);
+        if(one == null){
+            result.put("isExists",false);
+        }else {
+            result.put("isExists",true);
+            result.put("userId",one.getUserId());
+        }
+        return result;
     }
 
     private List<Integer> getUserIds(List<User> userList) {

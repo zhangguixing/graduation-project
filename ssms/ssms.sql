@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50540
 File Encoding         : 65001
 
-Date: 2019-05-06 23:21:59
+Date: 2019-05-12 22:52:07
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -57,17 +57,17 @@ CREATE TABLE `info_course` (
   `class_id` int(11) NOT NULL COMMENT '所属班级id',
   `grade_id` int(11) NOT NULL COMMENT '所属年级id',
   `school_year` varchar(10) NOT NULL COMMENT '学年，2019-2020',
-  `user_id` int(11) NOT NULL COMMENT '用户id',
   `semester` tinyint(2) NOT NULL COMMENT '学期，1上学期，2下学期',
   `create_time` datetime NOT NULL COMMENT '创建时间',
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '状态，0删除，1正常',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of info_course
 -- ----------------------------
+INSERT INTO `info_course` VALUES ('1', 'Java程序设计', null, '0', '6', '张老师', '1', '2', '4', '1', '2015-2016', '1', '2019-05-12 18:07:52', '2019-05-12 18:13:37', '1');
 
 -- ----------------------------
 -- Table structure for info_grade
@@ -121,16 +121,16 @@ CREATE TABLE `info_score` (
   `grade_id` int(11) NOT NULL COMMENT '所属年级id',
   `school_year` varchar(10) NOT NULL COMMENT '学年，2019-2020',
   `semester` tinyint(2) NOT NULL COMMENT '学期，1上学期，2下学期',
-  `user_id` int(11) NOT NULL COMMENT '用户id',
   `create_time` datetime NOT NULL COMMENT '创建时间',
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '状态，0删除，1正常',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of info_score
 -- ----------------------------
+INSERT INTO `info_score` VALUES ('2', '100.00', '1', '7', '1', '2', '4', '1', '2015-2016', '1', '2019-05-12 22:46:07', '2019-05-12 22:46:07', '1');
 
 -- ----------------------------
 -- Table structure for sys_authorities
@@ -148,7 +148,7 @@ CREATE TABLE `sys_authorities` (
   `create_time` datetime NOT NULL COMMENT '创建时间',
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '修改时间',
   PRIMARY KEY (`authority_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=87 DEFAULT CHARSET=utf8mb4 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC COMMENT='权限表';
+) ENGINE=InnoDB AUTO_INCREMENT=90 DEFAULT CHARSET=utf8mb4 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC COMMENT='权限表';
 
 -- ----------------------------
 -- Records of sys_authorities
@@ -204,6 +204,8 @@ INSERT INTO `sys_authorities` VALUES ('83', '修改学院信息', 'college:edit'
 INSERT INTO `sys_authorities` VALUES ('84', '添加学院信息', 'college:add', '', '79', '1', '2', '', '2019-05-04 12:01:43', '2019-05-04 12:01:43');
 INSERT INTO `sys_authorities` VALUES ('85', '删除学院信息', 'college:delete', '', '79', '1', '4', '', '2019-05-04 12:02:20', '2019-05-04 12:02:20');
 INSERT INTO `sys_authorities` VALUES ('86', '年级管理', '', 'system/gradeManage', '1', '0', '2', '', '2019-05-06 23:17:00', '2019-05-06 23:17:00');
+INSERT INTO `sys_authorities` VALUES ('87', '登录日志', '', 'system/loginRecord', '1', '0', '20', '', '2019-05-08 10:22:16', '2019-05-08 10:22:16');
+INSERT INTO `sys_authorities` VALUES ('88', '查询登录日志', 'loginRecord:view', '', '87', '1', '21', '', '2019-05-08 10:23:45', '2019-05-08 10:23:45');
 
 -- ----------------------------
 -- Table structure for sys_information
@@ -223,6 +225,45 @@ CREATE TABLE `sys_information` (
 -- ----------------------------
 -- Records of sys_information
 -- ----------------------------
+
+-- ----------------------------
+-- Table structure for sys_login_record
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_login_record`;
+CREATE TABLE `sys_login_record` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `user_id` int(11) NOT NULL COMMENT '用户id',
+  `os_name` varchar(40) DEFAULT NULL COMMENT '操作系统',
+  `device` varchar(40) DEFAULT NULL COMMENT '设备名',
+  `browser_type` varchar(40) DEFAULT NULL COMMENT '浏览器类型',
+  `ip_address` varchar(40) DEFAULT NULL COMMENT 'ip地址',
+  `create_time` datetime NOT NULL COMMENT '登录时间',
+  PRIMARY KEY (`id`),
+  KEY `FK_sys_login_record_user` (`user_id`),
+  CONSTRAINT `sys_login_record_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `sys_user` (`user_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC;
+
+-- ----------------------------
+-- Records of sys_login_record
+-- ----------------------------
+INSERT INTO `sys_login_record` VALUES ('1', '2', 'Windows 10', 'Windows 10', 'Chrome', '169.254.191.202', '2019-05-08 20:40:51');
+INSERT INTO `sys_login_record` VALUES ('2', '2', 'Windows 10', 'Windows 10', 'Chrome', '169.254.191.202', '2019-05-08 21:11:47');
+INSERT INTO `sys_login_record` VALUES ('3', '2', 'Windows 10', 'Windows 10', 'Chrome', '169.254.191.202', '2019-05-08 21:13:39');
+INSERT INTO `sys_login_record` VALUES ('4', '7', 'Windows 10', 'Windows 10', 'Microsoft Edge', '169.254.191.202', '2019-05-08 21:37:21');
+INSERT INTO `sys_login_record` VALUES ('5', '7', 'Windows 10', 'Windows 10', 'Chrome', '169.254.191.202', '2019-05-08 21:39:34');
+INSERT INTO `sys_login_record` VALUES ('6', '2', 'Windows 10', 'Windows 10', 'Chrome', '169.254.191.202', '2019-05-08 21:56:17');
+INSERT INTO `sys_login_record` VALUES ('7', '2', 'Windows 10', 'Windows 10', 'Chrome', '169.254.191.202', '2019-05-08 22:35:36');
+INSERT INTO `sys_login_record` VALUES ('8', '2', 'Windows 10', 'Windows 10', 'Chrome', '169.254.191.202', '2019-05-08 22:36:50');
+INSERT INTO `sys_login_record` VALUES ('9', '2', 'Windows 10', 'Windows 10', 'Chrome', '169.254.191.202', '2019-05-09 21:38:36');
+INSERT INTO `sys_login_record` VALUES ('10', '2', 'Windows 10', 'Windows 10', 'Chrome', '169.254.191.202', '2019-05-09 21:41:07');
+INSERT INTO `sys_login_record` VALUES ('11', '2', 'Windows 10', 'Windows 10', 'Chrome', '169.254.191.202', '2019-05-09 22:50:01');
+INSERT INTO `sys_login_record` VALUES ('12', '2', 'Windows 10', 'Windows 10', 'Chrome', '169.254.191.202', '2019-05-10 21:13:29');
+INSERT INTO `sys_login_record` VALUES ('13', '2', 'Windows 10', 'Windows 10', 'Chrome', '169.254.191.202', '2019-05-10 23:03:19');
+INSERT INTO `sys_login_record` VALUES ('14', '2', 'Windows 10', 'Windows 10', 'Chrome', '169.254.191.202', '2019-05-12 18:11:41');
+INSERT INTO `sys_login_record` VALUES ('15', '2', 'Windows 10', 'Windows 10', 'Chrome', '169.254.191.202', '2019-05-12 21:07:58');
+INSERT INTO `sys_login_record` VALUES ('16', '2', 'Windows 10', 'Windows 10', 'Chrome', '169.254.191.202', '2019-05-12 21:33:14');
+INSERT INTO `sys_login_record` VALUES ('17', '2', 'Windows 10', 'Windows 10', 'Chrome', '169.254.191.202', '2019-05-12 21:48:37');
+INSERT INTO `sys_login_record` VALUES ('18', '7', 'Windows 10', 'Windows 10', 'Chrome', '169.254.191.202', '2019-05-12 22:49:56');
 
 -- ----------------------------
 -- Table structure for sys_notice
@@ -277,7 +318,7 @@ CREATE TABLE `sys_role_authorities` (
   KEY `FK_sys_role_permission_role` (`role_id`),
   CONSTRAINT `sys_role_authorities_ibfk_2` FOREIGN KEY (`role_id`) REFERENCES `sys_role` (`role_id`),
   CONSTRAINT `sys_role_authorities_ibfk_3` FOREIGN KEY (`authority_id`) REFERENCES `sys_authorities` (`authority_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1299 DEFAULT CHARSET=utf8mb4 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC COMMENT='角色权限关联表';
+) ENGINE=InnoDB AUTO_INCREMENT=1352 DEFAULT CHARSET=utf8mb4 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC COMMENT='角色权限关联表';
 
 -- ----------------------------
 -- Records of sys_role_authorities
@@ -348,57 +389,59 @@ INSERT INTO `sys_role_authorities` VALUES ('1244', '1', '27', '2019-05-04 19:18:
 INSERT INTO `sys_role_authorities` VALUES ('1245', '1', '28', '2019-05-04 19:18:00');
 INSERT INTO `sys_role_authorities` VALUES ('1246', '1', '29', '2019-05-04 19:18:00');
 INSERT INTO `sys_role_authorities` VALUES ('1247', '1', '30', '2019-05-04 19:18:00');
-INSERT INTO `sys_role_authorities` VALUES ('1248', '2', '39', '2019-05-06 23:17:17');
-INSERT INTO `sys_role_authorities` VALUES ('1249', '2', '40', '2019-05-06 23:17:17');
-INSERT INTO `sys_role_authorities` VALUES ('1250', '2', '74', '2019-05-06 23:17:17');
-INSERT INTO `sys_role_authorities` VALUES ('1251', '2', '75', '2019-05-06 23:17:17');
-INSERT INTO `sys_role_authorities` VALUES ('1252', '2', '76', '2019-05-06 23:17:17');
-INSERT INTO `sys_role_authorities` VALUES ('1253', '2', '77', '2019-05-06 23:17:17');
-INSERT INTO `sys_role_authorities` VALUES ('1254', '2', '78', '2019-05-06 23:17:17');
-INSERT INTO `sys_role_authorities` VALUES ('1255', '2', '47', '2019-05-06 23:17:17');
-INSERT INTO `sys_role_authorities` VALUES ('1256', '2', '67', '2019-05-06 23:17:17');
-INSERT INTO `sys_role_authorities` VALUES ('1257', '2', '73', '2019-05-06 23:17:17');
-INSERT INTO `sys_role_authorities` VALUES ('1258', '2', '1', '2019-05-06 23:17:17');
-INSERT INTO `sys_role_authorities` VALUES ('1259', '2', '79', '2019-05-06 23:17:17');
-INSERT INTO `sys_role_authorities` VALUES ('1260', '2', '82', '2019-05-06 23:17:17');
-INSERT INTO `sys_role_authorities` VALUES ('1261', '2', '84', '2019-05-06 23:17:17');
-INSERT INTO `sys_role_authorities` VALUES ('1262', '2', '83', '2019-05-06 23:17:17');
-INSERT INTO `sys_role_authorities` VALUES ('1263', '2', '85', '2019-05-06 23:17:17');
-INSERT INTO `sys_role_authorities` VALUES ('1264', '2', '2', '2019-05-06 23:17:17');
-INSERT INTO `sys_role_authorities` VALUES ('1265', '2', '3', '2019-05-06 23:17:17');
-INSERT INTO `sys_role_authorities` VALUES ('1266', '2', '4', '2019-05-06 23:17:17');
-INSERT INTO `sys_role_authorities` VALUES ('1267', '2', '5', '2019-05-06 23:17:17');
-INSERT INTO `sys_role_authorities` VALUES ('1268', '2', '6', '2019-05-06 23:17:17');
-INSERT INTO `sys_role_authorities` VALUES ('1269', '2', '7', '2019-05-06 23:17:17');
-INSERT INTO `sys_role_authorities` VALUES ('1270', '2', '8', '2019-05-06 23:17:17');
-INSERT INTO `sys_role_authorities` VALUES ('1271', '2', '9', '2019-05-06 23:17:17');
-INSERT INTO `sys_role_authorities` VALUES ('1272', '2', '10', '2019-05-06 23:17:17');
-INSERT INTO `sys_role_authorities` VALUES ('1273', '2', '11', '2019-05-06 23:17:17');
-INSERT INTO `sys_role_authorities` VALUES ('1274', '2', '12', '2019-05-06 23:17:17');
-INSERT INTO `sys_role_authorities` VALUES ('1275', '2', '13', '2019-05-06 23:17:17');
-INSERT INTO `sys_role_authorities` VALUES ('1276', '2', '14', '2019-05-06 23:17:17');
-INSERT INTO `sys_role_authorities` VALUES ('1277', '2', '15', '2019-05-06 23:17:17');
-INSERT INTO `sys_role_authorities` VALUES ('1278', '2', '16', '2019-05-06 23:17:17');
-INSERT INTO `sys_role_authorities` VALUES ('1279', '2', '17', '2019-05-06 23:17:17');
-INSERT INTO `sys_role_authorities` VALUES ('1280', '2', '80', '2019-05-06 23:17:17');
-INSERT INTO `sys_role_authorities` VALUES ('1281', '2', '81', '2019-05-06 23:17:17');
-INSERT INTO `sys_role_authorities` VALUES ('1282', '2', '86', '2019-05-06 23:17:17');
-INSERT INTO `sys_role_authorities` VALUES ('1283', '2', '27', '2019-05-06 23:17:17');
-INSERT INTO `sys_role_authorities` VALUES ('1284', '2', '28', '2019-05-06 23:17:17');
-INSERT INTO `sys_role_authorities` VALUES ('1285', '2', '29', '2019-05-06 23:17:17');
-INSERT INTO `sys_role_authorities` VALUES ('1286', '2', '30', '2019-05-06 23:17:17');
-INSERT INTO `sys_role_authorities` VALUES ('1287', '2', '31', '2019-05-06 23:17:17');
-INSERT INTO `sys_role_authorities` VALUES ('1288', '2', '32', '2019-05-06 23:17:17');
-INSERT INTO `sys_role_authorities` VALUES ('1289', '2', '33', '2019-05-06 23:17:17');
-INSERT INTO `sys_role_authorities` VALUES ('1290', '2', '34', '2019-05-06 23:17:17');
-INSERT INTO `sys_role_authorities` VALUES ('1291', '2', '35', '2019-05-06 23:17:17');
-INSERT INTO `sys_role_authorities` VALUES ('1292', '2', '36', '2019-05-06 23:17:17');
-INSERT INTO `sys_role_authorities` VALUES ('1293', '2', '37', '2019-05-06 23:17:17');
-INSERT INTO `sys_role_authorities` VALUES ('1294', '2', '38', '2019-05-06 23:17:17');
-INSERT INTO `sys_role_authorities` VALUES ('1295', '2', '50', '2019-05-06 23:17:17');
-INSERT INTO `sys_role_authorities` VALUES ('1296', '2', '51', '2019-05-06 23:17:17');
-INSERT INTO `sys_role_authorities` VALUES ('1297', '2', '52', '2019-05-06 23:17:17');
-INSERT INTO `sys_role_authorities` VALUES ('1298', '2', '53', '2019-05-06 23:17:17');
+INSERT INTO `sys_role_authorities` VALUES ('1299', '2', '39', '2019-05-09 21:40:47');
+INSERT INTO `sys_role_authorities` VALUES ('1300', '2', '40', '2019-05-09 21:40:47');
+INSERT INTO `sys_role_authorities` VALUES ('1301', '2', '74', '2019-05-09 21:40:47');
+INSERT INTO `sys_role_authorities` VALUES ('1302', '2', '75', '2019-05-09 21:40:47');
+INSERT INTO `sys_role_authorities` VALUES ('1303', '2', '76', '2019-05-09 21:40:47');
+INSERT INTO `sys_role_authorities` VALUES ('1304', '2', '77', '2019-05-09 21:40:47');
+INSERT INTO `sys_role_authorities` VALUES ('1305', '2', '78', '2019-05-09 21:40:47');
+INSERT INTO `sys_role_authorities` VALUES ('1306', '2', '47', '2019-05-09 21:40:47');
+INSERT INTO `sys_role_authorities` VALUES ('1307', '2', '67', '2019-05-09 21:40:47');
+INSERT INTO `sys_role_authorities` VALUES ('1308', '2', '73', '2019-05-09 21:40:47');
+INSERT INTO `sys_role_authorities` VALUES ('1309', '2', '1', '2019-05-09 21:40:47');
+INSERT INTO `sys_role_authorities` VALUES ('1310', '2', '79', '2019-05-09 21:40:47');
+INSERT INTO `sys_role_authorities` VALUES ('1311', '2', '82', '2019-05-09 21:40:47');
+INSERT INTO `sys_role_authorities` VALUES ('1312', '2', '84', '2019-05-09 21:40:47');
+INSERT INTO `sys_role_authorities` VALUES ('1313', '2', '83', '2019-05-09 21:40:47');
+INSERT INTO `sys_role_authorities` VALUES ('1314', '2', '85', '2019-05-09 21:40:47');
+INSERT INTO `sys_role_authorities` VALUES ('1315', '2', '86', '2019-05-09 21:40:47');
+INSERT INTO `sys_role_authorities` VALUES ('1316', '2', '2', '2019-05-09 21:40:47');
+INSERT INTO `sys_role_authorities` VALUES ('1317', '2', '3', '2019-05-09 21:40:47');
+INSERT INTO `sys_role_authorities` VALUES ('1318', '2', '4', '2019-05-09 21:40:47');
+INSERT INTO `sys_role_authorities` VALUES ('1319', '2', '5', '2019-05-09 21:40:47');
+INSERT INTO `sys_role_authorities` VALUES ('1320', '2', '6', '2019-05-09 21:40:47');
+INSERT INTO `sys_role_authorities` VALUES ('1321', '2', '7', '2019-05-09 21:40:47');
+INSERT INTO `sys_role_authorities` VALUES ('1322', '2', '8', '2019-05-09 21:40:47');
+INSERT INTO `sys_role_authorities` VALUES ('1323', '2', '9', '2019-05-09 21:40:47');
+INSERT INTO `sys_role_authorities` VALUES ('1324', '2', '10', '2019-05-09 21:40:47');
+INSERT INTO `sys_role_authorities` VALUES ('1325', '2', '11', '2019-05-09 21:40:47');
+INSERT INTO `sys_role_authorities` VALUES ('1326', '2', '12', '2019-05-09 21:40:47');
+INSERT INTO `sys_role_authorities` VALUES ('1327', '2', '13', '2019-05-09 21:40:47');
+INSERT INTO `sys_role_authorities` VALUES ('1328', '2', '14', '2019-05-09 21:40:47');
+INSERT INTO `sys_role_authorities` VALUES ('1329', '2', '15', '2019-05-09 21:40:47');
+INSERT INTO `sys_role_authorities` VALUES ('1330', '2', '16', '2019-05-09 21:40:47');
+INSERT INTO `sys_role_authorities` VALUES ('1331', '2', '17', '2019-05-09 21:40:47');
+INSERT INTO `sys_role_authorities` VALUES ('1332', '2', '80', '2019-05-09 21:40:47');
+INSERT INTO `sys_role_authorities` VALUES ('1333', '2', '81', '2019-05-09 21:40:47');
+INSERT INTO `sys_role_authorities` VALUES ('1334', '2', '87', '2019-05-09 21:40:47');
+INSERT INTO `sys_role_authorities` VALUES ('1335', '2', '88', '2019-05-09 21:40:47');
+INSERT INTO `sys_role_authorities` VALUES ('1336', '2', '27', '2019-05-09 21:40:47');
+INSERT INTO `sys_role_authorities` VALUES ('1337', '2', '28', '2019-05-09 21:40:47');
+INSERT INTO `sys_role_authorities` VALUES ('1338', '2', '29', '2019-05-09 21:40:47');
+INSERT INTO `sys_role_authorities` VALUES ('1339', '2', '30', '2019-05-09 21:40:47');
+INSERT INTO `sys_role_authorities` VALUES ('1340', '2', '31', '2019-05-09 21:40:47');
+INSERT INTO `sys_role_authorities` VALUES ('1341', '2', '32', '2019-05-09 21:40:47');
+INSERT INTO `sys_role_authorities` VALUES ('1342', '2', '33', '2019-05-09 21:40:47');
+INSERT INTO `sys_role_authorities` VALUES ('1343', '2', '34', '2019-05-09 21:40:47');
+INSERT INTO `sys_role_authorities` VALUES ('1344', '2', '35', '2019-05-09 21:40:47');
+INSERT INTO `sys_role_authorities` VALUES ('1345', '2', '36', '2019-05-09 21:40:47');
+INSERT INTO `sys_role_authorities` VALUES ('1346', '2', '37', '2019-05-09 21:40:47');
+INSERT INTO `sys_role_authorities` VALUES ('1347', '2', '38', '2019-05-09 21:40:47');
+INSERT INTO `sys_role_authorities` VALUES ('1348', '2', '50', '2019-05-09 21:40:47');
+INSERT INTO `sys_role_authorities` VALUES ('1349', '2', '51', '2019-05-09 21:40:47');
+INSERT INTO `sys_role_authorities` VALUES ('1350', '2', '52', '2019-05-09 21:40:47');
+INSERT INTO `sys_role_authorities` VALUES ('1351', '2', '53', '2019-05-09 21:40:47');
 
 -- ----------------------------
 -- Table structure for sys_user
@@ -431,7 +474,7 @@ CREATE TABLE `sys_user` (
 INSERT INTO `sys_user` VALUES ('1', 'superadmin', '2d4d426bb63055bfdc17bed0d10792b7', '超级管理员', null, '男', '12345678901', null, '0', '0', '0', '0', '0', '0', '2018-07-21 10:03:40', '2019-05-03 17:51:44');
 INSERT INTO `sys_user` VALUES ('2', 'admin', '3fed7a346e430ea4c2aa10250928f4de', '管理员', null, '男', '12345678901', null, '1', '0', '0', '0', '2', '0', '2018-07-21 10:50:18', '2019-05-06 22:14:44');
 INSERT INTO `sys_user` VALUES ('6', 'teacher', '629a1bf631c5ee1e898e1cd283e5c156', '教师账号', null, '女', '18849334210', null, '2', '0', '0', '0', '0', '0', '2019-04-25 15:30:49', '2019-05-03 17:51:48');
-INSERT INTO `sys_user` VALUES ('7', 'student', '7b5470e577dc3c5750d1a9f49ae660a3', '学生账号', null, '女', '18849334210', null, '3', '1', '2', '4', '0', '0', '2019-04-25 15:31:11', '2019-05-04 18:58:34');
+INSERT INTO `sys_user` VALUES ('7', 'student', '7b5470e577dc3c5750d1a9f49ae660a3', '学生账号', null, '女', '18849334210', null, '3', '1', '2', '4', '1', '0', '2019-04-25 15:31:11', '2019-05-08 21:34:50');
 
 -- ----------------------------
 -- Table structure for sys_user_role

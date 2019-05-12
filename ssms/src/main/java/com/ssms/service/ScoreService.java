@@ -14,4 +14,8 @@ public interface ScoreService {
     Map<String,Object> getChartsData(Integer studentId);
 
     boolean delete(Integer id);
+
+    Map<String,Object> getCollegeInfoById(Integer id);
+
+    boolean saveOrUpdate(Map<String, Object> map);
 }

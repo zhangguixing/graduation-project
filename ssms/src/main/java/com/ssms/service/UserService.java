@@ -6,6 +6,8 @@ import com.ssms.common.exception.ParameterException;
 import com.ssms.model.User;
 import com.ssms.common.PageResult;
 
+import java.util.Map;
+
 public interface UserService extends IService<User> {
 
     User getByUsername(String username);
@@ -26,4 +28,5 @@ public interface UserService extends IService<User> {
 
     boolean delete(Integer userId);
 
+    Map<String, Object> existsName(Integer gradeId, Integer collegeId, Integer subjectId, Integer classId, String username, String nickName);
 }

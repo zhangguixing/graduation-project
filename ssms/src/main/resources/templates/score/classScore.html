@@ -109,7 +109,7 @@
                 {field: 'subjectId', hide: true},
                 {field: 'classId', hide: true},
                 {field: 'studentId', hide: true},
-                {field: 'index', align: 'center', sort: true, title: '排名'},
+                {type: 'numbers', align: 'center', title: '排名'},
                 {field: 'username', align: 'center', sort: true, title: '学号'},
                 {field: 'nickName', align: 'center', sort: true, title: '姓名'},
                 {field: 'subjectName', align: 'center', sort: true, title: '专业'},
@@ -192,7 +192,7 @@
             var subjectId = '${collegeInfo.subjectId}';
             var classId = '${collegeInfo.classId}';
             var gradeId = '${collegeInfo.gradeId}';
-            collegeSelect.reshowAll(collegeId,subjectId,classId,gradeId);
+            collegeSelect.reshowAll(collegeId,subjectId,classId,gradeId,null,null,true);
         }
 
         //选择学院触发事件

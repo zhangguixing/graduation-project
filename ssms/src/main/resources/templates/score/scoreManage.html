@@ -124,7 +124,7 @@
                 {field: 'collegeId', hide: true},
                 {field: 'subjectId', hide: true},
                 {field: 'classId', hide: true},
-                {field: 'index', align: 'center', sort: true, title: '序号'},
+                {type: 'numbers', align: 'center', title: '序号'},
                 {field: 'username', align: 'center', sort: true, title: '学号'},
                 {field: 'nickName', align: 'center', sort: true, title: '姓名'},
                 {field: 'totalScore', align: 'center', sort: true, title: '总成绩'},
@@ -168,16 +168,11 @@
             var layEvent = obj.event; //获得 lay-event 对应的值
 
            if (layEvent === 'edit') {
-                //渲染下拉框，学院、专业、班级下拉框
-               collegeSelect.renderCollegeList();
-               collegeSelect.renderSubjectList(data.collegeId);
-               collegeSelect.renderClassList(data.classId);
-                //回显数据
-               collegeSelect.selectCollege(data);
-               collegeSelect.selectSubject(data);
-               collegeSelect.selectClass(data);
-                //展示数据
-                //showEditModel(data);
+               var url = "score/operateScore?id="+data.id;
+               top.layui.index.loadView({
+                   menuPath : url,
+                   menuName : '添加学生成绩'
+               });
             } else if (layEvent === 'del') {
                 table.reload('score-table');
                 layer.msg("操作成功", {icon: 1});
@@ -208,7 +203,7 @@
             var subjectId = '${collegeInfo.subjectId}';
             var classId = '${collegeInfo.classId}';
             var gradeId = '${collegeInfo.gradeId}';
-            collegeSelect.reshowAll(collegeId,subjectId,classId,gradeId);
+            collegeSelect.reshowAll(collegeId,subjectId,classId,gradeId,null,null,true);
         }
 
         //选择学院触发事件
@@ -333,21 +328,6 @@
                 menuPath : url,
                 menuName : '添加学生成绩'
             });
-        });
-
-        //选择学院触发时间
-        form.on('select(collegeId)', function (data) {
-            collegeSelect.renderSubjectList(data.value);
-        });
-        //选择学院触发时间
-        form.on('select(subjectId)', function (data) {
-            collegeSelect.renderClassList(data.value);
-        });
-        //选择学院触发时间
-        form.on('select(classId)', function (data) {
-            if ($("#classId option:selected").val() != "") {
-                //TODO 查询学生信息
-            }
         });
 
         // var type = 'post';
