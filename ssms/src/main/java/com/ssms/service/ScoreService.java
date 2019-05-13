@@ -13,7 +13,7 @@ public interface ScoreService {
 
     Map<String,Object> getChartsData(Integer studentId);
 
-    boolean delete(Integer id);
+    boolean delete(Map<String, Object> map);
 
     Map<String,Object> getCollegeInfoById(Integer id);
 

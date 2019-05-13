@@ -51,6 +51,21 @@
         var trendCharts = echarts.init(document.getElementById('trendId'), myEchartsTheme);
         var xData = ["2015-2016学年上学期", "2015-2016学年下学期", "2016-2017学年上学期", "2016-2017学年下学期", "2017-2018学年上学期", "2017-2018学年下学期", "2018-2019学年上学期", "2018-2019学年下学期"];
         var yData = [350, 400, 450, 550, 620, 650, 680, 700];
+        //查询指定格式学生成绩信息
+        $.ajax({
+            url:'/score/chartsData',
+            type:'GET',
+            async:false,
+            success:function (res) {
+                if(res.code == 200){
+                    var data = res.data;
+                    if(data != null){
+                        xData = data.xData;
+                        yData = data.yData;
+                    }
+                }
+            }
+        });
         var option = {
             title: {
                 textStyle: {
@@ -89,21 +104,6 @@
         window.onresize = function () {
             trendCharts.resize();
         }
-
-        //查询指定格式学生成绩信息
-        $.ajax({
-            url:'/score/chartsData',
-            type:'GET',
-            success:function (res) {
-                if(res.code == 200){
-                    var data = res.data;
-                    if(data != null){
-                        xData = data.xData;
-                        yData = data.yData;
-                    }
-                }
-            }
-        });
     });
 
 </script>

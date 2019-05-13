@@ -41,10 +41,10 @@
             <if test="searchKey != null and searchKey != '' and searchValue != null and searchValue != ''">
                 <choose>
                     <when test="searchKey == 'username'">
-                        AND u.username=#{searchValue}
+                        AND u.username like '%${searchValue}%'
                     </when>
                     <when test="searchKey == 'nick_name'">
-                        AND u.nick_name=#{searchValue}
+                        AND u.nick_name like '%${searchValue}%'
                     </when>
                 </choose>
             </if>

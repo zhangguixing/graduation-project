@@ -1,16 +1,12 @@
 package com.ssms.service.impl;
 
-import com.alibaba.druid.support.json.JSONUtils;
 import com.alibaba.fastjson.JSON;
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.pagination.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.ssms.common.util.JSONUtil;
+import com.ssms.common.util.StringUtil;
 import com.ssms.dao.ScoreMapper;
 import com.ssms.model.Score;
 import com.ssms.service.ScoreService;
-import com.ssms.common.util.StringUtil;
-import com.sun.xml.internal.bind.v2.util.QNameMap;
 import org.apache.shiro.util.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -66,8 +62,23 @@ public class ScoreServiceImpl implements ScoreService {
 
     @Transactional
     @Override
-    public boolean delete(Integer id) {
-        return scoreMapper.deleteById(id) > 0;
+    public boolean delete(Map<String, Object> map) {
+        try {
+            //0、获取所需数据
+            Integer subjectId = map.get("subjectId") == null ? null : Integer.valueOf(map.get("subjectId").toString());
+            Integer collegeId = map.get("collegeId") == null ? null : Integer.valueOf(map.get("collegeId").toString());
+            Integer studentId = map.get("studentId") == null ? null : Integer.valueOf(map.get("studentId").toString());
+            Integer classId = map.get("classId") == null ? null : Integer.valueOf(map.get("classId").toString());
+            Integer gradeId = map.get("gradeId") == null ? null : Integer.valueOf(map.get("gradeId").toString());
+            Integer semester = map.get("semester") == null ? null : Integer.valueOf(map.get("semester").toString());
+            String schoolYear = map.get("schoolYear") == null ? null : map.get("schoolYear").toString();
+            //1、删除成绩
+            scoreMapper.deleteByCollegeInfo(gradeId,collegeId,subjectId,classId,schoolYear,semester,studentId);
+            return true;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return false;
     }
 
     @Override
@@ -115,7 +126,6 @@ public class ScoreServiceImpl implements ScoreService {
                 sc.setCourseId(courseId);
                 sc.setScore(score);
                 sc.setCreateTime(new Date());
-                System.out.println(JSON.toJSONString(sc));
                 scoreMapper.insert(sc);
             }
             return true;

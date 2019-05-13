@@ -271,10 +271,11 @@
                 type:'POST',
                 contentType:'application/json;charset=utf-8',
                 dataType: "json",
+                async:false,
                 data:JSON.stringify(jsonData),
                 success:function (res) {
                     if(res.code == 200){
-                        top.layer.msg("操作成功", {icon: 1});
+                        step.next('#taskForm');
                     }else {
                         top.layer.msg("操作失败", {icon: 2});
                     }
@@ -340,12 +341,13 @@
             var schoolYear = '${collegeAndScore.schoolYear}';
             var semester = '${collegeAndScore.semester}';
             collegeSelect.reshowAll(collegeId, subjectId, classId, gradeId,schoolYear,semester, false);
+            //回显成绩列表
+            var scoreListTpl = JSON.parse('${collegeAndScore.scoreList}');
+            laytpl($("#scoreScript").html()).render(scoreListTpl, function (html) {
+                //得到的模板渲染到html
+                $('#scoreDiv').html(html);
+            });
         }
-        var scoreListTpl = JSON.parse('${collegeAndScore.scoreList}');
-        laytpl($("#scoreScript").html()).render(scoreListTpl, function (html) {
-            //得到的模板渲染到html
-            $('#scoreDiv').html(html);
-        });
 
         //选择学院触发事件
         form.on('select(collegeId)', function (data) {

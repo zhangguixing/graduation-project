@@ -72,9 +72,9 @@ public class ScoreController extends BaseController {
     }
 
     @ResponseBody
-    @DeleteMapping("delete/{id}")
-    public CommonResponse delete(@PathVariable Integer id){
-        return ResponseUtil.generateResponse(scoreService.delete(id));
+    @DeleteMapping("delete")
+    public CommonResponse delete(@RequestBody Map<String,Object> map){
+        return ResponseUtil.generateResponse(scoreService.delete(map));
     }
 
     @ResponseBody

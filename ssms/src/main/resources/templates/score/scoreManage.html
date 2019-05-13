@@ -82,6 +82,9 @@
                             <i class="layui-icon">&#xe640;</i>删除
                         </button>
                     </div>
+                    <div class="layui-inline">
+                        <button id="btnExp" class="layui-btn icon-btn"><i class="layui-icon">&#xe67d;</i>导出</button>
+                    </div>
                 </div>
             </div>
             <table class="layui-table" id="score-table" lay-filter="score-table"></table>
@@ -102,7 +105,7 @@
 <script type="text/javascript" src="/assets/js/common.js"></script>
 
 <script>
-    layui.use(['layer', 'form', 'table', 'admin','collegeSelect'], function () {
+    layui.use(['layer', 'form', 'table', 'admin', 'collegeSelect'], function () {
         var $ = layui.jquery;
         var layer = layui.layer;
         var form = layui.form;
@@ -117,6 +120,7 @@
             elem: '#score-table',
             method: 'GET',
             url: '/score/all',
+            title:'学生成绩单',
             page: true,
             cols: [[
                 {type: 'checkbox'},
@@ -131,15 +135,15 @@
                 {field: 'subjectName', align: 'center', sort: true, title: '专业'},
                 {field: 'schoolYear', align: 'center', sort: true, title: '学年'},
                 {
-                    align: 'center', sort: true,templet:function (d) {
-                        if(d.semester==1){
+                    align: 'center', sort: true, templet: function (d) {
+                        if (d.semester == 1) {
                             return '上学期';
-                        }else if(d.semester==2){
+                        } else if (d.semester == 2) {
                             return '下学期';
-                        }else {
+                        } else {
                             return '未知';
                         }
-                    },title: '学期'
+                    }, title: '学期'
                 },
                 {field: 'operation', align: 'center', toolbar: '#score-table-bar', title: '操作'}
             ]],
@@ -167,18 +171,30 @@
             var data = obj.data; //获得当前行数据
             var layEvent = obj.event; //获得 lay-event 对应的值
 
-           if (layEvent === 'edit') {
-               var url = "score/operateScore?id="+data.id;
-               top.layui.index.loadView({
-                   menuPath : url,
-                   menuName : '添加学生成绩'
-               });
+            if (layEvent === 'edit') {
+                var url = "score/operateScore?id=" + data.id;
+                top.layui.index.loadView({
+                    menuPath: url,
+                    menuName: '添加学生成绩'
+                });
             } else if (layEvent === 'del') {
                 table.reload('score-table');
                 layer.msg("操作成功", {icon: 1});
+                var jsonData = {
+                    collegeId: data.collegeId,
+                    subjectId: data.subjectId,
+                    classId: data.classId,
+                    gradeId: data.gradeId,
+                    schoolYear: data.schoolYearId,
+                    semester: data.semesterId,
+                    studentId: data.studentId
+                };
                 $.ajax({
                     type: 'delete',
-                    url: '/score/delete/' + data.id,
+                    url: '/score/delete',
+                    contentType: 'application/json;charset=utf-8',
+                    async: false,
+                    data: JSON.stringify(jsonData),
                     success: function (data) {
                         layer.closeAll('loading');
                         if (data.code == 200) {
@@ -193,6 +209,17 @@
             }
         });
 
+        // 导出excel
+        $('#btnExp').click(function () {
+            var checkRows = table.checkStatus('score-table');
+            if (checkRows.data.length == 0) {
+                layer.msg('请选择要导出的数据', {icon: 2});
+            } else {
+                table.exportFile(ins1.config.id, checkRows.data, 'xls');
+            }
+        });
+
+
         //加载学院下拉框
         collegeSelect.renderCollegeList();
 
@@ -203,7 +230,7 @@
             var subjectId = '${collegeInfo.subjectId}';
             var classId = '${collegeInfo.classId}';
             var gradeId = '${collegeInfo.gradeId}';
-            collegeSelect.reshowAll(collegeId,subjectId,classId,gradeId,null,null,true);
+            collegeSelect.reshowAll(collegeId, subjectId, classId, gradeId, null, null, true);
         }
 
         //选择学院触发事件
@@ -325,8 +352,8 @@
         $('#btnAdd').click(function () {
             var url = "score/operateScore";
             top.layui.index.loadView({
-                menuPath : url,
-                menuName : '添加学生成绩'
+                menuPath: url,
+                menuName: '添加学生成绩'
             });
         });
 
