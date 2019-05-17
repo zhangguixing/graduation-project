@@ -4,13 +4,15 @@ import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.plugins.pagination.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.ssms.common.util.StringUtil;
+import com.ssms.dao.CollegeSubjectClassMapper;
+import com.ssms.dao.GradeMapper;
 import com.ssms.dao.ScoreMapper;
 import com.ssms.model.Score;
 import com.ssms.service.ScoreService;
-import org.apache.shiro.util.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -20,6 +22,10 @@ public class ScoreServiceImpl implements ScoreService {
 
     @Autowired
     private ScoreMapper scoreMapper;
+    @Autowired
+    private CollegeSubjectClassMapper collegeSubjectClassMapper;
+    @Autowired
+    private GradeMapper gradeMapper;
 
     @Override
     public PageInfo<Map<String, Object>> listScore(Integer pageNum, Integer pageSize, Integer gradeId, Integer collegeId, Integer subjectId, Integer classId, String schoolYear, Integer semester, String searchKey, String searchValue) {
@@ -30,7 +36,7 @@ public class ScoreServiceImpl implements ScoreService {
         }
         listScore = scoreMapper.listScore(gradeId, collegeId, subjectId, classId, schoolYear, semester, searchKey, searchValue);
         //表中无符合条件数据
-        if (CollectionUtils.isEmpty(listScore) || CollectionUtils.isEmpty(listScore.get(0)) || listScore.get(0).get("id").toString().equals("0")) {
+        if (CollectionUtils.isEmpty(listScore) || CollectionUtils.isEmpty(listScore.get(0))) {
             listScore = new ArrayList<>();
         }
         return PageInfo.of(listScore);
@@ -133,5 +139,77 @@ public class ScoreServiceImpl implements ScoreService {
             e.printStackTrace();
         }
         return false;
+    }
+
+    @Override
+    public Map<String, Object> export(List<Map<String, Object>> list) {
+        Map<String, Object> result = new HashMap<>();
+        if(!CollectionUtils.isEmpty(list) && list.size()>0){
+            Map<String, Object> map = list.get(0);
+            Integer gradeId = map.get("gradeId") == null ? null : Integer.valueOf(map.get("gradeId").toString());
+            Integer collegeId = map.get("collegeId") == null ? null : Integer.valueOf(map.get("collegeId").toString());
+            Integer subjectId = map.get("subjectId") == null ? null : Integer.valueOf(map.get("subjectId").toString());
+            Integer classId = map.get("classId") == null ? null : Integer.valueOf(map.get("classId").toString());
+            Integer semester = map.get("semester") == null ? null : Integer.valueOf(map.get("semester").toString());
+            String schoolYear = map.get("schoolYear") == null ? null : map.get("schoolYear").toString();
+
+            List<String> headList = new ArrayList<>();
+            headList.add("学号");
+            headList.add("姓名");
+            headList.add("年级");
+            headList.add("学院");
+            headList.add("专业");
+            headList.add("班级");
+            if(!StringUtil.isBlank(schoolYear)){
+                headList.add("学年");
+            }
+            if(!StringUtil.isBlank(semester+"")){
+                headList.add("学期");
+            }
+            List<String> courseList = scoreMapper.listCourseInfo(gradeId,collegeId,subjectId,classId,schoolYear,semester);
+            headList.addAll(courseList);
+            headList.add("总成绩");
+            List<List<Object>> bodyList = new ArrayList<>();
+
+            List<Object> row = new ArrayList<>();
+            String username = map.get("username") == null ? null : map.get("username").toString();
+            String nickName = map.get("nickName") == null ? null : map.get("nickName").toString();
+            String gradeName = gradeMapper.selectNameById(gradeId);
+            String collegeName = collegeSubjectClassMapper.selectNameById(collegeId);
+            String subjectName = collegeSubjectClassMapper.selectNameById(subjectId);
+            String className = collegeSubjectClassMapper.selectNameById(classId);
+
+
+            row.add(username);
+            row.add(nickName);
+            row.add(gradeName);
+            row.add(collegeName);
+            row.add(subjectName);
+            row.add(className);
+            if(!StringUtil.isBlank(schoolYear)){
+                row.add(schoolYear);
+            }
+            if(!StringUtil.isBlank(semester+"")){
+                String[] semesterNames = {"上学期","下学期"};
+                String semesterName = semesterNames[semester-1];
+                row.add(semesterName);
+            }
+            for (Map<String,Object> studentMap:list) {
+                Integer studentId = studentMap.get("studentId") == null ? null : Integer.valueOf(studentMap.get("studentId").toString());
+                //获取课程、成绩
+                List<BigDecimal> scoreList = scoreMapper.listScoreInfo(gradeId,collegeId,subjectId,classId,schoolYear,semester,studentId);
+                row.addAll(scoreList);
+                BigDecimal totalScore=new BigDecimal("0");
+                for (BigDecimal score:scoreList) {
+                    totalScore = totalScore.add(score);
+                }
+                row.add(totalScore);
+                bodyList.add(row);
+            }
+            result.put("headList",headList);
+            result.put("bodyList",bodyList);
+        }
+        System.out.println(JSON.toJSONString(result));
+        return result;
     }
 }

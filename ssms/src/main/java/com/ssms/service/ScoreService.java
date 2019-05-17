@@ -18,4 +18,6 @@ public interface ScoreService {
     Map<String,Object> getCollegeInfoById(Integer id);
 
     boolean saveOrUpdate(Map<String, Object> map);
+
+   Map<String,Object> export(List<Map<String,Object>> list);
 }

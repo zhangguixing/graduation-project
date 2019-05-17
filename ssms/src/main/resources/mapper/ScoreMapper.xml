@@ -4,17 +4,18 @@
 
     <select id="listScore" resultType="java.util.HashMap">
         SELECT
-        s.id,
-        s.college_id AS collegeId,
-        s.subject_id AS subjectId,
-        csc.name AS subjectName,
-        s.class_id AS classId,
-        s.student_id AS studentId,
-        u.username,
-        u.nick_name AS nickName,
-        sum(s.score) AS totalScore,
-        s.school_year AS schoolYear,
-        s.semester
+            s.id,
+            s.college_id AS collegeId,
+            s.subject_id AS subjectId,
+            csc.name AS subjectName,
+            s.class_id AS classId,
+            s.grade_id AS gradeId,
+            s.student_id AS studentId,
+            u.username,
+            u.nick_name AS nickName,
+            sum(s.score) AS totalScore,
+            s.school_year AS schoolYear,
+            s.semester
         FROM
         info_score s
         LEFT JOIN sys_user u ON s.student_id = u.user_id
@@ -50,7 +51,7 @@
             </if>
             AND s.status=1 AND u.state=0
         </where>
-        GROUP BY s.school_year,s.semester,s.student_id
+        GROUP BY s.student_id,s.school_year,s.semester
         ORDER BY totalScore DESC
     </select>
 
@@ -122,6 +123,63 @@
         AND s.grade_id = #{gradeId}
         AND s.school_year = #{schoolYear}
         AND s.semester = #{semester}
+    </select>
+    
+    <select id="listScoreInfo" resultType="java.math.BigDecimal">
+        SELECT
+          s.score
+        FROM info_score s
+        LEFT JOIN info_course c ON s.course_id=c.id
+        <where>
+            <if test="gradeId != null">
+                AND s.grade_id=#{gradeId}
+            </if>
+            <if test="collegeId != null">
+                AND s.college_id=#{collegeId}
+            </if>
+            <if test="subjectId != null">
+                AND s.subject_id=#{subjectId}
+            </if>
+            <if test="classId != null">
+                AND s.class_id=#{classId}
+            </if>
+            <if test="studentId != null">
+                AND s.student_id=#{studentId}
+            </if>
+            <if test="schoolYear != null">
+                AND s.school_year=#{schoolYear}
+            </if>
+            <if test="semester != null">
+                AND s.semester=#{semester}
+            </if>
+        </where>
+        ORDER BY c.name
+    </select>
+    <select id="listCourseInfo" resultType="java.lang.String">
+        SELECT
+          c.name
+        FROM info_course c
+        <where>
+            <if test="gradeId != null">
+                AND c.grade_id=#{gradeId}
+            </if>
+            <if test="collegeId != null">
+                AND c.college_id=#{collegeId}
+            </if>
+            <if test="subjectId != null">
+                AND c.subject_id=#{subjectId}
+            </if>
+            <if test="classId != null">
+                AND c.class_id=#{classId}
+            </if>
+            <if test="schoolYear != null">
+                AND c.school_year=#{schoolYear}
+            </if>
+            <if test="semester != null">
+                AND c.semester=#{semester}
+            </if>
+        </where>
+        ORDER BY c.name
     </select>
 
     <delete id="deleteByCollegeInfo">

@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RequestMapping("score")
@@ -69,6 +70,12 @@ public class ScoreController extends BaseController {
     public String scoreTrend(Model model) {
         model.addAttribute("loginUser", getLoginUser());
         return "score/scoreTrend.html";
+    }
+
+    @ResponseBody
+    @PostMapping("export")
+    public CommonResponse export(@RequestBody List<Map<String,Object>> list){
+        return ResponseUtil.generateResponse(scoreService.export(list));
     }
 
     @ResponseBody

@@ -60,8 +60,12 @@
                 if(res.code == 200){
                     var data = res.data;
                     if(data != null){
-                        xData = data.xData;
-                        yData = data.yData;
+                        if(data.xData.length > 0){
+                            xData = data.xData;
+                        }
+                        if(data.yData.length >0){
+                            yData = data.yData;
+                        }
                     }
                 }
             }

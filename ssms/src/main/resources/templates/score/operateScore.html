@@ -170,7 +170,7 @@
                         <div style="font-size: 14px; color: #666; margin-top: 20px;">请到成绩管理界面查看成绩</div>
                     </div>
                     <div style="text-align: center; margin-top: 50px;">
-                        <button class="layui-btn next" lay-submit lay-filter="againCreate">再次添加</button>
+                        <button class="layui-btn next" lay-submit lay-filter="againCreate" id="againCreate">再次添加</button>
                     </div>
                 </div>
 
@@ -232,10 +232,12 @@
             return false;
         });
 
+        //上一步
         $('.pre').click(function () {
             step.pre('#taskForm');
         });
 
+        //再次创建
         form.on('submit(againCreate)', function (data) {
             step.next('#taskForm');
             location.reload(false);
@@ -347,6 +349,7 @@
                 //得到的模板渲染到html
                 $('#scoreDiv').html(html);
             });
+            $('#againCreate').html('再次编辑');
         }
 
         //选择学院触发事件

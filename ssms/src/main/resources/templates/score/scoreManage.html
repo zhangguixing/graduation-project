@@ -128,6 +128,9 @@
                 {field: 'collegeId', hide: true},
                 {field: 'subjectId', hide: true},
                 {field: 'classId', hide: true},
+                {field: 'gradeId', hide: true},
+                {field: 'semester', hide: true},
+                {field: 'studentId', hide: true},
                 {type: 'numbers', align: 'center', title: '序号'},
                 {field: 'username', align: 'center', sort: true, title: '学号'},
                 {field: 'nickName', align: 'center', sort: true, title: '姓名'},
@@ -175,7 +178,7 @@
                 var url = "score/operateScore?id=" + data.id;
                 top.layui.index.loadView({
                     menuPath: url,
-                    menuName: '添加学生成绩'
+                    menuName: '修改学生成绩'
                 });
             } else if (layEvent === 'del') {
                 table.reload('score-table');
@@ -212,11 +215,32 @@
         // 导出excel
         $('#btnExp').click(function () {
             var checkRows = table.checkStatus('score-table');
+            var rows = checkRows.data;
+            var collegeId = $('#collegeId option:selected').val();
+            var subjectId = $('#subjectId option:selected').val();
+            var classId = $('#classId option:selected').val();
+            var gradeId = $('#gradeId option:selected').val();
+            var schoolYearId = $('#schoolYearId option:selected').val();
+            var semesterId = $('#semesterId option:selected').val();
             if (checkRows.data.length == 0) {
                 layer.msg('请选择要导出的数据', {icon: 2});
+            } else if(rows.length!=1 && (collegeId=="" || subjectId=="" || classId=="" || gradeId=="" || schoolYearId=="" || semesterId=="")) {
+                layer.msg('只可导出指定学年学期的学生', {icon: 2});
             } else {
-                table.exportFile(ins1.config.id, checkRows.data, 'xls');
-            }
+                    $.ajax({
+                        url:'/score/export',
+                        type:'POST',
+                        contentType:'application/json;charset=utf-8',
+                        async:false,
+                        data:JSON.stringify(rows),
+                        success:function (res) {
+                            if(res.code == 200){
+                                var data = res.data;
+                                table.exportFile(data.headList, data.bodyList, 'xls','学生成绩单');
+                            }
+                        }
+                    })
+                }
         });
 
 

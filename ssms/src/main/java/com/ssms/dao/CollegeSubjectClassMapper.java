@@ -10,4 +10,6 @@ public interface CollegeSubjectClassMapper extends BaseMapper<CollegeSubjectClas
     List<CollegeSubjectClass> findByParentId(Integer parentId);
 
     List<CollegeSubjectClass> listCollegeAndSubject();
+
+    String selectNameById(Integer collegeId);
 }

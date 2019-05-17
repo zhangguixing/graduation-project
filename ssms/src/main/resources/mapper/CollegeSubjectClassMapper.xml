@@ -9,4 +9,8 @@
     <select id="listCollegeAndSubject" resultType="com.ssms.model.CollegeSubjectClass">
         SELECT * FROM info_college_subject_class WHERE type_number IN (0,1)
     </select>
+
+    <select id="selectNameById" parameterType="java.lang.Integer" resultType="java.lang.String">
+        SELECT name FROM info_college_subject_class WHERE id=#{id}
+    </select>
 </mapper>

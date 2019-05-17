@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50540
 File Encoding         : 65001
 
-Date: 2019-05-12 22:52:07
+Date: 2019-05-17 13:58:09
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -28,7 +28,7 @@ CREATE TABLE `info_college_subject_class` (
   `create_time` datetime NOT NULL COMMENT '创建时间',
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of info_college_subject_class
@@ -38,8 +38,10 @@ INSERT INTO `info_college_subject_class` VALUES ('2', '计算机科学与技术'
 INSERT INTO `info_college_subject_class` VALUES ('3', '1班', '3', '2', '2', '2019-05-04 16:41:33', '2019-05-04 16:41:33');
 INSERT INTO `info_college_subject_class` VALUES ('4', '2班', '4', '2', '2', '2019-05-04 16:43:20', '2019-05-04 16:43:20');
 INSERT INTO `info_college_subject_class` VALUES ('5', '理学院', '2', '0', '0', '2019-05-04 18:28:26', '2019-05-04 18:28:26');
-INSERT INTO `info_college_subject_class` VALUES ('6', '新能源', '1', '5', '1', '2019-05-04 18:28:55', '2019-05-04 18:28:55');
+INSERT INTO `info_college_subject_class` VALUES ('6', '新能源', '2', '5', '1', '2019-05-04 18:28:55', '2019-05-13 21:45:44');
 INSERT INTO `info_college_subject_class` VALUES ('7', '1班', '1', '6', '2', '2019-05-04 18:29:19', '2019-05-04 18:29:19');
+INSERT INTO `info_college_subject_class` VALUES ('8', '应用化学', '3', '5', '1', '2019-05-13 21:46:41', '2019-05-13 21:46:41');
+INSERT INTO `info_college_subject_class` VALUES ('9', '1班', '1', '8', '2', '2019-05-13 21:47:32', '2019-05-13 21:47:46');
 
 -- ----------------------------
 -- Table structure for info_course
@@ -62,12 +64,13 @@ CREATE TABLE `info_course` (
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '状态，0删除，1正常',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of info_course
 -- ----------------------------
 INSERT INTO `info_course` VALUES ('1', 'Java程序设计', null, '0', '6', '张老师', '1', '2', '4', '1', '2015-2016', '1', '2019-05-12 18:07:52', '2019-05-12 18:13:37', '1');
+INSERT INTO `info_course` VALUES ('2', 'SQLServer数据库理论基础', null, '0', '6', '张老师', '1', '2', '4', '1', '2015-2016', '2', '2019-05-12 18:07:52', '2019-05-17 13:26:32', '1');
 
 -- ----------------------------
 -- Table structure for info_grade
@@ -125,12 +128,13 @@ CREATE TABLE `info_score` (
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '状态，0删除，1正常',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of info_score
 -- ----------------------------
-INSERT INTO `info_score` VALUES ('2', '100.00', '1', '7', '1', '2', '4', '1', '2015-2016', '1', '2019-05-12 22:46:07', '2019-05-12 22:46:07', '1');
+INSERT INTO `info_score` VALUES ('10', '99.00', '1', '7', '1', '2', '4', '1', '2015-2016', '1', '2019-05-17 13:45:34', '2019-05-17 13:45:34', '1');
+INSERT INTO `info_score` VALUES ('12', '89.00', '2', '7', '1', '2', '4', '1', '2015-2016', '2', '2019-05-17 13:48:51', '2019-05-17 13:48:51', '1');
 
 -- ----------------------------
 -- Table structure for sys_authorities
@@ -241,7 +245,7 @@ CREATE TABLE `sys_login_record` (
   PRIMARY KEY (`id`),
   KEY `FK_sys_login_record_user` (`user_id`),
   CONSTRAINT `sys_login_record_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `sys_user` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8mb4 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_login_record
@@ -264,6 +268,17 @@ INSERT INTO `sys_login_record` VALUES ('15', '2', 'Windows 10', 'Windows 10', 'C
 INSERT INTO `sys_login_record` VALUES ('16', '2', 'Windows 10', 'Windows 10', 'Chrome', '169.254.191.202', '2019-05-12 21:33:14');
 INSERT INTO `sys_login_record` VALUES ('17', '2', 'Windows 10', 'Windows 10', 'Chrome', '169.254.191.202', '2019-05-12 21:48:37');
 INSERT INTO `sys_login_record` VALUES ('18', '7', 'Windows 10', 'Windows 10', 'Chrome', '169.254.191.202', '2019-05-12 22:49:56');
+INSERT INTO `sys_login_record` VALUES ('19', '2', 'Windows 10', 'Windows 10', 'Chrome', '169.254.191.202', '2019-05-13 19:04:36');
+INSERT INTO `sys_login_record` VALUES ('20', '2', 'Windows 10', 'Windows 10', 'Chrome', '169.254.191.202', '2019-05-13 21:44:18');
+INSERT INTO `sys_login_record` VALUES ('21', '2', 'Windows 10', 'Windows 10', 'Chrome', '169.254.191.202', '2019-05-13 21:51:50');
+INSERT INTO `sys_login_record` VALUES ('22', '2', 'Windows 10', 'Windows 10', 'Chrome', '169.254.191.202', '2019-05-13 21:54:56');
+INSERT INTO `sys_login_record` VALUES ('23', '7', 'Windows 10', 'Windows 10', 'Chrome', '169.254.191.202', '2019-05-13 22:02:24');
+INSERT INTO `sys_login_record` VALUES ('24', '2', 'Windows 10', 'Windows 10', 'Chrome', '169.254.191.202', '2019-05-13 22:08:15');
+INSERT INTO `sys_login_record` VALUES ('25', '2', 'Windows 10', 'Windows 10', 'Chrome', '169.254.191.202', '2019-05-14 22:23:52');
+INSERT INTO `sys_login_record` VALUES ('26', '2', 'Windows 10', 'Windows 10', 'Chrome', '169.254.191.202', '2019-05-17 11:09:20');
+INSERT INTO `sys_login_record` VALUES ('27', '2', 'Windows 10', 'Windows 10', 'Chrome', '169.254.191.202', '2019-05-17 12:40:14');
+INSERT INTO `sys_login_record` VALUES ('28', '2', 'Windows 10', 'Windows 10', 'Chrome', '169.254.191.202', '2019-05-17 12:48:12');
+INSERT INTO `sys_login_record` VALUES ('29', '2', 'Windows 10', 'Windows 10', 'Chrome', '169.254.191.202', '2019-05-17 13:17:21');
 
 -- ----------------------------
 -- Table structure for sys_notice
@@ -474,7 +489,7 @@ CREATE TABLE `sys_user` (
 INSERT INTO `sys_user` VALUES ('1', 'superadmin', '2d4d426bb63055bfdc17bed0d10792b7', '超级管理员', null, '男', '12345678901', null, '0', '0', '0', '0', '0', '0', '2018-07-21 10:03:40', '2019-05-03 17:51:44');
 INSERT INTO `sys_user` VALUES ('2', 'admin', '3fed7a346e430ea4c2aa10250928f4de', '管理员', null, '男', '12345678901', null, '1', '0', '0', '0', '2', '0', '2018-07-21 10:50:18', '2019-05-06 22:14:44');
 INSERT INTO `sys_user` VALUES ('6', 'teacher', '629a1bf631c5ee1e898e1cd283e5c156', '教师账号', null, '女', '18849334210', null, '2', '0', '0', '0', '0', '0', '2019-04-25 15:30:49', '2019-05-03 17:51:48');
-INSERT INTO `sys_user` VALUES ('7', 'student', '7b5470e577dc3c5750d1a9f49ae660a3', '学生账号', null, '女', '18849334210', null, '3', '1', '2', '4', '1', '0', '2019-04-25 15:31:11', '2019-05-08 21:34:50');
+INSERT INTO `sys_user` VALUES ('7', 'student', '7b5470e577dc3c5750d1a9f49ae660a3', '仙女大人', null, '女', '18849334210', null, '3', '1', '2', '4', '1', '0', '2019-04-25 15:31:11', '2019-05-13 22:02:13');
 
 -- ----------------------------
 -- Table structure for sys_user_role
