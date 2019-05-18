@@ -82,16 +82,14 @@
         form.on('select(schoolYearId)', function (data) {
             if ($("#schoolYearId option:selected").val() != "") {
                 $('#semesterDiv').show();
-                searchScoreList();
             }else {
                 $('#semesterDiv').hide();
             }
+            searchScoreList();
         });
         //选择学期触发事件
         form.on('select(semesterId)', function (data) {
-            if ($("#semesterId option:selected").val() != "") {
-                searchScoreList();
-            }
+            searchScoreList();
         });
 
         //根据条件获取成绩列表

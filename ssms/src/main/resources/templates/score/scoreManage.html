@@ -263,7 +263,6 @@
                 $('#subjectDiv').show();
                 collegeSelect.renderSubjectList(data.value);
                 form.render('select');
-                searchScoreList();
             } else {
                 $('#subjectDiv').hide();
             }
@@ -271,6 +270,7 @@
             $('#gradeDiv').hide();
             $('#schoolYearDiv').hide();
             $('#semesterDiv').hide();
+            searchScoreList();
         });
 
         //选择专业触发事件
@@ -279,13 +279,13 @@
                 collegeSelect.renderClassList(data.value);
                 form.render('select');
                 $('#classDiv').show();
-                searchScoreList();
             } else {
                 $('#classDiv').hide();
             }
             $('#gradeDiv').hide();
             $('#schoolYearDiv').hide();
             $('#semesterDiv').hide();
+            searchScoreList();
         });
         //选择班级触发事件
         form.on('select(classId)', function (data) {
@@ -293,12 +293,12 @@
                 //加载年级下拉框
                 collegeSelect.renderGradeList();
                 $('#gradeDiv').show();
-                searchScoreList();
             } else {
                 $('#gradeDiv').hide();
             }
             $('#schoolYearDiv').hide();
             $('#semesterDiv').hide();
+            searchScoreList();
         });
         //选择年级触发事件
         form.on('select(gradeId)', function (data) {
@@ -308,27 +308,25 @@
                     collegeSelect.renderSchoolYearList(gradeName);
                     $('#schoolYearDiv').show();
                     form.render('select')
-                    searchScoreList();
                 }
             } else {
                 $('#schoolYearDiv').hide();
             }
             $('#semesterDiv').hide();
+            searchScoreList();
         });
         //选择学年触发事件
         form.on('select(schoolYearId)', function (data) {
             if ($("#schoolYearId option:selected").val() != "") {
                 $('#semesterDiv').show();
-                searchScoreList();
             } else {
                 $('#semesterDiv').hide();
             }
+            searchScoreList();
         });
         //选择学期触发事件
         form.on('select(semesterId)', function (data) {
-            if ($("#semesterId option:selected").val() != "") {
-                searchScoreList();
-            }
+            dsearchScoreList();
         });
 
         // 搜索按钮点击事件
