@@ -158,34 +158,42 @@ layui.define(["layer","jquery","form"],function (exports) {
             this.selectSubject(subjectId);
             this.renderClassList(subjectId);
             $('#classDiv').show();
-            //回显班级
-            this.selectClass(classId);
-            this.renderGradeList(classId);
-            $('#gradeDiv').show();
-            //回显年级
-            this.selectGrade(gradeId);
-            var gradeName = $('#gradeId option:selected').text();
-            this.renderSchoolYearList(gradeName);
-            $('#schoolYearDiv').show();
-            if(schoolYear!=null){
-                //回显学年
-                this.selectSchoolYear(schoolYear);
-                $('#semesterDiv').show();
-                if(semester!=null){
-                    //回显学期
-                    this.selectSemester(semester);
+            if(classId!=null){
+                //回显班级
+                this.selectClass(classId);
+                this.renderGradeList(classId);
+                $('#gradeDiv').show();
+                if(gradeId != null){
+                    //回显年级
+                    this.selectGrade(gradeId);
+                    var gradeName = $('#gradeId option:selected').text();
+                    this.renderSchoolYearList(gradeName);
+                    $('#schoolYearDiv').show();
+                    if(schoolYear!=null){
+                        //回显学年
+                        this.selectSchoolYear(schoolYear);
+                        $('#semesterDiv').show();
+                        if(semester!=null){
+                            //回显学期
+                            this.selectSemester(semester);
+                        }
+                    }
                 }
             }
             //设置不可用
             if(isDisabled == true){
                 $('#collegeId').attr("disabled",true);
                 $('#subjectId').attr("disabled",true);
-                $('#classId').attr("disabled",true);
-                $('#gradeId').attr("disabled",true);
-                if(schoolYear!=null){
-                    $('#schoolYearId').attr("disabled",true);
-                    if(semester!=null){
-                        $('#semesterId').attr("disabled",true);
+                if(classId!=null){
+                    $('#classId').attr("disabled",true);
+                    if(gradeId!=null){
+                        $('#gradeId').attr("disabled",true);
+                        if(schoolYear!=null){
+                            $('#schoolYearId').attr("disabled",true);
+                            if(semester!=null){
+                                $('#semesterId').attr("disabled",true);
+                            }
+                        }
                     }
                 }
             }

@@ -3,13 +3,18 @@ package com.ssms.controller;
 import com.ssms.common.BaseController;
 import com.ssms.common.CommonResponse;
 import com.ssms.common.ResponseUtil;
+import com.ssms.model.CourseTimeTable;
+import com.ssms.model.User;
 import com.ssms.service.CourseService;
+import com.ssms.service.CourseTimeTableService;
+import com.ssms.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @Author Guixing
@@ -22,10 +27,32 @@ public class CourseController extends BaseController {
 
     @Autowired
     private CourseService courseService;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private CourseTimeTableService courseTimeTableService;
 
     @GetMapping("manage")
     public String manage(Model model){
         return "/course/courseManage.html";
+    }
+
+    @GetMapping("view")
+    public String view(Model model) {
+        User user = this.getLoginUser();
+        Map<String,Integer> result = new HashMap<>();
+        Integer collegeId = user.getCollegeId();
+        Integer subjectId = user.getSubjectId();
+        result.put("collegeId",collegeId);
+        result.put("subjectId",subjectId);
+        if(User.STUDENT_TYPE == user.getPersonType()){
+            Integer gradeId = user.getGradeId();
+            Integer classId = user.getClassId();
+            result.put("gradeId",gradeId);
+            result.put("classId",classId);
+        }
+        model.addAttribute("collegeInfo",result);
+        return "/course/classCourse.html";
     }
 
     @ResponseBody
@@ -34,4 +61,45 @@ public class CourseController extends BaseController {
         return ResponseUtil.generateResponse(courseService.listByCollege(gradeId,collegeId,subjectId,classId,schoolYear,semester));
     }
 
+    @ResponseBody
+    @GetMapping("listTimeTable")
+    public CommonResponse listTimeTable(Integer gradeId, Integer collegeId, Integer subjectId, Integer classId,String schoolYear,Integer semester,Integer weekNum){
+        return ResponseUtil.generateResponse(courseService.listTimeTable(gradeId,collegeId,subjectId,classId,schoolYear,semester,weekNum));
+    }
+
+    @ResponseBody
+    @GetMapping("listTeacherIdAndName")
+    public CommonResponse listTeacherIdAndName(Integer collegeId, Integer subjectId){
+        return ResponseUtil.generateResponse(userService.listUserIdAndName(collegeId,subjectId,null,null, User.TEACHER_TYPE));
+    }
+
+    @ResponseBody
+    @GetMapping("listCourseIdAndName")
+    public CommonResponse listCourseIdAndName(Integer gradeId, Integer collegeId, Integer subjectId, Integer classId,String schoolYear,Integer semester){
+        return ResponseUtil.generateResponse(courseService.listCourseIdAndName(gradeId,collegeId,subjectId,classId,schoolYear,semester));
+    }
+
+    @ResponseBody
+    @PostMapping("timeTable")
+    public CommonResponse addTimeTable(@RequestBody CourseTimeTable courseTimeTable){
+        return ResponseUtil.generateResponse(courseTimeTableService.addTimeTable(courseTimeTable));
+    }
+
+    @ResponseBody
+    @PutMapping("timeTable")
+    public CommonResponse updateTimeTable(@RequestBody CourseTimeTable courseTimeTable){
+        return ResponseUtil.generateResponse(courseTimeTableService.updateTimeTable(courseTimeTable));
+    }
+
+    @ResponseBody
+    @DeleteMapping("timeTable/{id}")
+    public CommonResponse deleteTimeTable(@PathVariable Integer id){
+        return ResponseUtil.generateResponse(courseTimeTableService.deleteTimeTable(id));
+    }
+
+    @ResponseBody
+    @GetMapping("getCourseInfo")
+    public CommonResponse getCourseInfo(@RequestParam Map<String,Object> map){
+        return ResponseUtil.generateResponse(courseTimeTableService.getCourseInfo(map));
+    }
 }

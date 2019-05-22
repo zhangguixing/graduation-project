@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ssms.dao.CourseTimeTableMapper">
+
+    <select id="listTimeTable" resultType="java.util.HashMap">
+       SELECT
+       		ct.id,
+			ct.day_of_week AS dayOfWeek,
+			ct.start_lesson AS startLesson,
+			ct.end_lesson AS endLesson,
+			ct.address,
+			c.name,
+			ct.teacher_name AS teacherName
+		FROM
+			info_course_timetable ct
+		LEFT JOIN info_course c ON ct.course_id = c.id
+		WHERE
+			c.college_id = #{collegeId}
+		AND c.subject_id = #{subjectId}
+		AND c.class_id = #{classId}
+		AND c.school_year = #{schoolYear}
+		AND c.semester = #{semester}
+		AND start_week_num &lt;= #{weekNum}
+		AND end_week_num &gt;= #{weekNum}
+    </select>
+	
+	<select id="getCourseInfo" parameterType="Map" resultType="com.ssms.model.CourseTimeTable">
+		SELECT
+			*
+		FROM
+			info_course_timetable ct
+		LEFT JOIN info_course c ON ct.course_id=c.id
+		WHERE
+			c.college_id=#{collegeId}
+			AND c.subject_id=#{subjectId}
+			AND c.class_id=#{classId}
+			AND c.grade_id=#{gradeId}
+			AND c.school_year=#{schoolYear}
+			AND c.semester=#{semester}
+			AND ct.day_of_week=#{dayOfWeek}
+			AND ct.start_lesson=#{startLesson}
+			AND ct.end_lesson=#{endLesson}
+			AND ct.start_week_num &lt;= #{weekNum}
+			AND ct.end_week_num &gt;= #{weekNum}
+		  LIMIT 1
+	</select>
+</mapper>

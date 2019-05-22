@@ -21,10 +21,6 @@ public class Course implements Serializable {
 
     private String name; //课程名
 
-    private  String classTime; //上课时间
-
-    private Integer studentId;  //学生id
-
     private Integer collegeId;  //学院id
 
     private Integer subjectId;  //专业id
@@ -37,13 +33,9 @@ public class Course implements Serializable {
 
     private Integer semester;    //学期，1上学期，2下学期
 
-    private Integer userId;     //用户id
-
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     private Date createTime;  // 创建时间
 
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     private Date updateTime;  // 修改时间
-
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
-    private Integer status;  //状态，0删除，1正常
 }

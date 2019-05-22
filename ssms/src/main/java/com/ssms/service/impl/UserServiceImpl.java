@@ -80,7 +80,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Transactional(rollbackFor = Exception.class)
     @Override
     public boolean deleteUserRoleByUserId(Integer userId) throws BusinessException {
-        if (userRoleMapper.deleteUserRoleByUserId(userId)<1) {
+        if (userRoleMapper.deleteUserRoleByUserId(userId) < 1) {
             throw new BusinessException("删除失败，请重试");
         }
         return true;
@@ -152,15 +152,20 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         user.setClassId(classId);
         user.setUsername(username);
         user.setNickName(nickName);
-        Map<String,Object> result = new HashMap<>();
+        Map<String, Object> result = new HashMap<>();
         User one = baseMapper.selectOne(user);
-        if(one == null){
-            result.put("isExists",false);
-        }else {
-            result.put("isExists",true);
-            result.put("userId",one.getUserId());
+        if (one == null) {
+            result.put("isExists", false);
+        } else {
+            result.put("isExists", true);
+            result.put("userId", one.getUserId());
         }
         return result;
+    }
+
+    @Override
+    public List<Map<String, Object>> listUserIdAndName(Integer collegeId, Integer subjectId, Integer classId, Integer gradeId, Integer userType) {
+        return baseMapper.listUserIdAndName(collegeId, subjectId, classId, gradeId, userType);
     }
 
     private List<Integer> getUserIds(List<User> userList) {

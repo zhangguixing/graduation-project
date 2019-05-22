@@ -18,4 +18,19 @@
         AND c.school_year = #{schoolYear}
         AND c.semester = #{semester}
     </select>
+
+    <select id="listCourseIdAndName" resultType="java.util.HashMap">
+        SELECT
+            c.id,
+            c. name
+        FROM
+            info_course c
+        WHERE
+        c.college_id = #{collegeId}
+        AND c.subject_id = #{subjectId}
+        AND c.class_id = #{classId}
+        AND c.grade_id = #{gradeId}
+        AND c.school_year = #{schoolYear}
+        AND c.semester = #{semester}
+    </select>
 </mapper>

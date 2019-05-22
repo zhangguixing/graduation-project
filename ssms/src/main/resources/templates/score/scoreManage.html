@@ -203,7 +203,7 @@
                         if (data.code == 200) {
 
                         } else {
-                            layer.msg("操作失败", {icon: 2});
+                            layer.msg("操作失败", {icon: 5});
                             $(obj.elem).prop('checked', !obj.elem.checked);
                             form.render('checkbox');
                         }
@@ -326,7 +326,7 @@
         });
         //选择学期触发事件
         form.on('select(semesterId)', function (data) {
-            dsearchScoreList();
+            searchScoreList();
         });
 
         // 搜索按钮点击事件
@@ -447,7 +447,7 @@
                                 }
                                 if (data.code == 500) {
                                     layer.msg('删除失败', {
-                                        icon: 2
+                                        icon: 5
                                     });
                                 }
                                 layer.close(index);

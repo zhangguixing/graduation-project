@@ -6,6 +6,7 @@ import com.ssms.common.exception.ParameterException;
 import com.ssms.model.User;
 import com.ssms.common.PageResult;
 
+import java.util.List;
 import java.util.Map;
 
 public interface UserService extends IService<User> {
@@ -29,4 +30,6 @@ public interface UserService extends IService<User> {
     boolean delete(Integer userId);
 
     Map<String, Object> existsName(Integer gradeId, Integer collegeId, Integer subjectId, Integer classId, String username, String nickName);
+
+    List<Map<String, Object>> listUserIdAndName(Integer collegeId, Integer subjectId, Integer classId, Integer gradeId, Integer userType);
 }

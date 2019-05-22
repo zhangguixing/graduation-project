@@ -5,4 +5,29 @@
     <select id="selectByUsername" resultType="com.ssms.model.User">
         select * from sys_user where username=#{username} limit 1
     </select>
+
+    <select id="listUserIdAndName" resultType="map">
+        select
+          user_id AS id,
+          nick_name AS name
+        from sys_user
+        <where>
+            <if test="collegeId != null">
+                and college_id=#{collegeId}
+            </if>
+            <if test="subjectId != null">
+                and subject_id=#{subjectId}
+            </if>
+            <if test="classId != null">
+                and class_id=#{classId}
+            </if>
+            <if test="gradeId != null">
+                and grade_id=#{gradeId}
+            </if>
+            <if test="userType != null">
+                and person_type=#{userType}
+            </if>
+            and state = 0
+        </where>
+    </select>
 </mapper>
