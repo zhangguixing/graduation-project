@@ -12,4 +12,6 @@ public interface CourseTimeTableMapper extends BaseMapper<CourseTimeTable> {
     List<Map<String,Object>> listTimeTable(@Param("gradeId") Integer gradeId, @Param("collegeId") Integer collegeId, @Param("subjectId") Integer subjectId, @Param("classId") Integer classId, @Param("schoolYear") String schoolYear, @Param("semester") Integer semester,@Param("weekNum") Integer weekNum);
 
     CourseTimeTable getCourseInfo(Map<String, Object> map);
+
+    List<Map<String,Object>> getMyTimeTable(@Param("schoolYear") String schoolYear, @Param("semester") Integer semester, @Param("teacherId") Integer teacherId);
 }

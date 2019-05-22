@@ -55,6 +55,12 @@ public class CourseController extends BaseController {
         return "/course/classCourse.html";
     }
 
+    @GetMapping("myCourse")
+    public String myCourse(Model model){
+        model.addAttribute("loginUser", getLoginUser());
+        return "course/myCourse.html";
+    }
+
     @ResponseBody
     @GetMapping("listByCollege")
     public CommonResponse listByCollege(Integer gradeId, Integer collegeId, Integer subjectId, Integer classId,String schoolYear,Integer semester){
@@ -101,5 +107,12 @@ public class CourseController extends BaseController {
     @GetMapping("getCourseInfo")
     public CommonResponse getCourseInfo(@RequestParam Map<String,Object> map){
         return ResponseUtil.generateResponse(courseTimeTableService.getCourseInfo(map));
+    }
+
+    @ResponseBody
+    @GetMapping("myTimeTable")
+    public CommonResponse myTimeTable(String schoolYear,Integer semester){
+        Integer teacherId = this.getLoginUserId();
+        return ResponseUtil.generateResponse(courseTimeTableService.getMyTimeTable(schoolYear,semester,teacherId));
     }
 }

@@ -4,7 +4,6 @@
 
     <select id="listTimeTable" resultType="java.util.HashMap">
        SELECT
-       		ct.id,
 			ct.day_of_week AS dayOfWeek,
 			ct.start_lesson AS startLesson,
 			ct.end_lesson AS endLesson,
@@ -23,7 +22,31 @@
 		AND start_week_num &lt;= #{weekNum}
 		AND end_week_num &gt;= #{weekNum}
     </select>
-	
+
+    <select id="getMyTimeTable" resultType="java.util.HashMap">
+       SELECT
+			ct.day_of_week AS dayOfWeek,
+			ct.start_lesson AS startLesson,
+			ct.end_lesson AS endLesson,
+			ct.start_week_num AS startWeekNum,
+			ct.end_week_num AS endWeekNum,
+			ct.address,
+			c.name
+		FROM
+			info_course_timetable ct
+		LEFT JOIN info_course c ON ct.course_id = c.id
+		<where>
+			ct.teacher_id=#{teacherId}
+			<if test="schoolYear!='' and schoolYear!=null">
+				AND c.school_year=#{schoolYear}
+			</if>
+			<if test="semester!='' and semester!=null">
+				AND c.semester=#{semester}
+			</if>
+		</where>
+
+    </select>
+
 	<select id="getCourseInfo" parameterType="Map" resultType="com.ssms.model.CourseTimeTable">
 		SELECT
 			*

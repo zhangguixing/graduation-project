@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>分析型成绩管理系统</title>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="/assets/libs/layui/css/layui.css"/>
+    <link rel="stylesheet" href="/assets/css/admin.css" media="all"/>
+    <!-- js部分 -->
+    <script type="text/javascript" src="/assets/libs/layui/layui.js"></script>
+    <script type="text/javascript" src="/assets/js/common.js"></script>
+    <script type="text/javascript" src="/assets/js/Timetables.min.js"></script>
+    <style>
+        #coursesTable {
+            padding: 15px 10px;
+        }
+
+        .Courses-head {
+            background-color: #edffff;
+        }
+
+        .Courses-head > div {
+            text-align: center;
+            font-size: 14px;
+            line-height: 28px;
+        }
+
+        .left-hand-TextDom, .Courses-head {
+            background-color: #f2f6f7;
+        }
+
+        .Courses-leftHand {
+            background-color: #f2f6f7;
+            font-size: 12px;
+        }
+
+        .Courses-leftHand .left-hand-index {
+            color: #9c9c9c;
+            margin-bottom: 4px !important;
+        }
+
+        .Courses-leftHand .left-hand-name {
+            color: #666;
+        }
+
+        .Courses-leftHand p {
+            text-align: center;
+            font-weight: 900;
+        }
+
+        .Courses-head > div {
+            border-left: none !important;
+        }
+
+        .Courses-leftHand > div {
+            padding-top: 5px;
+            border-bottom: 1px dashed rgb(219, 219, 219);
+        }
+
+        .Courses-leftHand > div:last-child {
+            border-bottom: none !important;
+        }
+
+        .left-hand-TextDom, .Courses-head {
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
+        }
+
+        .Courses-content > ul {
+            border-bottom: 1px dashed rgb(219, 219, 219);
+            box-sizing: border-box;
+        }
+
+        .Courses-content > ul:last-child {
+            border-bottom: none !important;
+        }
+
+        .highlight-week {
+            color: #02a9f5 !important;
+        }
+
+        .Courses-content li {
+            text-align: center;
+            color: #666666;
+            font-size: 14px;
+            line-height: 50px;
+        }
+
+        .Courses-content li span {
+            padding: 6px 2px;
+            box-sizing: border-box;
+            line-height: 18px;
+            border-radius: 4px;
+            white-space: normal;
+            word-break: break-all;
+            cursor: pointer;
+        }
+
+        .grid-active {
+            z-index: 9999;
+        }
+
+        .grid-active span {
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body>
+
+<!-- 加载动画，移除位置在common.js中 -->
+<div class="page-loading">
+    <div class="rubik-loader"></div>
+</div>
+
+
+<!-- 正文开始 -->
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <div class="layui-form toolbar">
+                <div class="layui-form-item">
+                    <div class="layui-inline" style="padding-left: 20px;">
+                        <select id="schoolYearId" name="schoolYearId" lay-filter="schoolYearId">
+                        </select>
+                    </div>
+                    <div id="semesterDiv" class="layui-inline" style="padding-left: 20px;display: none;">
+                        <select id="semesterId" name="semesterId" lay-filter="semesterId">
+                            <option value="">请选择学期</option>
+                            <option value="1">上学期</option>
+                            <option value="2">下学期</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-card">
+                        <div class="layui-card-header">${loginUser.nickName!}老师--课程安排</div>
+                        <div class="layui-card-body">
+                            <div id="coursesTable"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    layui.use(['layer', 'form', 'table', 'admin', 'collegeSelect'], function () {
+        var $ = layui.jquery;
+        var layer = layui.layer;
+        var form = layui.form;
+        var table = layui.table;
+        var admin = layui.admin;
+
+        form.render('select');
+
+        var courseList = [
+            ['W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W'],
+            ['E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E'],
+            ['L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L'],
+            ['C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C'],
+            ['O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O'],
+            ['M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M'],
+            ['!', '!', '!', '!', '!', '!', '!', '!', '!', '!', '!', '!']
+        ];
+        var week = window.innerWidth > 360 ? ['周一', '周二', '周三', '周四', '周五', '周六', '周日'] :
+            ['一', '二', '三', '四', '五', '六', '日'];
+        var day = new Date().getDay();
+        var courseType = [
+            [{index: '1', name: '9:00'}, 1],
+            [{index: '2', name: '10:00'}, 1],
+            [{index: '3', name: '11:00'}, 1],
+            [{index: '4', name: '12:00'}, 1],
+
+            [{index: '休息', name: '14:30'}, 1],
+
+            [{index: '5', name: '15:30'}, 1],
+            [{index: '6', name: '16:30'}, 1],
+            [{index: '7', name: '17:30'}, 1],
+            [{index: '8', name: '18:30'}, 1],
+
+            [{index: '休息', name: '19:30'}, 1],
+
+            [{index: '9', name: '20:30'}, 1],
+            [{index: '10', name: '21:30'}, 1]
+        ];
+        // 实例化(初始化课表)
+        var Timetable = new Timetables({
+            el: '#coursesTable',
+            timetables: courseList,
+            week: week,
+            timetableType: courseType,
+            highlightWeek: day,
+            styles: {
+                Gheight: 50
+            }
+        });
+
+        //渲染学年下拉框(可查看前三年和未来一年课程)
+        $('#schoolYearId').html('<option value="">请选择学年</option>');
+        var year = new Date().getFullYear();//获取当前年
+        for(var i=4;i>=0;i--){
+            var schoolYear = (year-i)+"-"+(year-i+1)
+            $('#schoolYearId').append('<option value="' + schoolYear + '" >' + schoolYear + '</option>')
+        }
+        form.render('select');
+
+        //选择学年触发事件
+        form.on('select(schoolYearId)', function (data) {
+            if ($("#schoolYearId option:selected").val() != "") {
+                $("#semesterDiv").show();
+                form.render('select');
+                searchTimeTableList();
+            }else {
+                $("#semesterId").val('');
+                $("#semesterDiv").hide();
+                form.render('select');
+                Timetable.setOption({
+                    timetables: courseList
+                });
+            }
+        });
+        //选择学期触发事件
+        form.on('select(semesterId)', function (data) {
+            searchTimeTableList();
+        });
+
+        //根据条件获取成绩列表
+        function searchTimeTableList() {
+            var schoolYear = $('#schoolYearId option:selected').val();
+            var semester = $('#semesterId option:selected').val();
+            var jsonData = {
+                schoolYear: schoolYear,
+                semester: semester
+            };
+            $.ajax({
+                url: '/course/myTimeTable',
+                type: 'GET',
+                data: jsonData,
+                success: function (res) {
+                    if (res.code == 200) {
+                        Timetable.setOption({
+                            timetables: res.data
+                        });
+                    }
+                }
+            });
+        }
+    });
+</script>
+</body>
+</html>

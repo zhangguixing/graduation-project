@@ -2,6 +2,7 @@ package com.ssms.service;
 
 import com.ssms.model.CourseTimeTable;
 
+import java.util.List;
 import java.util.Map;
 
 public interface CourseTimeTableService {
@@ -13,4 +14,6 @@ public interface CourseTimeTableService {
     CourseTimeTable getCourseInfo(Map<String, Object> map);
 
     boolean deleteTimeTable(Integer id);
+
+    List<List<String>> getMyTimeTable(String schoolYear, Integer semester, Integer teacherId);
 }
