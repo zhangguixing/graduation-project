@@ -199,21 +199,6 @@ layui.define(["layer","jquery","form"],function (exports) {
             }
             form.render('select');
         }
-        //获取用户列表
-        // getUserList:function(collegeId,subjectId,classId,personType){
-        //     var data;
-        //     $.ajax({
-        //         url:'/system/user/view',
-        //         type:'GET',
-        //         async:false,
-        //         success:function(res){
-        //             if(res.code==200){
-        //                 data = res.data;
-        //             }
-        //         }
-        //     });
-        //     return data;
-        // }
     }
     exports("collegeSelect",obj);
 });

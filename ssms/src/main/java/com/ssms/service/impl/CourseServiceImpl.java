@@ -1,10 +1,18 @@
 package com.ssms.service.impl;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.plugins.pagination.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.ssms.common.util.StringUtil;
 import com.ssms.dao.CourseMapper;
 import com.ssms.dao.CourseTimeTableMapper;
+import com.ssms.model.Course;
+import com.ssms.model.CourseTimeTable;
 import com.ssms.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.util.*;
 
@@ -44,20 +52,20 @@ public class CourseServiceImpl implements CourseService {
             if (dayOfWeek == null) {
                 break;
             }
-            if (startLesson >= 5 && startLesson<=8) {
+            if (startLesson >= 5 && startLesson <= 8) {
                 startLesson += 1;
                 endLesson += 1;
-            } else if (startLesson >=9) {
+            } else if (startLesson >= 9) {
                 startLesson += 2;
-                if(endLesson+2>12){
+                if (endLesson + 2 > 12) {
                     endLesson = 12;
-                }else {
+                } else {
                     endLesson += 2;
                 }
             }
             List<String> timeTable = result.get(dayOfWeek);
             if (startLesson != null && endLesson != null) {
-                for (int i = startLesson; i <= endLesson && i-1<timeTable.size(); i++) {
+                for (int i = startLesson; i <= endLesson && i - 1 < timeTable.size(); i++) {
                     timeTable.set(i - 1, courseName + "@" + address + "\n" + teacherName);
                 }
             }
@@ -68,5 +76,46 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public List<Map<String, Object>> listCourseIdAndName(Integer gradeId, Integer collegeId, Integer subjectId, Integer classId, String schoolYear, Integer semester) {
         return courseMapper.listCourseIdAndName(gradeId, collegeId, subjectId, classId, schoolYear, semester);
+    }
+
+    @Override
+    public PageInfo<Map<String, Object>> all(Integer pageNum, Integer pageSize, Integer gradeId, Integer collegeId, Integer subjectId, Integer classId, String schoolYear, Integer semester, String searchKey, String searchValue) {
+        PageHelper.startPage(pageNum, pageSize);
+        List<Map<String, Object>> courseList = null;
+        if (StringUtil.isBlank(searchKey)) {
+            searchKey = null;
+        }
+        courseList = courseMapper.all(gradeId, collegeId, subjectId, classId, schoolYear, semester, searchKey, searchValue);
+        //表中无符合条件数据
+        if (CollectionUtils.isEmpty(courseList) || CollectionUtils.isEmpty(courseList.get(0))) {
+            courseList = new ArrayList<>();
+        }
+        return PageInfo.of(courseList);
+    }
+
+    @Transactional
+    @Override
+    public boolean add(Course course) {
+        course.setCreateTime(new Date());
+        return courseMapper.insert(course) > 0;
+    }
+
+    @Transactional
+    @Override
+    public boolean update(Course course) {
+        return courseMapper.updateById(course) > 0;
+    }
+
+    @Override
+    public boolean delete(Integer id) {
+        try {
+            //级联删除课程表
+            courseTimeTableMapper.delete(new EntityWrapper<CourseTimeTable>().eq("course_id", id));
+            courseMapper.deleteById(id);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }

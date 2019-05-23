@@ -33,4 +33,50 @@
         AND c.school_year = #{schoolYear}
         AND c.semester = #{semester}
     </select>
+
+    <select id="all" resultType="java.util.HashMap">
+        SELECT
+            c.id,
+            c.college_id AS collegeId,
+            c.subject_id AS subjectId,
+            c.class_id AS classId,
+            c.grade_id AS gradeId,
+            co.name AS collegeName,
+            su.name AS subjectName,
+            cl.name AS className,
+            g.name AS gradeName,
+            c.school_year AS schoolYear,
+            c.semester,
+            c.name
+        FROM
+            info_course c
+        LEFT JOIN info_college_subject_class co ON c.college_id=co.id
+        LEFT JOIN info_college_subject_class su ON c.subject_id=su.id
+        LEFT JOIN info_college_subject_class cl ON c.class_id=cl.id
+        LEFT JOIN info_grade g ON c.grade_id=g.id
+        <where>
+            <if test="gradeId != null and gradeId != ''">
+                AND c.grade_id=#{gradeId}
+            </if>
+            <if test="collegeId != null and collegeId != ''">
+                AND c.college_id=#{collegeId}
+            </if>
+            <if test="subjectId != null and subjectId != ''">
+                AND c.subject_id=#{subjectId}
+            </if>
+            <if test="classId != null and classId != ''">
+                AND c.class_id=#{classId}
+            </if>
+            <if test="schoolYear != null and schoolYear != ''">
+                AND c.school_year=#{schoolYear}
+            </if>
+            <if test="semester != null and semester != ''">
+                AND c.semester=#{semester}
+            </if>
+            <if test="searchKey != null and searchKey != '' and searchValue != null and searchValue != ''">
+               AND c.name LIKE '%${searchValue}%'
+            </if>
+        </where>
+        ORDER BY c.create_time DESC
+    </select>
 </mapper>

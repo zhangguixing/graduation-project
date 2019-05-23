@@ -31,7 +31,7 @@ public class ScoreServiceImpl implements ScoreService {
     public PageInfo<Map<String, Object>> listScore(Integer pageNum, Integer pageSize, Integer gradeId, Integer collegeId, Integer subjectId, Integer classId, String schoolYear, Integer semester, String searchKey, String searchValue) {
         PageHelper.startPage(pageNum, pageSize);
         List<Map<String, Object>> listScore = null;
-        if (StringUtil.isBlank()) {
+        if (StringUtil.isBlank(searchKey)) {
             searchKey = null;
         }
         listScore = scoreMapper.listScore(gradeId, collegeId, subjectId, classId, schoolYear, semester, searchKey, searchValue);
@@ -79,9 +79,9 @@ public class ScoreServiceImpl implements ScoreService {
             Integer semester = map.get("semester") == null ? null : Integer.valueOf(map.get("semester").toString());
             String schoolYear = map.get("schoolYear") == null ? null : map.get("schoolYear").toString();
             //1、删除成绩
-            scoreMapper.deleteByCollegeInfo(gradeId,collegeId,subjectId,classId,schoolYear,semester,studentId);
+            scoreMapper.deleteByCollegeInfo(gradeId, collegeId, subjectId, classId, schoolYear, semester, studentId);
             return true;
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return false;
@@ -92,11 +92,11 @@ public class ScoreServiceImpl implements ScoreService {
         Map<String, Object> collegeInfo = scoreMapper.getCollegeInfoById(id);
         List<Map<String, Object>> scoreList = scoreMapper.getStudentScore(collegeInfo);
         Map<String, Object> result = new HashMap<>();
-        if(collegeInfo!=null){
+        if (collegeInfo != null) {
             result.putAll(collegeInfo);
         }
-        Map<String,Object> map = new HashMap<>();
-        map.put("scoreList",scoreList);
+        Map<String, Object> map = new HashMap<>();
+        map.put("scoreList", scoreList);
         result.put("scoreList", JSON.toJSONString(map));
         return result;
     }
@@ -113,12 +113,12 @@ public class ScoreServiceImpl implements ScoreService {
             Integer studentId = map.get("studentId") == null ? null : Integer.valueOf(map.get("studentId").toString());
             String schoolYear = map.get("schoolYear") == null ? null : map.get("schoolYear").toString();
             Integer semester = map.get("semester") == null ? null : Integer.valueOf(map.get("semester").toString());
-            Map<String,String> scoreMap = (Map<String, String>) map.get("scoreList");
+            Map<String, String> scoreMap = (Map<String, String>) map.get("scoreList");
             //1、删除成绩
-            scoreMapper.deleteByCollegeInfo(gradeId,collegeId,subjectId,classId,schoolYear,semester,studentId);
+            scoreMapper.deleteByCollegeInfo(gradeId, collegeId, subjectId, classId, schoolYear, semester, studentId);
             //2、添加成绩
             Set<Map.Entry<String, String>> entries = scoreMap.entrySet();
-            for (Map.Entry<String,String> entry:entries) {
+            for (Map.Entry<String, String> entry : entries) {
                 Integer courseId = Integer.valueOf(entry.getKey());
                 BigDecimal score = new BigDecimal(entry.getValue());
                 Score sc = new Score();
@@ -144,7 +144,7 @@ public class ScoreServiceImpl implements ScoreService {
     @Override
     public Map<String, Object> export(List<Map<String, Object>> list) {
         Map<String, Object> result = new HashMap<>();
-        if(!CollectionUtils.isEmpty(list) && list.size()>0){
+        if (!CollectionUtils.isEmpty(list) && list.size() > 0) {
             Map<String, Object> map = list.get(0);
             Integer gradeId = map.get("gradeId") == null ? null : Integer.valueOf(map.get("gradeId").toString());
             Integer collegeId = map.get("collegeId") == null ? null : Integer.valueOf(map.get("collegeId").toString());
@@ -160,13 +160,13 @@ public class ScoreServiceImpl implements ScoreService {
             headList.add("学院");
             headList.add("专业");
             headList.add("班级");
-            if(!StringUtil.isBlank(schoolYear)){
+            if (!StringUtil.isBlank(schoolYear)) {
                 headList.add("学年");
             }
-            if(!StringUtil.isBlank(semester+"")){
+            if (!StringUtil.isBlank(semester + "")) {
                 headList.add("学期");
             }
-            List<String> courseList = scoreMapper.listCourseInfo(gradeId,collegeId,subjectId,classId,schoolYear,semester);
+            List<String> courseList = scoreMapper.listCourseInfo(gradeId, collegeId, subjectId, classId, schoolYear, semester);
             headList.addAll(courseList);
             headList.add("总成绩");
             List<List<Object>> bodyList = new ArrayList<>();
@@ -186,28 +186,28 @@ public class ScoreServiceImpl implements ScoreService {
             row.add(collegeName);
             row.add(subjectName);
             row.add(className);
-            if(!StringUtil.isBlank(schoolYear)){
+            if (!StringUtil.isBlank(schoolYear)) {
                 row.add(schoolYear);
             }
-            if(!StringUtil.isBlank(semester+"")){
-                String[] semesterNames = {"上学期","下学期"};
-                String semesterName = semesterNames[semester-1];
+            if (!StringUtil.isBlank(semester + "")) {
+                String[] semesterNames = {"上学期", "下学期"};
+                String semesterName = semesterNames[semester - 1];
                 row.add(semesterName);
             }
-            for (Map<String,Object> studentMap:list) {
+            for (Map<String, Object> studentMap : list) {
                 Integer studentId = studentMap.get("studentId") == null ? null : Integer.valueOf(studentMap.get("studentId").toString());
                 //获取课程、成绩
-                List<BigDecimal> scoreList = scoreMapper.listScoreInfo(gradeId,collegeId,subjectId,classId,schoolYear,semester,studentId);
+                List<BigDecimal> scoreList = scoreMapper.listScoreInfo(gradeId, collegeId, subjectId, classId, schoolYear, semester, studentId);
                 row.addAll(scoreList);
-                BigDecimal totalScore=new BigDecimal("0");
-                for (BigDecimal score:scoreList) {
+                BigDecimal totalScore = new BigDecimal("0");
+                for (BigDecimal score : scoreList) {
                     totalScore = totalScore.add(score);
                 }
                 row.add(totalScore);
                 bodyList.add(row);
             }
-            result.put("headList",headList);
-            result.put("bodyList",bodyList);
+            result.put("headList", headList);
+            result.put("bodyList", bodyList);
         }
         System.out.println(JSON.toJSONString(result));
         return result;

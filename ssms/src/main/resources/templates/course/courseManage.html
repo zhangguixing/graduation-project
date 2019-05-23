@@ -1,5 +1,6 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html>
+
 <head>
     <title>分析型成绩管理系统</title>
     <meta charset="utf-8"/>
@@ -7,111 +8,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="stylesheet" href="/assets/libs/layui/css/layui.css"/>
     <link rel="stylesheet" href="/assets/css/admin.css" media="all"/>
-    <!-- js部分 -->
-    <script type="text/javascript" src="/assets/libs/layui/layui.js"></script>
-    <script type="text/javascript" src="/assets/js/common.js"></script>
-    <script type="text/javascript" src="/assets/js/Timetables.min.js"></script>
-    <style>
-        #coursesTable {
-            padding: 15px 10px;
-        }
-
-        .Courses-head {
-            background-color: #edffff;
-        }
-
-        .Courses-head > div {
-            text-align: center;
-            font-size: 14px;
-            line-height: 28px;
-        }
-
-        .left-hand-TextDom, .Courses-head {
-            background-color: #f2f6f7;
-        }
-
-        .Courses-leftHand {
-            background-color: #f2f6f7;
-            font-size: 12px;
-        }
-
-        .Courses-leftHand .left-hand-index {
-            color: #9c9c9c;
-            margin-bottom: 4px !important;
-        }
-
-        .Courses-leftHand .left-hand-name {
-            color: #666;
-        }
-
-        .Courses-leftHand p {
-            text-align: center;
-            font-weight: 900;
-        }
-
-        .Courses-head > div {
-            border-left: none !important;
-        }
-
-        .Courses-leftHand > div {
-            padding-top: 5px;
-            border-bottom: 1px dashed rgb(219, 219, 219);
-        }
-
-        .Courses-leftHand > div:last-child {
-            border-bottom: none !important;
-        }
-
-        .left-hand-TextDom, .Courses-head {
-            border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
-        }
-
-        .Courses-content > ul {
-            border-bottom: 1px dashed rgb(219, 219, 219);
-            box-sizing: border-box;
-        }
-
-        .Courses-content > ul:last-child {
-            border-bottom: none !important;
-        }
-
-        .highlight-week {
-            color: #02a9f5 !important;
-        }
-
-        .Courses-content li {
-            text-align: center;
-            color: #666666;
-            font-size: 14px;
-            line-height: 50px;
-        }
-
-        .Courses-content li span {
-            padding: 6px 2px;
-            box-sizing: border-box;
-            line-height: 18px;
-            border-radius: 4px;
-            white-space: normal;
-            word-break: break-all;
-            cursor: pointer;
-        }
-
-        .grid-active {
-            z-index: 9999;
-        }
-
-        .grid-active span {
-            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
-        }
-    </style>
 </head>
+
 <body>
 
 <!-- 加载动画，移除位置在common.js中 -->
 <div class="page-loading">
     <div class="rubik-loader"></div>
 </div>
-
 
 <!-- 正文开始 -->
 <div class="layui-fluid">
@@ -134,13 +38,13 @@
                             <option value="">请选择班级</option>
                         </select>
                     </div>
+                </div>
+                <div class="layui-form-item">
                     <div id="gradeDiv" class="layui-inline" style="padding-left: 20px;display:none">
                         <select id="gradeId" name="gradeId" lay-filter="gradeId">
                             <option value="">请选择年级</option>
                         </select>
                     </div>
-                </div>
-                <div class="layui-form-item">
                     <div id="schoolYearDiv" class="layui-inline" style="padding-left: 20px;display:none">
                         <select id="schoolYearId" name="schoolYearId" lay-filter="schoolYearId">
                             <option value="">请选择学年</option>
@@ -153,24 +57,46 @@
                             <option value="2">下学期</option>
                         </select>
                     </div>
-                    <div id="weekNumDiv" class="layui-inline" style="padding-left: 20px;display:none;">
-                        <div class="layui-inline">
-                            <input name="weekNum" id="weekNumId" placeholder="第几周课程" type="number" value="1"
-                                   style="width: 135px" class="layui-input"/>
-                        </div>
-                        <div class="layui-inline">
-                            <button id="btnAdd" class="layui-btn icon-btn">
-                                <i class="layui-icon">&#xe654;</i>添加
-                            </button>
-                        </div>
+                </div>
+                <div class="layui-form-item" style="padding-left: 20px;">
+                    <div class="layui-inline">
+                        <input id="edtSearch" class="layui-input" type="text" placeholder="输入关键字"/>
+                    </div>
+                    <div class="layui-inline">
+                        <button id="btnSearch" class="layui-btn icon-btn">
+                            <i class="layui-icon">&#xe615;</i>搜索
+                        </button>
+                    </div>
+                    <div class="layui-inline">
+                        <button id="btnAdd" class="layui-btn icon-btn">
+                            <i class="layui-icon">&#xe654;</i>添加
+                        </button>
+                    </div>
+                    <div class="layui-inline">
+                        <button id="btnDelete" class="layui-btn icon-btn">
+                            <i class="layui-icon">&#xe640;</i>删除
+                        </button>
+                    </div>
+                    <div class="layui-inline">
+                        <button id="btnExp" class="layui-btn icon-btn"><i class="layui-icon">&#xe67d;</i>导出</button>
                     </div>
                 </div>
             </div>
-            <!--课程表-->
-            <div id="coursesTable"></div>
+            <table class="layui-table" id="course-table" lay-filter="course-table"></table>
         </div>
     </div>
+
 </div>
+
+<!-- 表格操作列 -->
+<script type="text/html" id="course-table-bar">
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="edit">修改</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+
+<!-- js部分 -->
+<script type="text/javascript" src="/assets/libs/layui/layui.js"></script>
+<script type="text/javascript" src="/assets/js/common.js"></script>
 
 <script>
     layui.use(['layer', 'form', 'table', 'admin', 'collegeSelect'], function () {
@@ -183,263 +109,125 @@
 
         form.render('select');
 
-        var courseList = [
-            ['W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W'],
-            ['E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E'],
-            ['L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L'],
-            ['C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C'],
-            ['O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O'],
-            ['M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M'],
-            ['!', '!', '!', '!', '!', '!', '!', '!', '!', '!', '!', '!']
-        ];
-        var week = window.innerWidth > 360 ? ['周一', '周二', '周三', '周四', '周五', '周六', '周日'] :
-            ['一', '二', '三', '四', '五', '六', '日'];
-        var day = new Date().getDay();
-        var courseType = [
-            [{index: '1', name: '9:00'}, 1],
-            [{index: '2', name: '10:00'}, 1],
-            [{index: '3', name: '11:00'}, 1],
-            [{index: '4', name: '12:00'}, 1],
-
-            [{index: '休息', name: '14:30'}, 1],
-
-            [{index: '5', name: '15:30'}, 1],
-            [{index: '6', name: '16:30'}, 1],
-            [{index: '7', name: '17:30'}, 1],
-            [{index: '8', name: '18:30'}, 1],
-
-            [{index: '休息', name: '19:30'}, 1],
-
-            [{index: '9', name: '20:30'}, 1],
-            [{index: '10', name: '21:30'}, 1]
-        ];
-        var index;
-        // 实例化(初始化课表)
-        var Timetable = new Timetables({
-            el: '#coursesTable',
-            timetables: courseList,
-            week: week,
-            timetableType: courseType,
-            highlightWeek: day,
-            gridOnClick: function (e) {
-                // alert(e.name + '  ' + e.week + ', 第' + e.index + '节课, 课长' + e.length + '节');
-                //新增或修改课程表
-                saveOrUpdateTimeTable(e);
-            },
-            styles: {
-                Gheight: 50
-            }
-        });
-
-        //添加课程表
-        $('#btnAdd').click(function () {
-            saveOrUpdateTimeTable();
-        });
-
-        //删除课程表
-        $('#btnDel').click(function () {
-            var id = $('#timeTableId').val();
-            $.ajax({
-                url: '/course/timeTable/'+id,
-                type: 'DELETE',
-                success: function (data) {
-                    layer.closeAll('loading');
-                    if (data.code == 200) {
-                        layer.msg('操作成功', {
-                            icon: 1
-                        });
-                    }
-                    if (data.code == 500) {
-                        layer.msg('操作失败', {
-                            icon: 2
-                        });
-                    }
-                    // 关闭当前弹出层
-                    layer.close(index);
-                    //获取课程表
-                    searchTimeTableList();
-                }
-            });
-            return false;
-        });
-        //新增或修改课程表
-        function saveOrUpdateTimeTable(e) {
-            var collegeId = $('#collegeId option:selected').val();
-            var subjectId = $('#subjectId option:selected').val();
-            var classId = $('#classId option:selected').val();
-            var gradeId = $('#gradeId option:selected').val();
-            var schoolYear = $('#schoolYearId option:selected').val();
-            var semester = $('#semesterId option:selected').val();
-            if (collegeId != "" && subjectId != "" && classId != "" && gradeId != "" && schoolYear != "" && semester != "") {
-                //加载课程下拉框
-                renderCourseList(collegeId, subjectId, classId, gradeId, schoolYear, semester);
-                //加载教师下拉框
-                renderTeacherList(collegeId, subjectId);
-                //表单重置
-                $('#timeTableForm')[0].reset();
-                $('#dayOfWeek').val('');
-                $('#timeTableForm input').removeAttr("readonly");
-                $('#timeTableForm select').attr("disabled", false);
-                $('#btnDel').hide();
-                $('#btnSubmit').show();
-                form.render();
-                var title = '添加课程';
-                if (e != null && e.name != null &&  e.name != "") {
-                    //修改
-                    title = '修改课程';
-                    reshowCourse(collegeId, subjectId, classId, gradeId, schoolYear, semester, e, false)
-                }
-                //展示弹窗
-                index = layer.open({
-                    type: 1,
-                    skin: 'layui-layer-molv',
-                    title: title,
-                    area: ['600px', '470px'],
-                    content: $('#timeTableDiv')
-                });
-            } else {
-                layer.msg("必须选择具体专业年级和学期信息", {icon: 4})
-            }
-        }
-        //回显课程信息
-        function reshowCourse(collegeId, subjectId, classId, gradeId, schoolYear, semester, e, isReadonly) {
-            var weekNum = $('#weekNumId').val();
-            var startLesson = e.index;
-            if (startLesson > 5 && startLesson < 10) {
-                startLesson -= 1;
-            } else if (startLesson > 10) {
-                startLesson -= 2;
-            }
-            var endLesson = startLesson + e.length - 1;
-            var dayOfWeek;
-            switch (e.week) {
-                case "周一" || '一':
-                    dayOfWeek = 0;
-                    break;
-                case "周二" || "二":
-                    dayOfWeek = 1;
-                    break;
-                case "周三" || "三":
-                    dayOfWeek = 2;
-                    break;
-                case "周四" || "四":
-                    dayOfWeek = 3;
-                    break;
-                case "周五" || "五":
-                    dayOfWeek = 4;
-                    break;
-                case "周六" || "六":
-                    dayOfWeek = 5;
-                    break;
-                case "周日" || "日":
-                    dayOfWeek = 6;
-                    break;
-            }
-            var jsonData = {
-                collegeId: collegeId,
-                subjectId: subjectId,
-                classId: classId,
-                gradeId: gradeId,
-                schoolYear: schoolYear,
-                semester: semester,
-                weekNum: weekNum,
-                dayOfWeek: dayOfWeek,
-                startLesson: startLesson,
-                endLesson: endLesson
-            };
-            $.ajax({
-                url: '/course/getCourseInfo',
-                type: 'GET',
-                data: jsonData,
-                async: false,
-                success: function (res) {
-                    if (res.code == 200) {
-                        var data = res.data;
-                        if (data != null) {
-                            //回显教师下拉框
-                            $('#teacherId').val(data.teacherId);
-                            //回显星期下拉框
-                            $('#dayOfWeek').val(data.dayOfWeek + 1);
-                            //回显课程下拉框
-                            $('#courseNameId').val(data.courseId);
-                            $('#startLesson').val(data.startLesson);
-                            $('#endLesson').val(data.endLesson);
-                            $('#startWeekNum').val(data.startWeekNum);
-                            $('#endWeekNum').val(data.endWeekNum);
-                            $('#address').val(data.address);
-                            $('#timeTableId').val(data.id);
-                            if (isReadonly == true) {
-                                $('#timeTableForm input').attr("readonly", "readonly");
-                                $('#timeTableForm select').attr("disabled", true);
-                                $('#btnSubmit').hide();
-                                $('#btnDel').hide();
-                            }else {
-                                $('#btnDel').show();
-                            }
-                            form.render('select');
+        // 渲染表格
+        var ins1 = table.render({
+            elem: '#course-table',
+            method: 'GET',
+            url: '/course/all',
+            title: '课程列表',
+            page: true,
+            cols: [[
+                {type: 'checkbox'},
+                {field: 'id', hide: true},
+                {field: 'collegeId', hide: true},
+                {field: 'subjectId', hide: true},
+                {field: 'classId', hide: true},
+                {field: 'gradeId', hide: true},
+                {field: 'numbers', type: 'numbers', align: 'center', title: '序号'},
+                {field: 'name', align: 'center', sort: true, title: '课程名称'},
+                {field: 'collegeName', align: 'center', sort: true, title: '学院'},
+                {field: 'subjectName', align: 'center', sort: true, title: '专业'},
+                {field: 'className', align: 'center', sort: true, title: '班级'},
+                {field: 'gradeName', align: 'center', sort: true, title: '年级'},
+                {field: 'schoolYear', align: 'center', sort: true, title: '学年'},
+                {
+                    align: 'center', sort: true, templet: function (d) {
+                        if (d.semester == 1) {
+                            return '上学期';
+                        } else if (d.semester == 2) {
+                            return '下学期';
+                        } else {
+                            return '未知';
                         }
-                    }
+                    }, title: '学期'
                 },
-                error: function () {
-                    layer.msg("获取课程信息失败", {icon: 2});
-                }
-            });
-        }
-
-        //加载课程列表
-        function renderCourseList(collegeId, subjectId, classId, gradeId, schoolYear, semester) {
-            var jsonData = {
-                collegeId: collegeId,
-                subjectId: subjectId,
-                classId: classId,
-                gradeId: gradeId,
-                schoolYear: schoolYear,
-                semester: semester
-            };
-            $('#courseNameId').html('<option value="">请选择课程</option>')
-            $.ajax({
-                url: '/course/listCourseIdAndName',
-                type: 'GET',
-                data: jsonData,
-                async: false,
-                success: function (res) {
-                    if (res.code == 200) {
-                        $.each(res.data, function (index, course) {
-                            $('#courseNameId').append('<option value="' + course.id + '">' + course.name + '</option>')
-                        })
-                    }
-                }
-            });
-            form.render('select');
-        }
-
-        //加载教师下拉框
-        function renderTeacherList(collegeId, subjectId) {
-            var jsonData = {
-                collegeId: collegeId,
-                subjectId: subjectId
-            };
-            $.ajax({
-                url: '/course/listTeacherIdAndName',
-                type: 'GET',
-                data: jsonData,
-                async: false,
-                success: function (res) {
-                    if (res.code == 200) {
-                        $('#teacherId').html('<option value="">请选择教师</option>')
-                        $.each(res.data, function (index, teacher) {
-                            $('#teacherId').append('<option value="' + teacher.id + '">' + teacher.name + '</option>')
-                        })
-                    }
-                }
-            });
-            form.render('select');
-        }
-
-        // 选择数据源树取消按钮
-        $('.closeDialog').click(function () {
-            layer.close(index);
+                {align: 'center', toolbar: '#course-table-bar', title: '操作'}
+            ]],
+            skin: 'line',
+            size: 'lg',
+            response: {
+                statusCode: 200
+            },
+            parseData: function (res) {
+                return {
+                    "count": res.data.total,
+                    "code": res.code,
+                    "data": res.data.list
+                };
+            },
+            request: {
+                pageName: 'pageNum', // 页码的参数名称，默认：page
+                limitName: 'pageSize' // 每页数据量的参数名，默认：limit
+            }
         });
+
+        //监听工具条
+        table.on('tool(course-table)', function (obj) {
+            var data = obj.data; //获得当前行数据
+            var layEvent = obj.event; //获得 lay-event 对应的值
+
+            if (layEvent === 'edit') {
+                showEditModel(data);
+            } else if (layEvent === 'del') {
+                doDelete(obj);
+            }
+        });
+
+        // 导出excel
+        $('#btnExp').click(function () {
+            var checkRows = table.checkStatus('course-table');
+            if (checkRows.data.length == 0) {
+                layer.msg('请选择要导出的数据', {icon: 2});
+            } else {
+                table.exportFile(ins1.config.id, checkRows.data, 'xls');
+            }
+        });
+
+        // 删除年级
+        function doDelete(obj) {
+            layer.confirm('确定要删除吗？', {
+                skin: 'layui-layer-admin'
+            }, function (index) {
+                layer.load(2);
+                var url = '/course/delete/' + obj.data.id;
+                $.ajax({
+                    url: url,
+                    type: 'delete',
+                    async: false,
+                    contentType: 'application/json;charset=UTF-8',
+                    success: function (data) {
+                        layer.closeAll('loading');
+                        if (data.code == 200) {
+                            layer.msg('删除成功', {
+                                icon: 1
+                            });
+                        }
+                        if (data.code == 500) {
+                            layer.msg('删除失败', {
+                                icon: 5
+                            });
+                        }
+                        layer.close(index);
+                    },
+                });
+                table.reload('course-table');
+            });
+        }
+
+        // 显示表单弹窗
+        function showEditModel(data) {
+            admin.putTempData('t_course', data);
+            admin.putTempData('formOk', false);
+            top.layui.admin.open({
+                type: 2,
+                title: data ? '修改课程信息' : '添加课程信息',
+                area: ['380px', '505px'],
+                content: '/course/editForm',
+                end: function () {
+                    admin.getTempData('formOk') && table.reload('course-table');  // 成功刷新表格
+                }
+            });
+        }
 
         //加载学院下拉框
         collegeSelect.renderCollegeList();
@@ -449,7 +237,6 @@
             if ($("#collegeId option:selected").val() != "") {
                 $('#subjectDiv').show();
                 collegeSelect.renderSubjectList(data.value);
-                form.render('select');
             } else {
                 $('#subjectDiv').hide();
             }
@@ -457,14 +244,14 @@
             $('#gradeDiv').hide();
             $('#schoolYearDiv').hide();
             $('#semesterDiv').hide();
-            $('#weekNumDiv').hide();
-            $('#btnAdd').hide();
+            form.render('select');
+            searchCourseList();
         });
+
         //选择专业触发事件
         form.on('select(subjectId)', function (data) {
             if ($("#subjectId option:selected").val() != "") {
                 collegeSelect.renderClassList(data.value);
-                form.render('select');
                 $('#classDiv').show();
             } else {
                 $('#classDiv').hide();
@@ -472,8 +259,8 @@
             $('#gradeDiv').hide();
             $('#schoolYearDiv').hide();
             $('#semesterDiv').hide();
-            $('#weekNumDiv').hide();
-            $('#btnAdd').hide();
+            form.render('select');
+            searchCourseList();
         });
         //选择班级触发事件
         form.on('select(classId)', function (data) {
@@ -486,8 +273,8 @@
             }
             $('#schoolYearDiv').hide();
             $('#semesterDiv').hide();
-            $('#weekNumDiv').hide();
-            $('#btnAdd').hide();
+            form.render('select');
+            searchCourseList();
         });
         //选择年级触发事件
         form.on('select(gradeId)', function (data) {
@@ -496,14 +283,13 @@
                 if (gradeName != "" && gradeName != undefined) {
                     collegeSelect.renderSchoolYearList(gradeName);
                     $('#schoolYearDiv').show();
-                    form.render('select')
                 }
             } else {
                 $('#schoolYearDiv').hide();
             }
             $('#semesterDiv').hide();
-            $('#weekNumDiv').hide();
-            $('#btnAdd').hide();
+            form.render('select');
+            searchCourseList();
         });
         //选择学年触发事件
         form.on('select(schoolYearId)', function (data) {
@@ -512,211 +298,90 @@
             } else {
                 $('#semesterDiv').hide();
             }
-            $('#weekNumDiv').hide();
-            $('#btnAdd').hide();
+            form.render('select');
+            searchCourseList();
         });
         //选择学期触发事件
         form.on('select(semesterId)', function (data) {
-            if ($("#semesterDiv option:selected").val() != "") {
-                $('#weekNumDiv').show();
-                $('#btnAdd').show();
-                searchTimeTableList();
-            } else {
-                $('#weekNumDiv').hide();
-                $('#btnAdd').hide();
-            }
+            searchCourseList();
         });
 
-        //监听第几周输入
-        $('#weekNumId').bind('input propertychange', function () {
-            var weekNum = $('#weekNumId').val();
-            if (weekNum != "") {
-                if (weekNum < 1 || weekNum > 18) {
-                    layer.msg('周数只可在1~18之内', {icon: 2});
-                    $('#weekNumId').val('');
-                    $('#weekNumId').focus();
-                } else {
-                    searchTimeTableList();
-                }
-            }
+        // 搜索按钮点击事件
+        $('#btnSearch').click(function () {
+            searchCourseList();
         });
 
-        //根据条件获取成绩列表
-        function searchTimeTableList() {
+        //根据条件获取课程列表
+        function searchCourseList() {
             var collegeId = $('#collegeId option:selected').val();
             var subjectId = $('#subjectId option:selected').val();
             var classId = $('#classId option:selected').val();
             var gradeId = $('#gradeId option:selected').val();
-            var schoolYear = $('#schoolYearId option:selected').val();
-            var semester = $('#semesterId option:selected').val();
-            var weekNum = $('#weekNumId').val();
-            if (weekNum == "") {
-                weekNum = 1;
-                $('#weekNumId').val('1');
-            }
-            var jsonData = {
-                collegeId: collegeId,
-                subjectId: subjectId,
-                classId: classId,
-                gradeId: gradeId,
-                schoolYear: schoolYear,
-                semester: semester,
-                weekNum: weekNum
-            };
-            $.ajax({
-                url: '/course/listTimeTable',
-                type: 'GET',
-                data: jsonData,
-                success: function (res) {
-                    if (res.code == 200) {
-                        Timetable.setOption({
-                            timetables: res.data
-                        });
-                    }
+            var schoolYearId = $('#schoolYearId option:selected').val();
+            var semesterId = $('#semesterId option:selected').val();
+            var key = 'name';
+            var value = $('#edtSearch').val();
+            table.reload('course-table', {
+                where: {
+                    collegeId: collegeId,
+                    subjectId: subjectId,
+                    classId: classId,
+                    gradeId: gradeId,
+                    schoolYear: schoolYearId,
+                    semester: semesterId,
+                    searchKey: key,
+                    searchValue: value
                 }
             });
         }
 
-        //表单提交事件
-        form.on('submit(btnSubmit)', function (data) {
-            layer.load(2);
-            var field = data.field;
-            //获取表单信息
-            var startLesson = field.startLesson;
-            var endLesson = field.endLesson;
-            var id = field.id;
-            var startWeekNum = field.startWeekNum;
-            var endWeekNum = field.endWeekNum;
-            var address = field.address;
-            var teacherId = $("#teacherId option:selected").val();
-            var teacherName = $("#teacherId option:selected").text();
-            var dayOfWeek = $("#dayOfWeek option:selected").val();
-            var courseId = $("#courseNameId option:selected").val();
-            var param = JSON.stringify({
-                "id": id,
-                "courseId": courseId,
-                "teacherId": teacherId,
-                "teacherName": teacherName,
-                "dayOfWeek": dayOfWeek - 1,
-                "startWeekNum": startWeekNum,
-                "endWeekNum": endWeekNum,
-                "startLesson": startLesson,
-                "endLesson": endLesson,
-                "address": address
-            });
-            var url;
-            var method;
-            if (id != '' && id != null) {
-                url = '/course/timeTable';
-                method = 'PUT';
+
+        // 添加课程信息
+        $('#btnAdd').click(function () {
+            showEditModel();
+        });
+
+        // 删除
+        $('#btnDelete').click(function () {
+            var checkRows = table.checkStatus('course-table');
+            if (checkRows.data.length == 0) {
+                layer.msg('请选择要删除的任务', {
+                    icon: 2
+                });
             } else {
-                url = '/course/timeTable';
-                method = 'POST';
+                layer.confirm('确定要删除吗？', {
+                    skin: 'layui-layer-molv'
+                }, function (index) {
+                    layer.load(2);
+                    for (var i = 0; i < checkRows.data.length; i++) {
+                        var id = checkRows.data[i].id;
+                        var url = '/course/delete/' + id;
+                        $.ajax({
+                            url: url,
+                            type: 'delete',
+                            contentType: 'application/json;charset=UTF-8',
+                            success: function (data) {
+                                layer.closeAll('loading');
+                                if (data.code == 200) {
+                                    layer.msg('删除成功', {
+                                        icon: 1
+                                    });
+                                }
+                                if (data.code == 500) {
+                                    layer.msg('删除失败', {
+                                        icon: 5
+                                    });
+                                }
+                                layer.close(index);
+                            },
+                        });
+                    }
+                    table.reload('course-table');
+                });
             }
-            $.ajax({
-                url: url,
-                type: method,
-                data: param,
-                contentType: 'application/json;charset=UTF-8',
-                success: function (data) {
-                    layer.closeAll('loading');
-                    if (data.code == 200) {
-                        layer.msg('操作成功', {
-                            icon: 1
-                        });
-                    }
-                    if (data.code == 500) {
-                        layer.msg('操作失败', {
-                            icon: 2
-                        });
-                    }
-                    // 关闭当前弹出层
-                    layer.close(index);
-                    //获取课程表
-                    searchTimeTableList();
-                },
-            });
-            return false;
         });
     });
 
 </script>
 </body>
-<div id="timeTableDiv" style="display: none;" lay-filter="timeTableDiv">
-    <form id="timeTableForm" lay-filter="timeTableForm" class="layui-form model-form">
-        <input id="timeTableId" name="id" type="hidden"/>
-        <div class="layui-form-item">
-            <label class="layui-form-label">课程名称</label>
-            <div class="layui-inline">
-                <select id="courseNameId" name="courseNameId" lay-filter="courseNameId" lay-verify="required"
-                        lay-search>
-                    <option value="">请选择课程</option>
-                </select>
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">上课星期</label>
-            <div class="layui-inline">
-                <select id="dayOfWeek" name="dayOfWeek" lay-filter="dayOfWeek" lay-verify="required">
-                    <option value="">请选择上课星期</option>
-                    <option value="1">星期一</option>
-                    <option value="2">星期二</option>
-                    <option value="3">星期三</option>
-                    <option value="4">星期四</option>
-                    <option value="5">星期五</option>
-                    <option value="6">星期六</option>
-                    <option value="7">星期日</option>
-                </select>
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">授课教师</label>
-            <div class="layui-inline">
-                <select id="teacherId" name="teacherId" lay-filter="teacherId" lay-verify="required" lay-search>
-                    <option value="">请选择教师</option>
-                </select>
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">上课节数</label>
-            <div class="layui-inline">
-                <input name="startLesson" id="startLesson" placeholder="开始节数" type="number"
-                       class="layui-input" maxlength="5" style="width: 90px" lay-verify="required" required/>
-            </div>
-            <div class="layui-inline">
-                -
-            </div>
-            <div class="layui-inline">
-                <input name="endLesson" id="endLesson" placeholder="结束节数" type="number"
-                       class="layui-input" maxlength="5" style="width: 90px" lay-verify="required" required/>
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">上课周数</label>
-            <div class="layui-inline">
-                <input name="startWeekNum" id="startWeekNum" placeholder="开始周数" type="number"
-                       class="layui-input" maxlength="5" style="width: 90px" lay-verify="required" required/>
-            </div>
-            <div class="layui-inline">
-                -
-            </div>
-            <div class="layui-inline">
-                <input name="endWeekNum" id="endWeekNum" placeholder="结束周数" type="number"
-                       class="layui-input" maxlength="5" style="width: 90px" lay-verify="required" required/>
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">所在教室</label>
-            <div class="layui-inline">
-                <input name="address" id="address" placeholder="上课教室" type="text"
-                       class="layui-input" maxlength="20" lay-verify="required" required/>
-            </div>
-        </div>
-        <div class="layui-form-item text-right">
-            <button class="layui-btn layui-btn-primary closeDialog" type="button">取消</button>
-            <button class="layui-btn" id="btnDel" lay-filter="btnDel">删除</button>
-            <button class="layui-btn" id="btnSubmit" lay-filter="btnSubmit" lay-submit>保存</button>
-        </div>
-    </form>
-</div>
 </html>

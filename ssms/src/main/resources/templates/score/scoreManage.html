@@ -120,7 +120,7 @@
             elem: '#score-table',
             method: 'GET',
             url: '/score/all',
-            title:'学生成绩单',
+            title: '学生成绩单',
             page: true,
             cols: [[
                 {type: 'checkbox'},
@@ -224,25 +224,24 @@
             var semesterId = $('#semesterId option:selected').val();
             if (checkRows.data.length == 0) {
                 layer.msg('请选择要导出的数据', {icon: 2});
-            } else if(rows.length!=1 && (collegeId=="" || subjectId=="" || classId=="" || gradeId=="" || schoolYearId=="" || semesterId=="")) {
+            } else if (rows.length != 1 && (collegeId == "" || subjectId == "" || classId == "" || gradeId == "" || schoolYearId == "" || semesterId == "")) {
                 layer.msg('只可导出指定学年学期的学生', {icon: 2});
             } else {
-                    $.ajax({
-                        url:'/score/export',
-                        type:'POST',
-                        contentType:'application/json;charset=utf-8',
-                        async:false,
-                        data:JSON.stringify(rows),
-                        success:function (res) {
-                            if(res.code == 200){
-                                var data = res.data;
-                                table.exportFile(data.headList, data.bodyList, 'xls','学生成绩单');
-                            }
+                $.ajax({
+                    url: '/score/export',
+                    type: 'POST',
+                    contentType: 'application/json;charset=utf-8',
+                    async: false,
+                    data: JSON.stringify(rows),
+                    success: function (res) {
+                        if (res.code == 200) {
+                            var data = res.data;
+                            table.exportFile(data.headList, data.bodyList, 'xls', '学生成绩单');
                         }
-                    })
-                }
+                    }
+                })
+            }
         });
-
 
         //加载学院下拉框
         collegeSelect.renderCollegeList();
@@ -369,7 +368,6 @@
             });
         }
 
-
         // 添加学生成绩
         $('#btnAdd').click(function () {
             var url = "score/operateScore";
@@ -379,46 +377,6 @@
             });
         });
 
-        // var type = 'post';
-        // var index;
-        // 显示表单弹窗
-        // function showEditModel(data) {
-        //     var title = '成绩信息';
-        //     // 重置添加表单的信息
-        //     $('#scoreForm')[0].reset();
-        //     layui.form.render();
-        //     admin.putTempData('form_data', data);
-        //     admin.putTempData('formOk', false);
-        //     if (data) {
-        //         var score = admin.getTempData('form_data');
-        //         if (score) {
-        //             var scoreId = data.id;
-        //             type = 'put';
-        //             form.val('scoreForm', score);
-        //             $('#scoreId').val(scoreId);
-        //             title = '编辑成绩信息'
-        //         }
-        //     } else {
-        //         $('#collegeId option:selected').attr("selected", false);
-        //         $('#subjectId option:selected').attr("selected", false);
-        //         $('#classId option:selected').attr("selected", false);
-        //     }
-        //     index = layer.open({
-        //         type: 1,
-        //         skin: 'layui-layer-molv',
-        //         title: title,
-        //         area: ['600px', '470px'],
-        //         content: $('#scoreDiv'),
-        //         end: function () {
-        //             admin.getTempData('formOk') && table.reload('score-table'); // 成功刷新表格
-        //         }
-        //     });
-        // }
-        //
-        // // 选择数据源树取消按钮
-        // $('.closeDialog').click(function () {
-        //     layer.close(index);
-        // });
         // 删除
         $('#btnDelete').click(function () {
             var checkRows = table.checkStatus('score-table');
@@ -451,94 +409,15 @@
                                     });
                                 }
                                 layer.close(index);
-                                table.reload('score-table');
                             },
                         });
                     }
+                    table.reload('score-table');
                 });
             }
         });
-        // 表单提交事件
-        // form.on('submit(btnSubmit)', function (data) {
-        //     layer.load(2);
-        //
-        //     var field = data.field;
-        //     //获取表单信息
-        //     var scoreName = field.scoreName;
-        //     var id = field.id;
-        //     var tableName = field.tableName;
-        //
-        //     var param = JSON.stringify({
-        //         "id": id,
-        //         "scoreName": scoreName,
-        //         "sourceNodeName": $("#sourceNodeName option:selected").val(),
-        //         "tableName": tableName,
-        //     });
-        //     var url;
-        //     var method;
-        //     if (id != '' && id != null) {
-        //         url = '/score';
-        //         method = 'PUT';
-        //     } else {
-        //         url = '/score';
-        //         method = 'POST';
-        //     }
-        //     $.ajax({
-        //         url: url,
-        //         type: method,
-        //         data: param,
-        //         contentType: 'application/json;charset=UTF-8',
-        //         success: function (data) {
-        //             layer.closeAll('loading');
-        //             if (data.code == 200) {
-        //                 layer.msg('操作成功', {
-        //                     icon: 1
-        //                 });
-        //             }
-        //             if (data.code == 500) {
-        //                 layer.msg('操作失败', {
-        //                     icon: 2
-        //                 });
-        //             }
-        //             admin.putTempData('formOk', true); // 操作成功刷新表格
-        //             // 关闭当前弹出层
-        //             layer.close(index);
-        //         },
-        //     });
-        //     return false;
-        // });
     });
 
 </script>
 </body>
-<!--<div id="scoreDiv" style="display: none;" lay-filter="scoreDiv">
-    <form id="scoreForm" lay-filter="scoreForm" class="layui-form model-form">
-        <input id="scoreId" name="id" type="hidden"/>
-        <div class="layui-form-item">
-            <label class="layui-form-label">学生姓名</label>
-            <div class="layui-inline">
-                <input name="username" id="username" placeholder="请输入学生姓名" type="text"
-                       class="layui-input" maxlength="20" lay-verify="required" required/>
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">成绩</label>
-            <div class="layui-inline">
-                <input name="score" id="score" placeholder="学生总成绩" type="text"
-                       class="layui-input" maxlength="20" lay-verify="required" required/>
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">描述</label>
-            <div class="layui-input-block">
-                <textarea name="description" id="description" placeholder="请输入描述"
-                          class="layui-textarea"></textarea>
-            </div>
-        </div>
-        <div class="layui-form-item text-right">
-            <button class="layui-btn layui-btn-primary closeDialog" type="button">取消</button>
-            <button class="layui-btn" id="btnSubmit" lay-filter="btnSubmit" lay-submit>保存</button>
-        </div>
-    </form>
-</div>-->
 </html>
