@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.ssms.dao.RoleMapper;
 import com.ssms.dao.UserMapper;
 import com.ssms.dao.UserRoleMapper;
 import com.ssms.common.exception.BusinessException;
@@ -18,6 +19,7 @@ import com.ssms.common.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.util.*;
 
@@ -25,6 +27,8 @@ import java.util.*;
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
     @Autowired
     private UserRoleMapper userRoleMapper;
+    @Autowired
+    private RoleMapper roleMapper;
 
     @Override
     public User getByUsername(String username) {
@@ -41,7 +45,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             wrapper.eq("state", 0);
         }
         Page<User> userPage = new Page<>(pageNum, pageSize);
-        List<User> userList = baseMapper.selectPage(userPage, wrapper.orderBy("create_time", true));
+        List<User> userList = baseMapper.selectPage(userPage, wrapper.orderBy("person_type", true).orderBy("create_time", true));
         if (userList != null && userList.size() > 0) {
             // 查询user的角色
             List<UserRole> userRoles = userRoleMapper.selectByUserIds(getUserIds(userList));
@@ -63,6 +67,25 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public boolean add(User user) throws BusinessException {
         if (baseMapper.selectByUsername(user.getUsername()) != null) {
             throw new BusinessException("账号已经存在");
+        }
+        List<Role> roles = user.getRoles();
+        if (CollectionUtils.isEmpty(roles)) {
+            throw new BusinessException("未设置权限");
+        }
+        Integer roleId = roles.get(0).getRoleId();
+        Role role = roleMapper.selectById(roleId);
+        if (role == null) {
+            throw new BusinessException("不合法权限");
+        }
+        String roleName = role.getRoleName();
+        if ("学生".equals(roleName)) {
+            user.setPersonType(User.STUDENT_TYPE);
+        } else if ("教师".equals(roleName)) {
+            user.setPersonType(User.TEACHER_TYPE);
+        } else if ("管理员".equals(roleName)) {
+            user.setPersonType(User.ADMIN_TYPE);
+        } else {
+            throw new BusinessException("添加用户的角色仅限【学生、教师、管理员】");
         }
         user.setPassword(EndecryptUtil.encrytMd5(user.getPassword(), user.getUsername(), 3));
         user.setState(0);
@@ -90,10 +113,28 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public boolean update(User user) {
         user.setUsername(null);
+        List<Integer> roleIds = getRoleIds(user.getRoles());
+        if (CollectionUtils.isEmpty(roleIds)) {
+            throw new BusinessException("未设置权限");
+        }
+        Integer roleId = roleIds.get(0);
+        Role role = roleMapper.selectById(roleId);
+        if (role == null) {
+            throw new BusinessException("不合法权限");
+        }
+        String roleName = role.getRoleName();
+        if ("学生".equals(roleName)) {
+            user.setPersonType(User.STUDENT_TYPE);
+        } else if ("教师".equals(roleName)) {
+            user.setPersonType(User.TEACHER_TYPE);
+        } else if ("管理员".equals(roleName)) {
+            user.setPersonType(User.ADMIN_TYPE);
+        } else {
+            throw new BusinessException("修改用户的角色仅限【学生、教师、管理员】");
+        }
         boolean rs = baseMapper.updateById(user) > 0;
         if (rs) {
             userRoleMapper.delete(new EntityWrapper().eq("user_id", user.getUserId()));
-            List<Integer> roleIds = getRoleIds(user.getRoles());
             if (userRoleMapper.insertBatch(user.getUserId(), roleIds) < roleIds.size()) {
                 throw new BusinessException("修改失败，请重试");
             }

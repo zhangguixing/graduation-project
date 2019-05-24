@@ -47,9 +47,9 @@ public class User implements Serializable {
 
     private Integer subjectId;  // 所属专业id
 
-    private Integer classId;  // 所属年级id
+    private Integer classId;  // 所属班级id
 
-    private Integer gradeId;  // 邮箱
+    private Integer gradeId;  // 所属年级id
 
     private Integer state;  // 用户状态，0正常，1锁定
 

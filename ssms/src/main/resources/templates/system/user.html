@@ -79,20 +79,40 @@
         var ins1 = table.render({
             elem: '#userTable',
             url: 'user/list',
-            title:'用户列表',
+            title: '用户列表',
             page: true,
             cols: [[
                 {type: 'checkbox'},
+                {field: 'id', hide: true},
+                {field: 'collegeId', hide: true},
+                {field: 'subjectId', hide: true},
+                {field: 'classId', hide: true},
+                {field: 'gradeId', hide: true},
                 {field: 'username', sort: true, title: '账号'},
                 {field: 'nickName', sort: true, title: '用户名'},
                 {field: 'phone', sort: true, title: '手机号'},
-                {field: 'sex', sort: true, title: '性别',width:'8%'},
+                {field: 'sex', sort: true, title: '性别', align: 'center', width: '6%'},
+                {
+                    sort: true, templet: function (d) {
+                        if (d.personType == 3) {
+                            return '学生';
+                        } else if (d.personType == 2) {
+                            return '教师';
+                        } else if (d.personType == 1) {
+                            return '管理员';
+                        } else if (d.personType == 0) {
+                            return '超级管理员';
+                        } else {
+                            return '未知';
+                        }
+                    }, align: 'center', title: '身份', width: '10%'
+                },
                 {
                     sort: true, templet: function (d) {
                         return util.toDateString(d.createTime);
                     }, title: '创建时间'
                 },
-                {field: 'state', sort: true, templet: '#tbaleState',width:'12%', title: '状态'},
+                {sort: true, templet: '#tbaleState', width: '12%', title: '状态', width: '7%'},
                 {align: 'center', toolbar: '#tableBar', title: '操作'}
             ]]
         });
@@ -143,8 +163,8 @@
 
         // 删除用户
         function doDelete(obj) {
-            layer.confirm('确定要删除吗？',{
-                skin : 'layui-layer-admin'
+            layer.confirm('确定要删除吗？', {
+                skin: 'layui-layer-admin'
             }, function (index) {
                 layer.load(2);
                 $.post('user/delete', {
@@ -197,7 +217,7 @@
             top.layui.admin.open({
                 type: 2,
                 title: data ? '修改用户' : '添加用户',
-                area: ['380px', '392px'],
+                area: ['380px', '420px'],
                 content: 'system/user/editForm',
                 end: function () {
                     admin.getTempData('formOk') && table.reload('userTable');  // 成功刷新表格
