@@ -141,6 +141,11 @@ public class MainController extends BaseController implements ErrorController {
         return "system/platformInfo.html";
     }
 
+    @RequestMapping("system/welcome")
+    public String welcome(){
+        return "system/welcome.html";
+    }
+
     /**
      * 控制台
      */

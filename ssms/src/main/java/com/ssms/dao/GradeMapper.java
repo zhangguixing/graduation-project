@@ -6,4 +6,6 @@ import com.ssms.model.Grade;
 public interface GradeMapper extends BaseMapper<Grade> {
 
     String selectNameById(Integer gradeId);
+
+    Integer selectIdByName(String name);
 }

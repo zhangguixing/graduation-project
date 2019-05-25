@@ -1,26 +1,30 @@
 package com.ssms.service.impl;
 
+import com.alibaba.excel.EasyExcelFactory;
+import com.alibaba.excel.metadata.Sheet;
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.ssms.dao.RoleMapper;
-import com.ssms.dao.UserMapper;
-import com.ssms.dao.UserRoleMapper;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.ssms.common.PageResult;
+import com.ssms.common.conifg.shiro.EndecryptUtil;
 import com.ssms.common.exception.BusinessException;
 import com.ssms.common.exception.ParameterException;
-import com.ssms.model.Role;
-import com.ssms.model.User;
-import com.ssms.model.UserRole;
-import com.ssms.service.UserService;
-import com.ssms.common.conifg.shiro.EndecryptUtil;
-import com.ssms.common.PageResult;
 import com.ssms.common.util.StringUtil;
+import com.ssms.dao.*;
+import com.ssms.model.*;
+import com.ssms.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 
 @Service
@@ -29,6 +33,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private UserRoleMapper userRoleMapper;
     @Autowired
     private RoleMapper roleMapper;
+    @Autowired
+    private CollegeSubjectClassMapper collegeSubjectClassMapper;
+    @Autowired
+    private GradeMapper gradeMapper;
+    @Autowired
+    private ScoreMapper scoreMapper;
+    @Autowired
+    private CourseTimeTableMapper courseTimeTableMapper;
 
     @Override
     public User getByUsername(String username) {
@@ -36,7 +48,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public PageResult<User> list(int pageNum, int pageSize, boolean showDelete, String column, String value) {
+    public PageInfo<User> list(int pageNum, int pageSize, boolean showDelete, String column, String value) {
         Wrapper<User> wrapper = new EntityWrapper<>();
         if (StringUtil.isNotBlank(column)) {
             wrapper.like(column, value);
@@ -44,8 +56,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (!showDelete) {  // 不显示锁定的用户
             wrapper.eq("state", 0);
         }
-        Page<User> userPage = new Page<>(pageNum, pageSize);
-        List<User> userList = baseMapper.selectPage(userPage, wrapper.orderBy("person_type", true).orderBy("create_time", true));
+        PageHelper.startPage(pageNum,pageSize);
+        List<User> userList = baseMapper.selectList(wrapper.orderBy("person_type", true).orderBy("create_time", true));
         if (userList != null && userList.size() > 0) {
             // 查询user的角色
             List<UserRole> userRoles = userRoleMapper.selectByUserIds(getUserIds(userList));
@@ -59,7 +71,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                 one.setRoles(tempURs);
             }
         }
-        return new PageResult<>(userPage.getTotal(), userList);
+        return PageInfo.of(userList);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -181,7 +193,24 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public boolean delete(Integer userId) {
-        return baseMapper.deleteById(userId) > 0;
+        try {
+            User user = baseMapper.selectById(userId);
+            if(user == null){
+                return false;
+            }
+            if(user.getPersonType().equals(3)){
+                //学生
+                scoreMapper.delete(new EntityWrapper<Score>().eq("student_id",userId));
+            }else if(user.getPersonType().equals(2)){
+                //教师
+                courseTimeTableMapper.delete(new EntityWrapper<CourseTimeTable>().eq("teacher_id",userId));
+            }
+            baseMapper.deleteById(userId);
+            return true;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return  false;
     }
 
     @Override
@@ -207,6 +236,103 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public List<Map<String, Object>> listUserIdAndName(Integer collegeId, Integer subjectId, Integer classId, Integer gradeId, Integer userType) {
         return baseMapper.listUserIdAndName(collegeId, subjectId, classId, gradeId, userType);
+    }
+
+    @Transactional
+    @Override
+    public void addUsers(MultipartFile file, Integer personType) throws IOException {
+        InputStream inputStream = file.getInputStream();
+        List<Object> data = EasyExcelFactory.read(inputStream, new Sheet(1, 1, UserModel.class));
+        inputStream.close();
+        //存储id和name键值对，减轻数据库查询次数
+        Map<String,Integer> idMap = new HashMap<>();
+        for (Object o:data){
+            if(o instanceof UserModel){
+                UserModel userModel = (UserModel)o;
+                if (baseMapper.selectByUsername(userModel.getUsername()) != null) {
+                    throw new BusinessException("账号【"+userModel.getUsername()+"】已经存在");
+                }
+                Role role = new Role();
+                if (personType.equals(3)) {
+                    role.setRoleName("学生");
+                } else if (personType.equals(2)) {
+                    role.setRoleName("教师");
+                } else {
+                    throw new BusinessException("批量导入用户的角色仅限【学生、教师】");
+                }
+                role = roleMapper.selectOne(role);
+                if (role == null) {
+                    throw new BusinessException("不合法权限");
+                }
+                User user = new User();
+                user.setPersonType(personType);
+                user.setUsername(userModel.getUsername());
+                user.setNickName(userModel.getNickName());
+                user.setSex(userModel.getSex());
+                user.setPhone(userModel.getPhone());
+                String collegeName = userModel.getCollegeName();
+                Integer collegeId = idMap.get(collegeName);
+                if(collegeId == null){
+                    collegeId = collegeSubjectClassMapper.selectIdByName(collegeName);
+                    if(collegeId == null){
+                        throw new BusinessException("【"+collegeName+"】学院不存在！");
+                    }
+                    idMap.put(collegeName,collegeId);
+                }
+                String subjectName = userModel.getSubjectName();
+                Integer subjectId = idMap.get(subjectName);
+                if(subjectId == null){
+                    subjectId = collegeSubjectClassMapper.selectIdByName(subjectName);
+                    if(subjectId == null){
+                        throw new BusinessException("【"+subjectName+"】专业不存在！");
+                    }
+                    idMap.put(subjectName,subjectId);
+                }
+                user.setCollegeId(collegeId);
+                user.setSubjectId(subjectId);
+                if(personType.equals(3)){
+                    //学生
+                    String className = userModel.getClassName();
+                    Integer classId = idMap.get(subjectName+className);
+                    if(classId == null){
+                        CollegeSubjectClass collegeSubjectClass = new CollegeSubjectClass();
+                        collegeSubjectClass.setName(className);
+                        collegeSubjectClass.setParentId(subjectId);
+                        collegeSubjectClass = collegeSubjectClassMapper.selectOne(collegeSubjectClass);
+                        if(collegeSubjectClass == null){
+                            throw new BusinessException("【"+className+"】班级不存在！");
+                        }
+                        classId = collegeSubjectClass.getId();
+                        idMap.put(subjectName+className,classId);
+                    }
+                    String gradeName = userModel.getGradeName();
+                    Integer gradeId = idMap.get(gradeName);
+                    if(gradeId == null){
+                        gradeId = gradeMapper.selectIdByName(gradeName);
+                        if(gradeId == null){
+                            throw new BusinessException("【"+gradeName+"】年级不存在！");
+                        }
+                        idMap.put(gradeName,gradeId);
+                    }
+                    user.setClassId(classId);
+                    user.setGradeId(gradeId);
+                }
+                user.setPassword(EndecryptUtil.encrytMd5("123456", user.getUsername(), 3));
+                user.setState(0);
+                user.setCreateTime(new Date());
+
+                boolean rs = baseMapper.insert(user) > 0;
+                if(rs){
+                    UserRole userRole = new UserRole();
+                    userRole.setRoleId(role.getRoleId());
+                    userRole.setUserId(user.getUserId());
+                    userRole.setCreateTime(new Date());
+                    if(userRoleMapper.insert(userRole)<=0){
+                        throw new BusinessException("添加失败，请重试");
+                    }
+                }
+            }
+        }
     }
 
     private List<Integer> getUserIds(List<User> userList) {

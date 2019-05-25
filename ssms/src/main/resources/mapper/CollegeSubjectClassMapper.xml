@@ -13,4 +13,8 @@
     <select id="selectNameById" parameterType="java.lang.Integer" resultType="java.lang.String">
         SELECT name FROM info_college_subject_class WHERE id=#{id}
     </select>
+
+    <select id="selectIdByName" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT id FROM info_college_subject_class WHERE name=#{name}
+    </select>
 </mapper>

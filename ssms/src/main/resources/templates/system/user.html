@@ -39,6 +39,8 @@
                         <button id="btnSearch" class="layui-btn icon-btn"><i class="layui-icon">&#xe615;</i>搜索</button>
                         <button id="btnAdd" class="layui-btn icon-btn"><i class="layui-icon">&#xe654;</i>添加</button>
                         <button id="btnExp" class="layui-btn icon-btn"><i class="layui-icon">&#xe67d;</i>导出</button>
+                        <button id="btnUploadTeacher" class="layui-btn icon-btn"><i class="layui-icon">&#xe67c;</i>导入教师</button>
+                        <button id="btnUploadStudent" class="layui-btn icon-btn" style="margin-left: 10px"><i class="layui-icon">&#xe67c;</i>导入学生</button>
                     </div>
                 </div>
             </div>
@@ -67,18 +69,21 @@
 <script type="text/javascript" src="/assets/libs/layui/layui.js"></script>
 <script type="text/javascript" src="/assets/js/common.js"></script>
 <script>
-    layui.use(['layer', 'form', 'table', 'util', 'admin'], function () {
+    layui.use(['layer', 'form', 'table', 'util', 'admin','element','upload'], function () {
         var $ = layui.jquery;
         var layer = layui.layer;
         var form = layui.form;
         var table = layui.table;
         var util = layui.util;
         var admin = layui.admin;
+        var element = layui.element;
+        var upload = layui.upload;
 
         // 渲染表格
         var ins1 = table.render({
             elem: '#userTable',
             url: 'user/list',
+            type:'GET',
             title: '用户列表',
             page: true,
             cols: [[
@@ -114,7 +119,21 @@
                 },
                 {sort: true, templet: '#tbaleState', width: '12%', title: '状态', width: '7%'},
                 {align: 'center', toolbar: '#tableBar', title: '操作'}
-            ]]
+            ]],
+            response: {
+                statusCode: 200
+            },
+            parseData: function (res) {
+                return {
+                    "count": res.data.total,
+                    "code": res.code,
+                    "data": res.data.list
+                };
+            },
+            request: {
+                pageName: 'pageNum', // 页码的参数名称，默认：page
+                limitName: 'pageSize' // 每页数据量的参数名，默认：limit
+            }
         });
 
         // 添加按钮点击事件
@@ -189,6 +208,38 @@
                 layer.msg('请选择要导出的数据', {icon: 2});
             } else {
                 table.exportFile(ins1.config.id, checkRows.data, 'xls');
+            }
+        });
+        //上传教师用户
+        upload.render({
+            elem: '#btnUploadTeacher'
+            ,url: '/system/user/addTeachers'
+            ,accept: 'file' //普通文件
+            ,multiple: true
+            ,done: function(res){
+                console.log(res);
+                if(res.code == 200){
+                    layer.msg(res.msg,{icon:1});
+                    admin.getTempData('formOk') && table.reload('userTable');  // 成功刷新表格
+                }else {
+                    layer.msg(res.msg,{icon:2})
+                }
+            }
+        });
+        //上传学生用户信息
+        upload.render({
+            elem: '#btnUploadStudent'
+            ,url: '/system/user/addStudents'
+            ,accept: 'file' //普通文件
+            ,multiple: true
+            ,done: function(res){
+                console.log(res);
+                if(res.code == 200){
+                    layer.msg(res.msg,{icon:1});
+                    admin.getTempData('formOk') && table.reload('userTable');  // 成功刷新表格
+                }else {
+                    layer.msg(res.msg,{icon:2})
+                }
             }
         });
 

@@ -13,8 +13,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,15 +60,11 @@ public class UserController extends BaseController {
     @RequiresPermissions("user:view")
     @ResponseBody
     @RequestMapping("/list")
-    public PageResult<User> list(Integer page, Integer limit, String searchKey, String searchValue) {
-        if (page == null) {
-            page = 0;
-            limit = 0;
-        }
+    public CommonResponse list(Integer pageNum, Integer pageSize, String searchKey, String searchValue) {
         if (StringUtil.isBlank(searchValue)) {
             searchKey = null;
         }
-        return userService.list(page, limit, true, searchKey, searchValue);
+        return ResponseUtil.generateResponse(userService.list(pageNum, pageSize, true, searchKey, searchValue));
     }
 
     /**
@@ -80,6 +80,38 @@ public class UserController extends BaseController {
             return JsonResult.ok("添加成功");
         } else {
             return JsonResult.error("添加失败");
+        }
+    }
+
+    /**
+     * 批量添加教师
+     **/
+    @RequiresPermissions("user:add")
+    @ResponseBody
+    @RequestMapping("/addTeachers")
+    public JsonResult addTeachers(@RequestParam MultipartFile file){
+        try {
+            userService.addUsers(file,User.TEACHER_TYPE);
+            return JsonResult.ok("添加成功");
+        }catch (Exception e){
+            e.printStackTrace();
+            return JsonResult.error(e.getMessage());
+        }
+    }
+
+    /**
+     * 批量添加学生
+     **/
+    @RequiresPermissions("user:add")
+    @ResponseBody
+    @RequestMapping("/addStudents")
+    public JsonResult addStudents(@RequestParam MultipartFile file){
+        try {
+            userService.addUsers(file,User.STUDENT_TYPE);
+            return JsonResult.ok("添加成功");
+        }catch (Exception e){
+            e.printStackTrace();
+            return JsonResult.error(e.getMessage());
         }
     }
 
