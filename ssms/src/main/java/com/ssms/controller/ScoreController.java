@@ -2,6 +2,7 @@ package com.ssms.controller;
 
 import com.ssms.common.BaseController;
 import com.ssms.common.CommonResponse;
+import com.ssms.common.JsonResult;
 import com.ssms.common.ResponseUtil;
 import com.ssms.model.User;
 import com.ssms.service.ScoreService;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.List;
@@ -26,11 +28,9 @@ public class ScoreController extends BaseController {
         User loginUser = getLoginUser();
         Map<String, Integer> collegeInfo = new HashMap<>();
         if (loginUser.getPersonType() != null && loginUser.getPersonType().equals(User.TEACHER_TYPE)) {
-            //教师默认展示本班级成绩
+            //教师默认展示本专业成绩
             collegeInfo.put("collegeId", loginUser.getCollegeId());
             collegeInfo.put("subjectId", loginUser.getSubjectId());
-            collegeInfo.put("classId", loginUser.getClassId());
-            collegeInfo.put("gradeId", loginUser.getGradeId());
         }
         model.addAttribute("collegeInfo", collegeInfo);
         return "score/scoreManage.html";
@@ -46,16 +46,21 @@ public class ScoreController extends BaseController {
             collegeInfo.put("collegeId", loginUser.getCollegeId());
             collegeInfo.put("subjectId", loginUser.getSubjectId());
             collegeInfo.put("classId", loginUser.getClassId());
+        }else if(loginUser.getPersonType() != null && loginUser.getPersonType().equals(User.TEACHER_TYPE)) {
+            //教师展示默认展示本专业
+            collegeInfo.put("collegeId", loginUser.getCollegeId());
+            collegeInfo.put("subjectId", loginUser.getSubjectId());
         }
+        model.addAttribute("personType", loginUser.getPersonType());
         model.addAttribute("collegeInfo", collegeInfo);
         return "score/classScore.html";
     }
 
     @GetMapping("operateScore")
-    public String operateScore(Model model,Integer id){
+    public String operateScore(Model model,Integer studentId,Integer collegeId,Integer subjectId,Integer classId,Integer gradeId,String schoolYear,Integer semester){
         Map<String,Object> collegeAndScore = new HashMap<>();
-        if(id != null){
-            collegeAndScore = scoreService.getCollegeInfoById(id);
+        if(studentId!=null && collegeId!=null && subjectId!=null && classId!=null && schoolYear!=null && semester!=null){
+            collegeAndScore = scoreService.getCollegeInfo(studentId,collegeId,subjectId,classId,gradeId,schoolYear,semester);
         }
         model.addAttribute("collegeAndScore",collegeAndScore);
         return "score/operateScore.html";
@@ -124,5 +129,17 @@ public class ScoreController extends BaseController {
             classId = user.getClassId();
         }
         return ResponseUtil.generateResponse(scoreService.listScore(pageNum, pageSize, gradeId, collegeId, subjectId, classId, schoolYear, semester, searchKey, searchValue));
+    }
+
+    @ResponseBody
+    @RequestMapping("addScores")
+    public CommonResponse addScores(@RequestParam MultipartFile file){
+        try {
+            scoreService.addScores(file);
+            return ResponseUtil.generateResponse("添加成功",true);
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResponseUtil.generateResponse(e.getMessage(),false);
+        }
     }
 }

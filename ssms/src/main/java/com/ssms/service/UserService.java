@@ -15,7 +15,7 @@ public interface UserService extends IService<User> {
 
     User getByUsername(String username);
 
-    PageInfo<User> list(int pageNum, int pageSize, boolean showDelete, String searchKey, String searchValue);
+    PageInfo<User> list(int pageNum, int pageSize, boolean showDelete, Integer collegeId, Integer subjectId, Integer classId, Integer gradeId, String searchKey, String searchValue);
 
     User getById(Integer userId);
 

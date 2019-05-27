@@ -2,14 +2,11 @@ package com.ssms.service.impl;
 
 import com.alibaba.excel.EasyExcelFactory;
 import com.alibaba.excel.metadata.Sheet;
-import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
-import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.ssms.common.PageResult;
 import com.ssms.common.conifg.shiro.EndecryptUtil;
 import com.ssms.common.exception.BusinessException;
 import com.ssms.common.exception.ParameterException;
@@ -48,8 +45,20 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public PageInfo<User> list(int pageNum, int pageSize, boolean showDelete, String column, String value) {
+    public PageInfo<User> list(int pageNum, int pageSize, boolean showDelete, Integer collegeId, Integer subjectId, Integer classId, Integer gradeId, String column, String value) {
         Wrapper<User> wrapper = new EntityWrapper<>();
+        if(collegeId != null){
+            wrapper.eq("college_id", collegeId);
+        }
+        if(subjectId != null){
+            wrapper.eq("subject_id", subjectId);
+        }
+        if(classId != null){
+            wrapper.eq("class_id", classId);
+        }
+        if(gradeId != null){
+            wrapper.eq("grade_id", gradeId);
+        }
         if (StringUtil.isNotBlank(column)) {
             wrapper.like(column, value);
         }

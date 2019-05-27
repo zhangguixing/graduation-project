@@ -209,16 +209,15 @@
         form.on('select(schoolYearId)', function (data) {
             if ($("#schoolYearId option:selected").val() != "") {
                 $("#semesterDiv").show();
-                form.render('select');
                 searchTimeTableList();
             }else {
                 $("#semesterId").val('');
                 $("#semesterDiv").hide();
-                form.render('select');
                 Timetable.setOption({
                     timetables: courseList
                 });
             }
+            form.render('select')
         });
         //选择学期触发事件
         form.on('select(semesterId)', function (data) {

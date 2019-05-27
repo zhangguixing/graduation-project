@@ -1,19 +1,23 @@
 package com.ssms.service.impl;
 
+import com.alibaba.excel.EasyExcelFactory;
+import com.alibaba.excel.metadata.Sheet;
 import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.pagination.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.ssms.common.exception.BusinessException;
 import com.ssms.common.util.StringUtil;
-import com.ssms.dao.CollegeSubjectClassMapper;
-import com.ssms.dao.GradeMapper;
-import com.ssms.dao.ScoreMapper;
-import com.ssms.model.Score;
+import com.ssms.dao.*;
+import com.ssms.model.*;
 import com.ssms.service.ScoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -26,6 +30,10 @@ public class ScoreServiceImpl implements ScoreService {
     private CollegeSubjectClassMapper collegeSubjectClassMapper;
     @Autowired
     private GradeMapper gradeMapper;
+    @Autowired
+    private UserMapper userMapper;
+    @Autowired
+    private CourseMapper courseMapper;
 
     @Override
     public PageInfo<Map<String, Object>> listScore(Integer pageNum, Integer pageSize, Integer gradeId, Integer collegeId, Integer subjectId, Integer classId, String schoolYear, Integer semester, String searchKey, String searchValue) {
@@ -88,8 +96,21 @@ public class ScoreServiceImpl implements ScoreService {
     }
 
     @Override
-    public Map<String, Object> getCollegeInfoById(Integer id) {
-        Map<String, Object> collegeInfo = scoreMapper.getCollegeInfoById(id);
+    public Map<String, Object> getCollegeInfo(Integer studentId,Integer collegeId,Integer subjectId,Integer classId,Integer gradeId,String schoolYear,Integer semester) {
+        User user = userMapper.selectById(studentId);
+        if(user == null){
+            throw new BusinessException("无此用户信息studentId="+studentId);
+        }
+        Map<String, Object> collegeInfo = new HashMap<>();
+        collegeInfo.put("studentId",studentId);
+        collegeInfo.put("collegeId",collegeId);
+        collegeInfo.put("subjectId",subjectId);
+        collegeInfo.put("classId",classId);
+        collegeInfo.put("gradeId",gradeId);
+        collegeInfo.put("schoolYear",schoolYear);
+        collegeInfo.put("semester",semester);
+        collegeInfo.put("nickName",user.getNickName());
+        collegeInfo.put("username",user.getUsername());
         List<Map<String, Object>> scoreList = scoreMapper.getStudentScore(collegeInfo);
         Map<String, Object> result = new HashMap<>();
         if (collegeInfo != null) {
@@ -211,5 +232,123 @@ public class ScoreServiceImpl implements ScoreService {
         }
         System.out.println(JSON.toJSONString(result));
         return result;
+    }
+
+    @Override
+    public void addScores(MultipartFile file) throws Exception {
+        InputStream inputStream = file.getInputStream();
+        List<Object> data = EasyExcelFactory.read(inputStream, new Sheet(1, 0));
+        inputStream.close();
+        if (CollectionUtils.isEmpty(data)) {
+            throw new BusinessException("上传成绩不可为空");
+        }
+        List<String> headList = (List<String>) data.get(0);
+        if (headList.size() < 9) {
+            throw new BusinessException("导入的成绩至少包含一科成绩");
+        }
+        //获取导入成绩的courseId
+        List<Integer> courseIdList = new ArrayList<>();
+        for (int i = 8; i < headList.size(); i++) {
+            String courseName = headList.get(i);
+            Course courseCondition = new Course();
+            courseCondition.setName(courseName);
+            Course course = courseMapper.selectOne(courseCondition);
+            if (course == null) {
+                throw new BusinessException("【" + courseName + "】课程不存在,无法导入成绩");
+            }
+            courseIdList.add(course.getId());
+        }
+        //存儲name和id键值对
+        Map<String, Integer> idMap = new HashMap<>();
+        //读入excel内容
+        for (int i = 1; i < data.size(); i++) {
+            List<String> scoreList = (List<String>) data.get(i);
+            //姓名, 学号, 学院, 专业, 班级, 年级, 学年, 学期
+            String nickName = scoreList.get(0);
+            String username = scoreList.get(1);
+            String collegeName = scoreList.get(2);
+            String subjectName = scoreList.get(3);
+            String className = scoreList.get(4);
+            String gradeName = scoreList.get(5);
+            String schoolYear = scoreList.get(6);
+            String semesterName = scoreList.get(7);
+            //获取学院信息id和学生id
+            Integer collegeId = idMap.get(collegeName);
+            if (collegeId == null) {
+                collegeId = collegeSubjectClassMapper.selectIdByName(collegeName);
+                if (collegeId == null) {
+                    throw new BusinessException("【" + collegeName + "】学院不存在！");
+                }
+                idMap.put(collegeName, collegeId);
+            }
+            Integer subjectId = idMap.get(subjectName);
+            if (subjectId == null) {
+                subjectId = collegeSubjectClassMapper.selectIdByName(subjectName);
+                if (subjectId == null) {
+                    throw new BusinessException("【" + subjectName + "】专业不存在！");
+                }
+                idMap.put(subjectName, subjectId);
+            }
+            Integer classId = idMap.get(subjectName + className);
+            if (classId == null) {
+                CollegeSubjectClass collegeSubjectClass = new CollegeSubjectClass();
+                collegeSubjectClass.setName(className);
+                collegeSubjectClass.setParentId(subjectId);
+                collegeSubjectClass = collegeSubjectClassMapper.selectOne(collegeSubjectClass);
+                if (collegeSubjectClass == null) {
+                    throw new BusinessException("【" + className + "】班级不存在！");
+                }
+                classId = collegeSubjectClass.getId();
+                idMap.put(subjectName + className, classId);
+            }
+            Integer gradeId = idMap.get(gradeName);
+            if (gradeId == null) {
+                gradeId = gradeMapper.selectIdByName(gradeName);
+                if (gradeId == null) {
+                    throw new BusinessException("【" + gradeName + "】年级不存在！");
+                }
+                idMap.put(gradeName, gradeId);
+            }
+            //获取userId
+            List<User> userList = userMapper.selectList(new EntityWrapper<User>()
+                    .setSqlSelect("user_id")
+                    .eq("nick_name", nickName)
+                    .eq("username", username)
+                    .eq("college_id", collegeId)
+                    .eq("subject_id", subjectId)
+                    .eq("class_id", classId)
+                    .eq("grade_id", gradeId)
+                    .last("limit 1"));
+            if (CollectionUtils.isEmpty(userList)) {
+                throw new BusinessException("【" + nickName + ":" + username + "】用户信息不合法");
+            }
+            Integer studentId = userList.get(0).getUserId();
+            Integer semester = null;
+            if ("上学期".equals(semesterName)) {
+                semester = 1;
+            } else if ("下学期".equals(semesterName)) {
+                semester = 2;
+            } else {
+                throw new BusinessException("学期不合法");
+            }
+            //插入成绩
+            for (int j = 8; j < scoreList.size(); j++) {
+                BigDecimal scoreResult = new BigDecimal(scoreList.get(j));
+                Score score = new Score();
+                score.setScore(scoreResult);
+                score.setCourseId(courseIdList.get(j - 8));
+                score.setStudentId(studentId);
+                score.setCollegeId(collegeId);
+                score.setSubjectId(subjectId);
+                score.setClassId(classId);
+                score.setGradeId(gradeId);
+                score.setSchoolYear(schoolYear);
+                score.setSemester(semester);
+                score.setCreateTime(new Date());
+                if (scoreMapper.insert(score) <= 0) {
+                    throw new BusinessException("添加失败，请重试");
+                }
+            }
+        }
     }
 }

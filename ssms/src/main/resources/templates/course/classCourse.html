@@ -428,10 +428,15 @@
                 $('#gradeDiv').show();
             } else {
                 $('#gradeDiv').hide();
+                $('#gradeId').val('');
             }
             $('#schoolYearDiv').hide();
             $('#semesterDiv').hide();
             $('#weekNumDiv').hide();
+            $('#schoolYearId').val('');
+            $('#semesterId').val('');
+            $('#weekNumId').val('');
+            form.render('select')
         });
         //选择年级触发事件
         form.on('select(gradeId)', function (data) {
@@ -444,9 +449,13 @@
                 }
             } else {
                 $('#schoolYearDiv').hide();
+                $('#schoolYearId').val('');
             }
             $('#semesterDiv').hide();
             $('#weekNumDiv').hide();
+            $('#semesterId').val('');
+            $('#weekNumId').val('');
+            form.render('select')
         });
         //选择学年触发事件
         form.on('select(schoolYearId)', function (data) {
@@ -454,8 +463,11 @@
                 $('#semesterDiv').show();
             } else {
                 $('#semesterDiv').hide();
+                $('#semesterId').val('');
             }
             $('#weekNumDiv').hide();
+            $('#weekNumId').val('');
+            form.render('select')
         });
         //选择学期触发事件
         form.on('select(semesterId)', function (data) {
@@ -464,7 +476,9 @@
                 searchTimeTableList();
             } else {
                 $('#weekNumDiv').hide();
+                $('#weekNumId').val('');
             }
+            form.render('select')
         });
 
         //监听第几周输入

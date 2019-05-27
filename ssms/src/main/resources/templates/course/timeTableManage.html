@@ -451,31 +451,42 @@
             if ($("#collegeId option:selected").val() != "") {
                 $('#subjectDiv').show();
                 collegeSelect.renderSubjectList(data.value);
-                form.render('select');
             } else {
                 $('#subjectDiv').hide();
+                $('#subjectId').val('');
             }
             $('#classDiv').hide();
             $('#gradeDiv').hide();
             $('#schoolYearDiv').hide();
             $('#semesterDiv').hide();
             $('#weekNumDiv').hide();
+            $('#classId').val('');
+            $('#gradeId').val('');
+            $('#schoolYearId').val('');
+            $('#semesterId').val('');
+            $('#weekNumId').val('');
             $('#btnAdd').hide();
+            form.render('select');
         });
         //选择专业触发事件
         form.on('select(subjectId)', function (data) {
             if ($("#subjectId option:selected").val() != "") {
                 collegeSelect.renderClassList(data.value);
-                form.render('select');
                 $('#classDiv').show();
             } else {
                 $('#classDiv').hide();
+                $('#classId').val('');
             }
             $('#gradeDiv').hide();
             $('#schoolYearDiv').hide();
             $('#semesterDiv').hide();
             $('#weekNumDiv').hide();
+            $('#gradeId').val('');
+            $('#schoolYearId').val('');
+            $('#semesterId').val('');
+            $('#weekNumId').val('');
             $('#btnAdd').hide();
+            form.render('select');
         });
         //选择班级触发事件
         form.on('select(classId)', function (data) {
@@ -485,11 +496,16 @@
                 $('#gradeDiv').show();
             } else {
                 $('#gradeDiv').hide();
+                $('#gradeId').val('');
             }
             $('#schoolYearDiv').hide();
             $('#semesterDiv').hide();
             $('#weekNumDiv').hide();
+            $('#schoolYearId').val('');
+            $('#semesterId').val('');
+            $('#weekNumId').val('');
             $('#btnAdd').hide();
+            form.render('select');
         });
         //选择年级触发事件
         form.on('select(gradeId)', function (data) {
@@ -498,14 +514,17 @@
                 if (gradeName != "" && gradeName != undefined) {
                     collegeSelect.renderSchoolYearList(gradeName);
                     $('#schoolYearDiv').show();
-                    form.render('select')
                 }
             } else {
                 $('#schoolYearDiv').hide();
+                $('#schoolYearId').val('');
             }
             $('#semesterDiv').hide();
             $('#weekNumDiv').hide();
+            $('#semesterId').val('');
+            $('#weekNumId').val('');
             $('#btnAdd').hide();
+            form.render('select');
         });
         //选择学年触发事件
         form.on('select(schoolYearId)', function (data) {
@@ -513,9 +532,12 @@
                 $('#semesterDiv').show();
             } else {
                 $('#semesterDiv').hide();
+                $('#semesterId').val('');
             }
             $('#weekNumDiv').hide();
+            $('#weekNumId').val('');
             $('#btnAdd').hide();
+            form.render('select');
         });
         //选择学期触发事件
         form.on('select(semesterId)', function (data) {
@@ -525,8 +547,10 @@
                 searchTimeTableList();
             } else {
                 $('#weekNumDiv').hide();
+                $('#weekNumId').val('');
                 $('#btnAdd').hide();
             }
+            form.render('select');
         });
 
         //监听第几周输入

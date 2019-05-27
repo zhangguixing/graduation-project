@@ -84,6 +84,7 @@
                     </div>
                     <div class="layui-inline">
                         <button id="btnExp" class="layui-btn icon-btn"><i class="layui-icon">&#xe67d;</i>导出</button>
+                        <button id="btnUpload" class="layui-btn icon-btn"><i class="layui-icon">&#xe67c;</i>导入</button>
                     </div>
                 </div>
             </div>
@@ -105,11 +106,12 @@
 <script type="text/javascript" src="/assets/js/common.js"></script>
 
 <script>
-    layui.use(['layer', 'form', 'table', 'admin', 'collegeSelect'], function () {
+    layui.use(['layer', 'form', 'table', 'admin', 'collegeSelect','upload'], function () {
         var $ = layui.jquery;
         var layer = layui.layer;
         var form = layui.form;
         var table = layui.table;
+        var upload = layui.upload;
         var admin = layui.admin;
         var collegeSelect = layui.collegeSelect;
 
@@ -134,7 +136,9 @@
                 {type: 'numbers', align: 'center', title: '序号'},
                 {field: 'username', align: 'center', sort: true, title: '学号'},
                 {field: 'nickName', align: 'center', sort: true, title: '姓名'},
-                {field: 'totalScore', align: 'center', sort: true, title: '总成绩'},
+                {field: 'totalScore', align: 'center', sort: true,templet: function (d) {
+                        return d.totalScore.toFixed(2);
+                    }, title: '总成绩'},
                 {field: 'subjectName', align: 'center', sort: true, title: '专业'},
                 {field: 'schoolYear', align: 'center', sort: true, title: '学年'},
                 {
@@ -150,9 +154,6 @@
                 },
                 {field: 'operation', align: 'center', toolbar: '#score-table-bar', title: '操作'}
             ]],
-            skin: 'line',
-            even: true,
-            size: 'lg',
             response: {
                 statusCode: 200
             },
@@ -175,40 +176,65 @@
             var layEvent = obj.event; //获得 lay-event 对应的值
 
             if (layEvent === 'edit') {
-                var url = "score/operateScore?id=" + data.id;
+                var url = "score/operateScore" +
+                    "?studentId=" + data.studentId
+                    +"&collegeId="+data.collegeId
+                    +"&subjectId="+data.subjectId
+                    +"&classId="+data.classId
+                    +"&gradeId="+data.gradeId
+                    +"&schoolYear="+data.schoolYear
+                    +"&semester="+data.semester
                 top.layui.index.loadView({
                     menuPath: url,
                     menuName: '修改学生成绩'
                 });
             } else if (layEvent === 'del') {
+                doDelete(data);
                 table.reload('score-table');
-                layer.msg("操作成功", {icon: 1});
-                var jsonData = {
-                    collegeId: data.collegeId,
-                    subjectId: data.subjectId,
-                    classId: data.classId,
-                    gradeId: data.gradeId,
-                    schoolYear: data.schoolYearId,
-                    semester: data.semesterId,
-                    studentId: data.studentId
-                };
-                $.ajax({
-                    type: 'delete',
-                    url: '/score/delete',
-                    contentType: 'application/json;charset=utf-8',
-                    async: false,
-                    data: JSON.stringify(jsonData),
-                    success: function (data) {
-                        layer.closeAll('loading');
-                        if (data.code == 200) {
+            }
+        });
 
-                        } else {
-                            layer.msg("操作失败", {icon: 5});
-                            $(obj.elem).prop('checked', !obj.elem.checked);
-                            form.render('checkbox');
-                        }
+        function doDelete(data) {
+            var jsonData = {
+                collegeId: data.collegeId,
+                subjectId: data.subjectId,
+                classId: data.classId,
+                gradeId: data.gradeId,
+                schoolYear: data.schoolYearId,
+                semester: data.semesterId,
+                studentId: data.studentId
+            };
+            $.ajax({
+                type: 'delete',
+                url: '/score/delete',
+                contentType: 'application/json;charset=utf-8',
+                async: false,
+                data: JSON.stringify(jsonData),
+                success: function (data) {
+                    layer.closeAll('loading');
+                    if (data.code == 200) {
+                        layer.msg("操作成功", {icon: 1});
+                    } else {
+                        layer.msg("操作失败", {icon: 5});
+                        form.render('checkbox');
                     }
-                });
+                }
+            });
+        }
+        //上传成绩
+        upload.render({
+            elem: '#btnUpload'
+            ,url: '/score/addScores'
+            ,accept: 'file' //普通文件
+            ,multiple: true
+            ,done: function(res){
+                console.log(res);
+                if(res.code == 200){
+                    layer.msg(res.message,{icon:1});
+                    table.reload('score-table');  // 成功刷新表格
+                }else {
+                    layer.msg(res.message,{icon:2})
+                }
             }
         });
 
@@ -251,9 +277,7 @@
         if (collegeInfo != undefined && collegeInfo != '' && collegeInfo != '{}') {
             var collegeId = '${collegeInfo.collegeId}';
             var subjectId = '${collegeInfo.subjectId}';
-            var classId = '${collegeInfo.classId}';
-            var gradeId = '${collegeInfo.gradeId}';
-            collegeSelect.reshowAll(collegeId, subjectId, classId, gradeId, null, null, true);
+            collegeSelect.reshowAll(collegeId, subjectId, null, null, null, null, true);
         }
 
         //选择学院触发事件
@@ -261,14 +285,19 @@
             if ($("#collegeId option:selected").val() != "") {
                 $('#subjectDiv').show();
                 collegeSelect.renderSubjectList(data.value);
-                form.render('select');
             } else {
                 $('#subjectDiv').hide();
+                $('#subjectId').val('');
             }
             $('#classDiv').hide();
             $('#gradeDiv').hide();
             $('#schoolYearDiv').hide();
             $('#semesterDiv').hide();
+            $('#classId').val('');
+            $('#gradeId').val('');
+            $('#schoolYearId').val('');
+            $('#semesterId').val('');
+            form.render('select')
             searchScoreList();
         });
 
@@ -276,14 +305,18 @@
         form.on('select(subjectId)', function (data) {
             if ($("#subjectId option:selected").val() != "") {
                 collegeSelect.renderClassList(data.value);
-                form.render('select');
                 $('#classDiv').show();
             } else {
                 $('#classDiv').hide();
+                $('#classId').val('');
             }
             $('#gradeDiv').hide();
             $('#schoolYearDiv').hide();
             $('#semesterDiv').hide();
+            $('#gradeId').val('');
+            $('#schoolYearId').val('');
+            $('#semesterId').val('');
+            form.render('select')
             searchScoreList();
         });
         //选择班级触发事件
@@ -293,10 +326,14 @@
                 collegeSelect.renderGradeList();
                 $('#gradeDiv').show();
             } else {
+                $('#gradeId').val('');
                 $('#gradeDiv').hide();
             }
             $('#schoolYearDiv').hide();
             $('#semesterDiv').hide();
+            $('#schoolYearId').val('');
+            $('#semesterId').val('');
+            form.render('select')
             searchScoreList();
         });
         //选择年级触发事件
@@ -306,12 +343,14 @@
                 if (gradeName != "" && gradeName != undefined) {
                     collegeSelect.renderSchoolYearList(gradeName);
                     $('#schoolYearDiv').show();
-                    form.render('select')
                 }
             } else {
+                $('#schoolYearId').val('');
                 $('#schoolYearDiv').hide();
             }
+            $('#semesterId').val('');
             $('#semesterDiv').hide();
+            form.render('select')
             searchScoreList();
         });
         //选择学年触发事件
@@ -320,7 +359,9 @@
                 $('#semesterDiv').show();
             } else {
                 $('#semesterDiv').hide();
+                $('#semesterId').val('');
             }
+            form.render('select')
             searchScoreList();
         });
         //选择学期触发事件
@@ -390,27 +431,9 @@
                 }, function (index) {
                     layer.load(2);
                     for (var i = 0; i < checkRows.data.length; i++) {
-                        var id = checkRows.data[i].id;
-                        var url = '/score/delete/' + id;
-                        $.ajax({
-                            url: url,
-                            type: 'delete',
-                            contentType: 'application/json;charset=UTF-8',
-                            success: function (data) {
-                                layer.closeAll('loading');
-                                if (data.code == 200) {
-                                    layer.msg('删除成功', {
-                                        icon: 1
-                                    });
-                                }
-                                if (data.code == 500) {
-                                    layer.msg('删除失败', {
-                                        icon: 5
-                                    });
-                                }
-                                layer.close(index);
-                            },
-                        });
+                        var data = checkRows.data[i];
+                        doDelete(data);
+                        layer.close(index);
                     }
                     table.reload('score-table');
                 });

@@ -161,7 +161,7 @@
                         <div style="font-size: 14px; color: #666; margin-top: 20px;">请到成绩管理界面查看成绩</div>
                     </div>
                     <div style="text-align: center; margin-top: 50px;">
-                        <button class="layui-btn next" lay-submit lay-filter="againCreate" id="againCreate">再次添加</button>
+                        <button class="layui-btn next" lay-filter="againCreate" id="againCreate">确定并关闭</button>
                     </div>
                 </div>
 
@@ -192,11 +192,13 @@
 <script type="text/javascript" src="/assets/libs/layui/layui.js"></script>
 <script type="text/javascript" src="/assets/js/common.js"></script>
 <script>
-    layui.use(['layer', 'form', 'laytpl', 'step', 'collegeSelect'], function () {
+    layui.use(['layer', 'form', 'laytpl', 'step','admin', 'collegeSelect','element'], function () {
         var $ = layui.jquery;
         var layer = layui.layer;
         var form = layui.form;
         var step = layui.step;
+        var element = layui.element;
+        var admin = layui.admin;
         var laytpl = layui.laytpl;
         var collegeSelect = layui.collegeSelect;
 
@@ -228,11 +230,8 @@
             step.pre('#taskForm');
         });
 
-        //再次创建
-        form.on('submit(againCreate)', function (data) {
-            step.next('#taskForm');
-            location.reload(false);
-            return false;
+        $('#againCreate').click(function () {
+            parent.layui.admin.events.closeThisTabs();
         });
 
         //成绩表单提交
@@ -333,14 +332,17 @@
             var gradeId = '${collegeAndScore.gradeId}';
             var schoolYear = '${collegeAndScore.schoolYear}';
             var semester = '${collegeAndScore.semester}';
-            collegeSelect.reshowAll(collegeId, subjectId, classId, gradeId,schoolYear,semester, false);
+            collegeSelect.reshowAll(collegeId, subjectId, classId, gradeId,null,null, true);
+            $('#schoolYearId').val(schoolYear);
+            $('#semesterDiv').show();
+            $('#semesterId').val(semester);
+            form.render('select');
             //回显成绩列表
             var scoreListTpl = JSON.parse('${collegeAndScore.scoreList}');
             laytpl($("#scoreScript").html()).render(scoreListTpl, function (html) {
                 //得到的模板渲染到html
                 $('#scoreDiv').html(html);
             });
-            $('#againCreate').html('再次编辑');
         }
 
         //选择学院触发事件
@@ -348,28 +350,37 @@
             if ($("#collegeId option:selected").val() != "") {
                 $('#subjectDiv').show();
                 collegeSelect.renderSubjectList(data.value);
-                form.render('select');
             } else {
                 $('#subjectDiv').hide();
+                $('#subjectId').val('');
             }
             $('#classDiv').hide();
             $('#gradeDiv').hide();
             $('#schoolYearDiv').hide();
             $('#semesterDiv').hide();
+            $('#classId').val('');
+            $('#gradeId').val('');
+            $('#schoolYearId').val('');
+            $('#semesterId').val('');
+            form.render('select')
         });
 
         //选择专业触发事件
         form.on('select(subjectId)', function (data) {
             if ($("#subjectId option:selected").val() != "") {
                 collegeSelect.renderClassList(data.value);
-                form.render('select');
                 $('#classDiv').show();
             } else {
                 $('#classDiv').hide();
+                $('#classId').val('');
             }
             $('#gradeDiv').hide();
             $('#schoolYearDiv').hide();
             $('#semesterDiv').hide();
+            $('#gradeId').val('');
+            $('#schoolYearId').val('');
+            $('#semesterId').val('');
+            form.render('select')
         });
         //选择班级触发事件
         form.on('select(classId)', function (data) {
@@ -379,9 +390,13 @@
                 $('#gradeDiv').show();
             } else {
                 $('#gradeDiv').hide();
+                $('#gradeId').val('');
             }
             $('#schoolYearDiv').hide();
             $('#semesterDiv').hide();
+            $('#schoolYearId').val('');
+            $('#semesterId').val('');
+            form.render('select')
         });
         //选择年级触发事件
         form.on('select(gradeId)', function (data) {
@@ -390,12 +405,14 @@
                 if (gradeName != "" && gradeName != undefined) {
                     collegeSelect.renderSchoolYearList(gradeName);
                     $('#schoolYearDiv').show();
-                    form.render('select')
                 }
             } else {
                 $('#schoolYearDiv').hide();
+                $('#schoolYearId').val('');
             }
             $('#semesterDiv').hide();
+            $('#semesterId').val('');
+            form.render('select')
         });
         //选择学年触发事件
         form.on('select(schoolYearId)', function (data) {
@@ -404,6 +421,8 @@
             } else {
                 $('#semesterDiv').hide();
             }
+            $('#semesterId').val('');
+            form.render('select')
         });
         //选择学期触发事件
         form.on('select(semesterId)', function (data) {

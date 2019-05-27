@@ -16,8 +16,6 @@ public interface ScoreMapper extends BaseMapper<Score> {
 
     List<Map<String,Object>> getChartsData(@Param("studentId") Integer studentId);
 
-    Map<String,Object> getCollegeInfoById(Integer id);
-
     List<Map<String, Object>>  getStudentScore(Map<String, Object> collegeInfo);
 
     void deleteByCollegeInfo(@Param("gradeId") Integer gradeId, @Param("collegeId") Integer collegeId, @Param("subjectId") Integer subjectId, @Param("classId") Integer classId, @Param("schoolYear") String schoolYear, @Param("semester") Integer semester,@Param("studentId") Integer studentId);

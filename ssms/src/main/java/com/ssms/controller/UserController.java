@@ -20,7 +20,9 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 用户管理
@@ -38,6 +40,14 @@ public class UserController extends BaseController {
     public String user(Model model) {
         List<Role> roles = roleService.list(false);
         model.addAttribute("roles", roles);
+        User loginUser = getLoginUser();
+        Map<String, Integer> collegeInfo = new HashMap<>();
+        if (loginUser.getPersonType() != null && loginUser.getPersonType().equals(User.TEACHER_TYPE)) {
+            //教师默认展示本专业成绩
+            collegeInfo.put("collegeId", loginUser.getCollegeId());
+            collegeInfo.put("subjectId", loginUser.getSubjectId());
+        }
+        model.addAttribute("collegeInfo", collegeInfo);
         return "system/user.html";
     }
 
@@ -60,11 +70,17 @@ public class UserController extends BaseController {
     @RequiresPermissions("user:view")
     @ResponseBody
     @RequestMapping("/list")
-    public CommonResponse list(Integer pageNum, Integer pageSize, String searchKey, String searchValue) {
+    public CommonResponse list(Integer pageNum, Integer pageSize,Integer collegeId,Integer subjectId, Integer classId,Integer gradeId, String searchKey, String searchValue) {
         if (StringUtil.isBlank(searchValue)) {
             searchKey = null;
         }
-        return ResponseUtil.generateResponse(userService.list(pageNum, pageSize, true, searchKey, searchValue));
+        User loginUser = this.getLoginUser();
+        if(loginUser.getPersonType() == 2){
+            //教师
+            collegeId = loginUser.getCollegeId();
+            subjectId = loginUser.getSubjectId();
+        }
+        return ResponseUtil.generateResponse(userService.list(pageNum, pageSize, true, collegeId,subjectId,classId,gradeId,searchKey, searchValue));
     }
 
     /**

@@ -89,24 +89,6 @@
         ORDER BY s.create_time
     </select>
 
-    <select id="getCollegeInfoById" parameterType="java.lang.Integer" resultType="java.util.HashMap">
-        SELECT
-            s.college_id AS collegeId,
-            s.subject_id AS subjectId,
-            s.class_id AS classId,
-            s.grade_id AS gradeId,
-            s.school_year AS schoolYear,
-            s.semester AS semester,
-            s.student_id AS studentId,
-            u.nick_name AS nickName,
-            u.username AS username
-        FROM
-            info_score s
-        LEFT JOIN sys_user u ON s.student_id = u.user_id
-        WHERE
-            s.id = #{id}
-    </select>
-
     <select id="getStudentScore" parameterType="Map" resultType="java.util.HashMap">
         SELECT
             s.course_id AS courseId,

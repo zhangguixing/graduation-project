@@ -239,11 +239,16 @@
                 collegeSelect.renderSubjectList(data.value);
             } else {
                 $('#subjectDiv').hide();
+                $('#subjectId').val('');
             }
             $('#classDiv').hide();
             $('#gradeDiv').hide();
             $('#schoolYearDiv').hide();
             $('#semesterDiv').hide();
+            $('#classId').val('');
+            $('#gradeId').val('');
+            $('#schoolYearId').val('');
+            $('#semesterId').val('');
             form.render('select');
             searchCourseList();
         });
@@ -255,10 +260,14 @@
                 $('#classDiv').show();
             } else {
                 $('#classDiv').hide();
+                $('#classId').val('');
             }
             $('#gradeDiv').hide();
             $('#schoolYearDiv').hide();
             $('#semesterDiv').hide();
+            $('#gradeId').val('');
+            $('#schoolYearId').val('');
+            $('#semesterId').val('');
             form.render('select');
             searchCourseList();
         });
@@ -270,9 +279,12 @@
                 $('#gradeDiv').show();
             } else {
                 $('#gradeDiv').hide();
+                $('#gradeId').val('');
             }
             $('#schoolYearDiv').hide();
             $('#semesterDiv').hide();
+            $('#schoolYearId').val('');
+            $('#semesterId').val('');
             form.render('select');
             searchCourseList();
         });
@@ -286,8 +298,10 @@
                 }
             } else {
                 $('#schoolYearDiv').hide();
+                $('#schoolYearId').val('');
             }
             $('#semesterDiv').hide();
+            $('#semesterId').val('');
             form.render('select');
             searchCourseList();
         });
@@ -297,6 +311,7 @@
                 $('#semesterDiv').show();
             } else {
                 $('#semesterDiv').hide();
+                $('#semesterId').val('');
             }
             form.render('select');
             searchCourseList();

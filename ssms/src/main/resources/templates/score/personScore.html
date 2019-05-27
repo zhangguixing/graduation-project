@@ -64,12 +64,11 @@
             cols: [[
                 {type: 'numbers', align: 'center'},
                 {field: 'scoreName', align: 'center', sort: true, title: '课程',fixed: 'left',unresize:true, totalRowText: '总成绩'},
-                {field: 'score', align: 'center', sort: true, title: '成绩',totalRow:true,unresize:true},
+                {field: 'score', align: 'center', sort: true, templet: function (d) {
+                    return d.score.toFixed(2);
+                    },title: '成绩',totalRow:true,unresize:true},
             ]],
-            skin: 'line',
             totalRow:true,
-            even:true,
-            size: 'lg',
             response: {
                 statusCode: 200
             }
@@ -84,6 +83,7 @@
                 $('#semesterDiv').show();
             }else {
                 $('#semesterDiv').hide();
+                $('#semesterId').val('');
             }
             searchScoreList();
         });
