@@ -25,13 +25,14 @@
             </li>
             <% } %>
 
-            <li class="layui-nav-item">
-                <a href="javascript:;"><i class="layui-icon layui-icon-engine"></i>&emsp;<cite>系统监控（自带）</cite></a>
-                <dl class="layui-nav-child">
-                    <dd><a lay-href="/druid/" href="javascript:;">Druid监控</a></dd>
-                </dl>
-            </li>
-
+            <% if(loginUser.personType == 1){ %>
+                <li class="layui-nav-item">
+                    <a href="javascript:;"><i class="layui-icon layui-icon-engine"></i>&emsp;<cite>系统监控</cite></a>
+                    <dl class="layui-nav-child">
+                        <dd><a lay-href="/druid/" href="javascript:;">Druid监控</a></dd>
+                    </dl>
+                </li>
+            <% } %>
         </ul>
 
     </div>
