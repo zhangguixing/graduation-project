@@ -96,9 +96,9 @@
 
 <!-- 表格操作列 -->
 <script type="text/html" id="score-table-bar">
-    <!--<a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="show">查看</a>-->
     <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="edit">修改</a>
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    <a class="layui-btn layui-btn-xs"  lay-event="show">查看</a>
 </script>
 
 <!-- js部分 -->
@@ -183,7 +183,7 @@
                     +"&classId="+data.classId
                     +"&gradeId="+data.gradeId
                     +"&schoolYear="+data.schoolYear
-                    +"&semester="+data.semester
+                    +"&semester="+data.semester;
                 top.layui.index.loadView({
                     menuPath: url,
                     menuName: '修改学生成绩'
@@ -191,6 +191,22 @@
             } else if (layEvent === 'del') {
                 doDelete(data);
                 table.reload('score-table');
+            }else if (layEvent === 'show') {
+                //查看成绩信息
+                top.layui.admin.open({
+                    type: 2,
+                    title: "成绩详情",
+                    btn: ['确定'],
+                    area: ['450px', '420px'],
+                    content: "/score/showForm"
+                    +"?studentId=" + data.studentId
+                    +"&collegeId="+data.collegeId
+                    +"&subjectId="+data.subjectId
+                    +"&classId="+data.classId
+                    +"&gradeId="+data.gradeId
+                    +"&schoolYear="+data.schoolYear
+                    +"&semester="+data.semester
+                });
             }
         });
 

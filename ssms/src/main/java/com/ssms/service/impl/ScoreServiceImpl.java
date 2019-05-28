@@ -351,4 +351,36 @@ public class ScoreServiceImpl implements ScoreService {
             }
         }
     }
+
+    @Override
+    public Map<String, Object> getCollegeNameAndScore(Integer studentId, Integer collegeId, Integer subjectId, Integer classId, Integer gradeId, String schoolYear, Integer semester) {
+        Map<String,Object> collegeNameAndScore = new HashMap<>();
+
+        Map<String, Object> collegeInfo = new HashMap<>();
+        collegeInfo.put("studentId",studentId);
+        collegeInfo.put("collegeId",collegeId);
+        collegeInfo.put("subjectId",subjectId);
+        collegeInfo.put("classId",classId);
+        collegeInfo.put("gradeId",gradeId);
+        collegeInfo.put("schoolYear",schoolYear);
+        collegeInfo.put("semester",semester);
+        List<Map<String, Object>> scoreList = scoreMapper.getStudentScore(collegeInfo);
+
+        String collegeName = collegeSubjectClassMapper.selectNameById(collegeId);
+        String subjectName = collegeSubjectClassMapper.selectNameById(subjectId);
+        String className = collegeSubjectClassMapper.selectNameById(classId);
+        String gradeName = gradeMapper.selectNameById(gradeId);
+        User user = userMapper.selectById(studentId);
+        String username = user.getUsername();
+        String nickName = user.getNickName();
+
+        collegeNameAndScore.put("collegeName",collegeName);
+        collegeNameAndScore.put("subjectName",subjectName);
+        collegeNameAndScore.put("className",className);
+        collegeNameAndScore.put("gradeName",gradeName);
+        collegeNameAndScore.put("username",username);
+        collegeNameAndScore.put("nickName",nickName);
+        collegeNameAndScore.put("scoreList",scoreList);
+        return collegeNameAndScore;
+    }
 }

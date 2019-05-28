@@ -79,7 +79,17 @@
                         return util.toDateString(d.createTime);
                     }, title: '登录时间'
                 }
-            ]]
+            ]],
+            response: {
+                statusCode: 200
+            },
+            parseData: function (res) {
+                return {
+                    "count": res.data.total,
+                    "code": res.code,
+                    "data": res.data.list
+                };
+            }
         });
 
         // 时间范围

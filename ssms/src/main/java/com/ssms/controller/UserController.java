@@ -46,7 +46,14 @@ public class UserController extends BaseController {
             //教师默认展示本专业成绩
             collegeInfo.put("collegeId", loginUser.getCollegeId());
             collegeInfo.put("subjectId", loginUser.getSubjectId());
+        }else if (loginUser.getPersonType() != null && loginUser.getPersonType().equals(User.STUDENT_TYPE)) {
+            //教师默认展示本专业成绩
+            collegeInfo.put("collegeId", loginUser.getCollegeId());
+            collegeInfo.put("subjectId", loginUser.getSubjectId());
+            collegeInfo.put("classId", loginUser.getClassId());
+            collegeInfo.put("gradeId", loginUser.getGradeId());
         }
+        model.addAttribute("personType", loginUser.getPersonType());
         model.addAttribute("collegeInfo", collegeInfo);
         return "system/user.html";
     }
@@ -74,11 +81,17 @@ public class UserController extends BaseController {
         if (StringUtil.isBlank(searchValue)) {
             searchKey = null;
         }
-        User loginUser = this.getLoginUser();
-        if(loginUser.getPersonType() == 2){
-            //教师
-            collegeId = loginUser.getCollegeId();
-            subjectId = loginUser.getSubjectId();
+        User user = this.getLoginUser();
+        if (user.getPersonType() == User.STUDENT_TYPE) {
+            //学生--查询所在班级
+            collegeId = user.getCollegeId();
+            subjectId = user.getSubjectId();
+            gradeId = user.getGradeId();
+            classId = user.getClassId();
+        }else if(user.getPersonType() == User.TEACHER_TYPE){
+            //教师--查询所在专业
+            collegeId = user.getCollegeId();
+            subjectId = user.getSubjectId();
         }
         return ResponseUtil.generateResponse(userService.list(pageNum, pageSize, true, collegeId,subjectId,classId,gradeId,searchKey, searchValue));
     }

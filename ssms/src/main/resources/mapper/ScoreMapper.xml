@@ -7,7 +7,10 @@
             s.id,
             s.college_id AS collegeId,
             s.subject_id AS subjectId,
-            csc.name AS subjectName,
+            col.name AS collegeName,
+            sub.name AS subjectName,
+            cla.name AS className,
+            g.name AS gradeName,
             s.class_id AS classId,
             s.grade_id AS gradeId,
             s.student_id AS studentId,
@@ -19,7 +22,10 @@
         FROM
         info_score s
         LEFT JOIN sys_user u ON s.student_id = u.user_id
-        LEFT JOIN info_college_subject_class csc ON s.subject_id = csc.id
+        LEFT JOIN info_college_subject_class col ON s.college_id = col.id
+        LEFT JOIN info_college_subject_class sub ON s.subject_id = sub.id
+        LEFT JOIN info_college_subject_class cla ON s.class_id = cla.id
+        LEFT JOIN info_grade g ON s.grade_id = g.id
         <where>
             <if test="gradeId != null and gradeId != ''">
                 AND s.grade_id=#{gradeId}

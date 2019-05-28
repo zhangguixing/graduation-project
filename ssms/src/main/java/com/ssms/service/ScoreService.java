@@ -25,4 +25,5 @@ public interface ScoreService {
 
     void addScores(MultipartFile file) throws IOException, Exception;
 
+    Map<String,Object> getCollegeNameAndScore(Integer studentId, Integer collegeId, Integer subjectId, Integer classId, Integer gradeId, String schoolYear, Integer semester);
 }

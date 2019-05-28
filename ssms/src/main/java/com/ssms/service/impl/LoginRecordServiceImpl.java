@@ -2,6 +2,8 @@
 package com.ssms.service.impl;
 
 import com.baomidou.mybatisplus.plugins.Page;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.ssms.common.PageResult;
 import com.ssms.dao.LoginRecordMapper;
 import com.ssms.model.LoginRecord;
@@ -24,11 +26,10 @@ public class LoginRecordServiceImpl implements LoginRecordService {
     }
 
     @Override
-    public PageResult<LoginRecord> list(int pageNum, int pageSize,
-                                        String startDate, String endDate, String account) {
-        Page<LoginRecord> page = new Page<>(pageNum, pageSize);
-        List<LoginRecord> records = loginRecordMapper.listFull(page, startDate,
-                endDate, account);
-        return new PageResult<>(page.getTotal(), records);
+    public PageInfo<LoginRecord> list(int pageNum, int pageSize,
+                                      String startDate, String endDate, String account) {
+        PageHelper.startPage(pageNum,pageSize);
+        List<LoginRecord> records = loginRecordMapper.listFull(startDate,endDate, account);
+        return PageInfo.of(records);
     }
 }

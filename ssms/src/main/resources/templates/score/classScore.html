@@ -90,10 +90,11 @@
 <script type="text/javascript" src="/assets/js/common.js"></script>
 
 <script>
-    layui.use(['layer', 'form', 'table', 'collegeSelect'], function () {
+    layui.use(['layer', 'form', 'table', 'collegeSelect','admin'], function () {
         var $ = layui.jquery;
         var layer = layui.layer;
         var form = layui.form;
+        var admin = layui.admin;
         var table = layui.table;
         var collegeSelect = layui.collegeSelect;
 
@@ -111,11 +112,15 @@
                 {field: 'collegeId', hide: true},
                 {field: 'subjectId', hide: true},
                 {field: 'classId', hide: true},
+                {field: 'gradeId', hide: true},
                 {field: 'studentId', hide: true},
                 {type: 'numbers', align: 'center', title: '排名'},
                 {field: 'username', align: 'center', sort: true, title: '学号'},
                 {field: 'nickName', align: 'center', sort: true, title: '姓名'},
+                {field: 'collegeName', align: 'center', sort: true, title: '学院'},
                 {field: 'subjectName', align: 'center', sort: true, title: '专业'},
+                {field: 'className', align: 'center', sort: true, title: '班级'},
+                {field: 'gradeName', align: 'center', sort: true, title: '年级'},
                 {field: 'schoolYear', align: 'center', sort: true, title: '学年'},
                 {
                     align: 'center', sort: true, templet: function (d) {
@@ -132,9 +137,6 @@
                         return d.totalScore.toFixed(2);
                     },  title: '总成绩'}
             ]],
-            skin: 'line',
-            even: true,
-            size: 'lg',
             response: {
                 statusCode: 200
             },
@@ -149,6 +151,30 @@
                 pageName: 'pageNum', // 页码的参数名称，默认：page
                 limitName: 'pageSize' // 每页数据量的参数名，默认：limit
             }
+        });
+
+        //监听行点击事件
+        table.on('row(score-table)', function(obj){
+            var data = obj.data;
+
+            //查看成绩信息
+            top.layui.admin.open({
+                type: 2,
+                title: "成绩详情",
+                btn: ['确定'],
+                area: ['450px', '420px'],
+                content: "/score/showForm"
+                +"?studentId=" + data.studentId
+                +"&collegeId="+data.collegeId
+                +"&subjectId="+data.subjectId
+                +"&classId="+data.classId
+                +"&gradeId="+data.gradeId
+                +"&schoolYear="+data.schoolYear
+                +"&semester="+data.semester
+            });
+
+            //标注选中样式
+            obj.tr.addClass('layui-table-click').siblings().removeClass('layui-table-click');
         });
 
         // 导出excel

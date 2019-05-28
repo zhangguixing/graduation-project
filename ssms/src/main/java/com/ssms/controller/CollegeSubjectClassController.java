@@ -28,6 +28,8 @@ public class CollegeSubjectClassController extends BaseController {
     @RequiresPermissions("college:view")
     @GetMapping
     public String college(Model model){
+        Integer personType = this.getLoginUser().getPersonType();
+        model.addAttribute("personType",personType);
         return "system/college.html";
     }
 

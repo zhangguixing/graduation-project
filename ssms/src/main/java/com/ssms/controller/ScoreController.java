@@ -71,6 +71,16 @@ public class ScoreController extends BaseController {
         return "score/personScore.html";
     }
 
+    @GetMapping("showForm")
+    public String showForm(Model model,Integer studentId,Integer collegeId,Integer subjectId,Integer classId,Integer gradeId,String schoolYear,Integer semester){
+        Map<String,Object> collegeNameAndScore = new HashMap<>();
+        if(studentId!=null && collegeId!=null && subjectId!=null && classId!=null && schoolYear!=null && semester!=null){
+            collegeNameAndScore = scoreService.getCollegeNameAndScore(studentId,collegeId,subjectId,classId,gradeId,schoolYear,semester);
+        }
+        model.addAttribute("collegeNameAndScore",collegeNameAndScore);
+        return "score/showForm.html";
+    }
+
     @GetMapping("trend")
     public String scoreTrend(Model model) {
         model.addAttribute("loginUser", getLoginUser());
@@ -127,6 +137,10 @@ public class ScoreController extends BaseController {
             collegeId = user.getCollegeId();
             subjectId = user.getSubjectId();
             classId = user.getClassId();
+        }else if(user.getPersonType() == User.TEACHER_TYPE){
+            //教师--查询所在专业
+            collegeId = user.getCollegeId();
+            subjectId = user.getSubjectId();
         }
         return ResponseUtil.generateResponse(scoreService.listScore(pageNum, pageSize, gradeId, collegeId, subjectId, classId, schoolYear, semester, searchKey, searchValue));
     }

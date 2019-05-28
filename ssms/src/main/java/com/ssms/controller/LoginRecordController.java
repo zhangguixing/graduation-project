@@ -1,6 +1,8 @@
 package com.ssms.controller;
 
+import com.ssms.common.CommonResponse;
 import com.ssms.common.PageResult;
+import com.ssms.common.ResponseUtil;
 import com.ssms.common.util.StringUtil;
 import com.ssms.model.LoginRecord;
 import com.ssms.service.LoginRecordService;
@@ -31,7 +33,7 @@ public class LoginRecordController {
     @RequiresPermissions("loginRecord:view")
     @ResponseBody
     @RequestMapping("/list")
-    public PageResult<LoginRecord> list(Integer page, Integer limit, String startDate, String endDate, String account) {
+    public CommonResponse list(Integer page, Integer limit, String startDate, String endDate, String account) {
         if (StringUtil.isBlank(startDate)) {
             startDate = null;
         } else {
@@ -45,7 +47,7 @@ public class LoginRecordController {
         if (StringUtil.isBlank(account)) {
             account = null;
         }
-        return loginRecordService.list(page, limit, startDate, endDate, account);
+        return ResponseUtil.generateResponse(loginRecordService.list(page, limit, startDate, endDate, account));
     }
 
 }

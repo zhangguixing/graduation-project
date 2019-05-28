@@ -9,6 +9,6 @@ import java.util.List;
 
 public interface LoginRecordMapper extends BaseMapper<LoginRecord> {
 
-    List<LoginRecord> listFull(Page<LoginRecord> page, @Param("startDate") String startDate, @Param("endDate") String endDate, @Param("account") String account);
+    List<LoginRecord> listFull(@Param("startDate") String startDate, @Param("endDate") String endDate, @Param("account") String account);
 
 }

@@ -59,10 +59,10 @@
                     </div>
                     <div class="layui-inline">
                         <button id="btnSearch" class="layui-btn icon-btn"><i class="layui-icon">&#xe615;</i>搜索</button>
-                        <button id="btnAdd" class="layui-btn icon-btn"><i class="layui-icon">&#xe654;</i>添加</button>
+                        <button id="btnAdd" class="layui-btn icon-btn"  style="display: none;"><i class="layui-icon">&#xe654;</i>添加</button>
                         <button id="btnExp" class="layui-btn icon-btn"><i class="layui-icon">&#xe67d;</i>导出</button>
                         <button id="btnUploadTeacher" class="layui-btn icon-btn"  style="display: none;"><i class="layui-icon">&#xe67c;</i>导入教师</button>
-                        <button id="btnUploadStudent" class="layui-btn icon-btn" style="margin-left: 10px"><i class="layui-icon">&#xe67c;</i>导入学生</button>
+                        <button id="btnUploadStudent" class="layui-btn icon-btn" style="margin-left: 10px;display: none;"><i class="layui-icon">&#xe67c;</i>导入学生</button>
                     </div>
                 </div>
             </div>
@@ -76,9 +76,13 @@
 
 <!-- 表格操作列 -->
 <script type="text/html" id="tableBar">
-    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="edit">修改</a>
-    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
-    <a class="layui-btn layui-btn-xs" lay-event="reset">重置密码</a>
+    <% if(personType != 3){ %>
+        <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="edit">修改</a>
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+        <a class="layui-btn layui-btn-xs" lay-event="reset">重置密码</a>
+    <% }else{ %>
+        无
+    <% } %>
 </script>
 
 <!-- 表格状态列 -->
@@ -163,14 +167,25 @@
         //加载学院下拉框
         collegeSelect.renderCollegeList();
 
-        //教师登录回显
+        //回显
         var collegeInfo = '${collegeInfo}';
         if (collegeInfo != undefined && collegeInfo != '' && collegeInfo != '{}') {
             var collegeId = '${collegeInfo.collegeId}';
             var subjectId = '${collegeInfo.subjectId}';
-            $("#btnUploadTeacher").hide();
-            collegeSelect.reshowAll(collegeId, subjectId, null, null, null, null, true);
+            var classId = null;
+            var gradeId = null;
+            if('${personType}' == 3){
+                //学生登录回显
+                classId = '${collegeInfo.classId}';
+                gradeId = '${collegeInfo.gradeId}';
+            }else {
+                $("#btnAdd").show();
+                $("#btnUploadStudent").show();
+            }
+            collegeSelect.reshowAll(collegeId, subjectId, classId, gradeId, null, null, true);
         }else {
+            $("#btnAdd").show();
+            $("#btnUploadStudent").show();
             $("#btnUploadTeacher").show();
         }
 
@@ -282,20 +297,26 @@
 
         // 修改user状态
         form.on('switch(ckState)', function (obj) {
-            layer.load(2);
-            $.post('user/updateState', {
-                userId: obj.elem.value,
-                state: obj.elem.checked ? 0 : 1
-            }, function (data) {
-                layer.closeAll('loading');
-                if (data.code == 200) {
-                    layer.msg(data.msg, {icon: 1});
-                } else {
-                    layer.msg(data.msg, {icon: 2});
-                    $(obj.elem).prop('checked', !obj.elem.checked);
-                    form.render('checkbox');
-                }
-            });
+            if('${personType}' == 3){
+                layer.msg('您无权限修改状态', {icon: 4});
+                $(obj.elem).prop('checked', !obj.elem.checked);
+                form.render('checkbox');
+            }else {
+                layer.load(2);
+                $.post('user/updateState', {
+                    userId: obj.elem.value,
+                    state: obj.elem.checked ? 0 : 1
+                }, function (data) {
+                    layer.closeAll('loading');
+                    if (data.code == 200) {
+                        layer.msg(data.msg, {icon: 1});
+                    } else {
+                        layer.msg(data.msg, {icon: 2});
+                        $(obj.elem).prop('checked', !obj.elem.checked);
+                        form.render('checkbox');
+                    }
+                });
+            }
         });
 
         // 删除用户
