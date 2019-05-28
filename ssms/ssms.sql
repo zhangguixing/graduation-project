@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50540
 File Encoding         : 65001
 
-Date: 2019-05-28 16:48:18
+Date: 2019-05-28 17:11:42
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -108,7 +108,7 @@ CREATE TABLE `info_grade` (
   `name` varchar(20) NOT NULL COMMENT '年级名称',
   `create_time` datetime NOT NULL COMMENT '创建时间',
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-  `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '状态，0删除，1正常',
+  `status` tinyint(2) NOT NULL DEFAULT '1' COMMENT '状态，0删除，1正常',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
@@ -136,21 +136,20 @@ CREATE TABLE `info_score` (
   `semester` tinyint(2) NOT NULL COMMENT '学期，1上学期，2下学期',
   `create_time` datetime NOT NULL COMMENT '创建时间',
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-  `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '状态，0删除，1正常',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=134 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of info_score
 -- ----------------------------
-INSERT INTO `info_score` VALUES ('116', '99.00', '1', '7', '1', '2', '4', '1', '2015-2016', '1', '2019-05-27 10:31:47', '2019-05-27 10:31:47', '1');
-INSERT INTO `info_score` VALUES ('118', '99.00', '2', '7', '1', '2', '4', '1', '2015-2016', '2', '2019-05-27 11:11:52', '2019-05-27 11:11:52', '1');
-INSERT INTO `info_score` VALUES ('125', '99.00', '1', '33', '1', '2', '3', '1', '2015-2016', '1', '2019-05-27 12:05:06', '2019-05-27 12:05:06', '1');
-INSERT INTO `info_score` VALUES ('126', '89.00', '2', '33', '1', '2', '3', '1', '2015-2016', '1', '2019-05-27 12:05:06', '2019-05-27 12:05:06', '1');
-INSERT INTO `info_score` VALUES ('127', '98.00', '9', '33', '1', '2', '3', '1', '2015-2016', '1', '2019-05-27 12:05:06', '2019-05-27 12:05:06', '1');
-INSERT INTO `info_score` VALUES ('131', '98.00', '1', '34', '1', '2', '4', '1', '2015-2016', '1', '2019-05-27 12:07:14', '2019-05-27 12:07:14', '1');
-INSERT INTO `info_score` VALUES ('132', '92.00', '2', '34', '1', '2', '4', '1', '2015-2016', '1', '2019-05-27 12:07:14', '2019-05-27 12:07:14', '1');
-INSERT INTO `info_score` VALUES ('133', '88.00', '9', '34', '1', '2', '4', '1', '2015-2016', '1', '2019-05-27 12:07:14', '2019-05-27 12:07:14', '1');
+INSERT INTO `info_score` VALUES ('116', '99.00', '1', '7', '1', '2', '4', '1', '2015-2016', '1', '2019-05-27 10:31:47', '2019-05-27 10:31:47');
+INSERT INTO `info_score` VALUES ('118', '99.00', '2', '7', '1', '2', '4', '1', '2015-2016', '2', '2019-05-27 11:11:52', '2019-05-27 11:11:52');
+INSERT INTO `info_score` VALUES ('125', '99.00', '1', '33', '1', '2', '3', '1', '2015-2016', '1', '2019-05-27 12:05:06', '2019-05-27 12:05:06');
+INSERT INTO `info_score` VALUES ('126', '89.00', '2', '33', '1', '2', '3', '1', '2015-2016', '1', '2019-05-27 12:05:06', '2019-05-27 12:05:06');
+INSERT INTO `info_score` VALUES ('127', '98.00', '9', '33', '1', '2', '3', '1', '2015-2016', '1', '2019-05-27 12:05:06', '2019-05-27 12:05:06');
+INSERT INTO `info_score` VALUES ('131', '98.00', '1', '34', '1', '2', '4', '1', '2015-2016', '1', '2019-05-27 12:07:14', '2019-05-27 12:07:14');
+INSERT INTO `info_score` VALUES ('132', '92.00', '2', '34', '1', '2', '4', '1', '2015-2016', '1', '2019-05-27 12:07:14', '2019-05-27 12:07:14');
+INSERT INTO `info_score` VALUES ('133', '88.00', '9', '34', '1', '2', '4', '1', '2015-2016', '1', '2019-05-27 12:07:14', '2019-05-27 12:07:14');
 
 -- ----------------------------
 -- Table structure for sys_authorities

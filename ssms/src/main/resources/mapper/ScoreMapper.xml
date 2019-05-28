@@ -55,7 +55,7 @@
                     </when>
                 </choose>
             </if>
-            AND s.status=1 AND u.state=0
+            AND u.state=0
         </where>
         GROUP BY s.student_id,s.school_year,s.semester
         ORDER BY totalScore DESC
