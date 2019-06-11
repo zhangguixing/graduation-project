@@ -45,7 +45,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public PageInfo<User> list(int pageNum, int pageSize, boolean showDelete, Integer collegeId, Integer subjectId, Integer classId, Integer gradeId, String column, String value) {
+    public PageInfo<User> list(int pageNum, int pageSize, boolean showDelete, Integer collegeId, Integer subjectId, Integer classId, Integer gradeId, String column, String value, Integer loginUserId) {
         Wrapper<User> wrapper = new EntityWrapper<>();
         if(collegeId != null){
             wrapper.eq("college_id", collegeId);
@@ -59,6 +59,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if(gradeId != null){
             wrapper.eq("grade_id", gradeId);
         }
+        wrapper.ne("user_id", loginUserId);
         if (StringUtil.isNotBlank(column)) {
             wrapper.like(column, value);
         }

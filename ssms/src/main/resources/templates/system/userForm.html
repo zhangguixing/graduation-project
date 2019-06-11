@@ -90,7 +90,7 @@
         <div id="gradeDiv" style="display: none">
             <label class="layui-form-label">年级</label>
             <div class="layui-input-inline">
-                <select id="gradeId" name="gradeId" lay-verify="studetnRequired" lay-filter="gradeId">
+                <select id="gradeId" name="gradeId" lay-verify="studentRequired" lay-filter="gradeId">
                     <option value="">请选择年级</option>
                 </select>
             </div>
@@ -118,7 +118,7 @@
         //自定义校验规则
         form.verify({
             studentRequired: function (value, item) { //value：表单的值、item：表单的DOM对象
-                if ($("#roleId option:selected") == '学生') {
+                if ($("#roleId option:selected").text() == '学生') {
                     value = $.trim(value);
                     if (value == "") {
                         return "必输项不能为空";
@@ -126,7 +126,7 @@
                 }
             },
             teacherRequired: function (value, item) { //value：表单的值、item：表单的DOM对象
-                if ($("#roleId option:selected") == '教师' || $("#roleId option:selected") == '学生') {
+                if ($("#roleId option:selected").text() == '教师' || $("#roleId option:selected").text() == '学生') {
                     value = $.trim(value);
                     if (value == "") {
                         return "必输项不能为空";
@@ -157,6 +157,11 @@
                     $('#gradeDiv').hide();
                 }
                 form.render('select');
+            }else{
+                $('#collegeDiv').hide();
+                $('#subjectDiv').hide();
+                $('#classDiv').hide();
+                $('#gradeDiv').hide();
             }
         });
 
@@ -195,7 +200,6 @@
             form.render('select');
         });
 
-
         var url = 'add';
         // 回显user数据
         var user = admin.getTempData('t_user');
@@ -204,7 +208,6 @@
             url = 'update';
             form.val('userForm', user);
             var roles = user.roles;
-            console.info(user)
             if (roles.length > 0) {
                 $('#roleId').val(roles[0].roleId);
                 if ($("#roleId option:selected").val() != "") {

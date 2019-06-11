@@ -15,9 +15,9 @@ public interface UserService extends IService<User> {
 
     User getByUsername(String username);
 
-    PageInfo<User> list(int pageNum, int pageSize, boolean showDelete, Integer collegeId, Integer subjectId, Integer classId, Integer gradeId, String searchKey, String searchValue);
-
     User getById(Integer userId);
+
+    PageInfo<User> list(int pageNum, int pageSize, boolean showDelete, Integer collegeId, Integer subjectId, Integer classId, Integer gradeId, String column, String value, Integer loginUserId);
 
     boolean add(User user) throws BusinessException;
 

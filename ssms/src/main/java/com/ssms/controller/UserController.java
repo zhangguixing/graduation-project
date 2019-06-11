@@ -93,7 +93,7 @@ public class UserController extends BaseController {
             collegeId = user.getCollegeId();
             subjectId = user.getSubjectId();
         }
-        return ResponseUtil.generateResponse(userService.list(pageNum, pageSize, true, collegeId,subjectId,classId,gradeId,searchKey, searchValue));
+        return ResponseUtil.generateResponse(userService.list(pageNum, pageSize, true, collegeId,subjectId,classId,gradeId,searchKey, searchValue,this.getLoginUserId()));
     }
 
     /**
