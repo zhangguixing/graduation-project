@@ -1,5 +1,6 @@
 package com.ssms.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.ssms.common.BaseController;
 import com.ssms.common.CommonResponse;
 import com.ssms.common.JsonResult;
@@ -109,6 +110,14 @@ public class ScoreController extends BaseController {
     @GetMapping("chartsData")
     public CommonResponse getChartsData(){
         return ResponseUtil.generateResponse(scoreService.getChartsData(getLoginUserId()));
+    }
+
+    @GetMapping("chartsData2")
+    public String getChartsData2(Model model,Integer userId,String nickName){
+        Map<String, Object> chartsData = scoreService.getChartsData(userId);
+        model.addAttribute("chartsData", JSON.toJSONString(chartsData));
+        model.addAttribute("nickName",nickName);
+        return "/system/scoreTrend.html";
     }
 
     @ResponseBody

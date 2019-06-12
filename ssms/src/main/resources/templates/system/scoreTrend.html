@@ -23,7 +23,7 @@
         <div class="layui-card-body">
             <div class="layui-form-item">
                 <div class="layui-card">
-                    <div class="layui-card-header">${loginUser.nickName!}-成绩趋势</div>
+                    <div class="layui-card-header">${nickName!}-成绩趋势</div>
                     <div class="layui-card-body" style="height: 416px;overflow: hidden;">
                         <div id="trendId" style="width: 100%;height:100%;"></div>
                     </div>
@@ -51,25 +51,18 @@
         var xData = ["2015-2016学年上学期", "2015-2016学年下学期", "2016-2017学年上学期", "2016-2017学年下学期", "2017-2018学年上学期", "2017-2018学年下学期", "2018-2019学年上学期", "2018-2019学年下学期"];
         var yData = [350, 400, 450, 550, 620, 650, 680, 700];
         //查询指定格式学生成绩信息
-        $.ajax({
-            url:'/score/chartsData',
-            type:'GET',
-            async:false,
-            success:function (res) {
-                if(res.code == 200){
-                    var data = res.data;
-                    if(data != null){
-                        if (data.xData.length > 0) {
-                            xData = data.xData;
-                            yData = data.yData;
-                        }else{
-                            $('#trendId').css({"text-align":"center"});
-                            $('#trendId').html("暂无成绩信息！");
-                        }
-                    }
-                }
+        var dataStr = '${chartsData}';
+        var data = JSON.parse(dataStr);
+        console.info(data)
+        if (data != '{}') {
+            if (data.xData.length > 0) {
+                xData = data.xData;
+                yData = data.yData;
+            }else{
+                $('#trendId').css({"text-align":"center"});
+                $('#trendId').html("暂无成绩！");
             }
-        });
+        }
         var option = {
             title: {
                 textStyle: {
