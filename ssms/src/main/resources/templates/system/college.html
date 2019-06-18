@@ -36,9 +36,9 @@
                             <i class="layui-icon">&#xe615;</i>搜索
                         </button>
                         <% if(personType == 1){ %>
-                            <button id="btnAdd" class="layui-btn icon-btn">
-                                <i class="layui-icon">&#xe654;</i>添加
-                            </button>
+                        <button id="btnAdd" class="layui-btn icon-btn">
+                            <i class="layui-icon">&#xe654;</i>添加
+                        </button>
                         <% } %>
                     </div>
                 </div>
@@ -54,10 +54,10 @@
 <!-- 表格操作列 -->
 <script type="text/html" id="tableBar">
     <% if(personType == 1){ %>
-        <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="edit">修改</a>
-        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="edit">修改</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
     <% }else{ %>
-        无
+    无
     <% } %>
 </script>
 
@@ -118,7 +118,7 @@
                                     },
                                     title: '类型'
                                 }, {
-                                    field:'operator',
+                                    field: 'operator',
                                     templet: '#tableBar',
                                     width: 200,
                                     align: 'center',
@@ -190,64 +190,64 @@
 
                 // 搜索按钮点击事件
                 $('#btnSearch').click(
-                        function () {
-                            var keyword = $('#edtSearch')
-                                .val();
-                            var $tds = $('#collegeTable')
-                                .next('.treeTable')
-                                .find(
-                                    '.layui-table-body tbody tr td');
-                            if (!keyword) {
-                                $tds.css(
-                                    'background-color',
-                                    'transparent');
-                                layer.msg("请输入关键字", {
-                                    icon: 5
-                                });
-                                return;
-                            }
-                            var searchCount = 0;
-                            $tds
-                                .each(function () {
+                    function () {
+                        var keyword = $('#edtSearch')
+                            .val();
+                        var $tds = $('#collegeTable')
+                            .next('.treeTable')
+                            .find(
+                                '.layui-table-body tbody tr td');
+                        if (!keyword) {
+                            $tds.css(
+                                'background-color',
+                                'transparent');
+                            layer.msg("请输入关键字", {
+                                icon: 5
+                            });
+                            return;
+                        }
+                        var searchCount = 0;
+                        $tds
+                            .each(function () {
+                                $(this)
+                                    .css(
+                                        'background-color',
+                                        'transparent');
+                                if ($(this)
+                                        .text()
+                                        .indexOf(
+                                            keyword) >= 0) {
                                     $(this)
                                         .css(
                                             'background-color',
-                                            'transparent');
-                                    if ($(this)
-                                            .text()
-                                            .indexOf(
-                                                keyword) >= 0) {
-                                        $(this)
-                                            .css(
-                                                'background-color',
-                                                'rgba(250,230,160,0.5)');
-                                        if (searchCount == 0) {
-                                            $(
-                                                'body,html')
-                                                .stop(
-                                                    true);
-                                            $(
-                                                'body,html')
-                                                .animate(
-                                                    {
-                                                        scrollTop: $(
-                                                            this)
-                                                            .offset().top - 150
-                                                    },
-                                                    500);
-                                        }
-                                        searchCount++;
+                                            'rgba(250,230,160,0.5)');
+                                    if (searchCount == 0) {
+                                        $(
+                                            'body,html')
+                                            .stop(
+                                                true);
+                                        $(
+                                            'body,html')
+                                            .animate(
+                                                {
+                                                    scrollTop: $(
+                                                        this)
+                                                        .offset().top - 150
+                                                },
+                                                500);
                                     }
-                                });
-                            if (searchCount == 0) {
-                                layer.msg("没有匹配结果", {
-                                    icon: 5
-                                });
-                            } else {
-                                treetable
-                                    .expandAll('#collegeTable');
-                            }
-                        });
+                                    searchCount++;
+                                }
+                            });
+                        if (searchCount == 0) {
+                            layer.msg("没有匹配结果", {
+                                icon: 5
+                            });
+                        } else {
+                            treetable
+                                .expandAll('#collegeTable');
+                        }
+                    });
 
             });
 </script>

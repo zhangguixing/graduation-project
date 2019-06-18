@@ -164,6 +164,12 @@
                             </button>
                         </div>
                     </div>
+                    <div class="layui-inline" style="padding-left: 20px;">
+                        <div class="layui-inline">
+                            <button id="btnUpload" class="layui-btn icon-btn"><i class="layui-icon">&#xe67c;</i>导入
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
             <!--课程表-->
@@ -173,11 +179,12 @@
 </div>
 
 <script>
-    layui.use(['layer', 'form', 'table', 'admin', 'collegeSelect'], function () {
+    layui.use(['layer', 'form', 'table', 'admin', 'collegeSelect', 'upload'], function () {
         var $ = layui.jquery;
         var layer = layui.layer;
         var form = layui.form;
         var table = layui.table;
+        var upload = layui.upload;
         var admin = layui.admin;
         var collegeSelect = layui.collegeSelect;
 
@@ -263,6 +270,23 @@
             return false;
         });
 
+        //导入课程表
+        upload.render({
+            elem: '#btnUpload'
+            , url: '/course/addTimeTables'
+            , accept: 'file' //普通文件
+            , multiple: true
+            , done: function (res) {
+                if (res.code == 200) {
+                    layer.msg(res.message, {icon: 1});
+                    //获取课程表
+                    searchTimeTableList();
+                } else {
+                    layer.msg(res.message, {icon: 2})
+                }
+            }
+        });
+
         //新增或修改课程表
         function saveOrUpdateTimeTable(e) {
             var collegeId = $('#collegeId option:selected').val();
@@ -278,6 +302,7 @@
                 renderTeacherList(collegeId, subjectId);
                 //表单重置
                 $('#timeTableForm')[0].reset();
+                $('#timeTableId').val('');
                 $('#dayOfWeek').val('');
                 $('#timeTableForm input').removeAttr("readonly");
                 $('#timeTableForm select').attr("disabled", false);
@@ -466,6 +491,7 @@
             $('#semesterId').val('');
             $('#weekNumId').val('');
             $('#btnAdd').hide();
+            resetTimeTableList();
             form.render('select');
         });
         //选择专业触发事件
@@ -486,6 +512,7 @@
             $('#semesterId').val('');
             $('#weekNumId').val('');
             $('#btnAdd').hide();
+            resetTimeTableList();
             form.render('select');
         });
         //选择班级触发事件
@@ -505,6 +532,7 @@
             $('#semesterId').val('');
             $('#weekNumId').val('');
             $('#btnAdd').hide();
+            resetTimeTableList();
             form.render('select');
         });
         //选择年级触发事件
@@ -524,6 +552,7 @@
             $('#semesterId').val('');
             $('#weekNumId').val('');
             $('#btnAdd').hide();
+            resetTimeTableList();
             form.render('select');
         });
         //选择学年触发事件
@@ -537,6 +566,7 @@
             $('#weekNumDiv').hide();
             $('#weekNumId').val('');
             $('#btnAdd').hide();
+            resetTimeTableList();
             form.render('select');
         });
         //选择学期触发事件
@@ -549,6 +579,7 @@
                 $('#weekNumDiv').hide();
                 $('#weekNumId').val('');
                 $('#btnAdd').hide();
+                resetTimeTableList();
             }
             form.render('select');
         });
@@ -561,11 +592,19 @@
                     layer.msg('周数只可在1~18之内', {icon: 2});
                     $('#weekNumId').val('');
                     $('#weekNumId').focus();
+                    resetTimeTableList();
                 } else {
                     searchTimeTableList();
                 }
             }
         });
+
+        //重置课程表
+        function resetTimeTableList() {
+            Timetable.setOption({
+                timetables: courseList
+            });
+        }
 
         //根据条件获取成绩列表
         function searchTimeTableList() {
@@ -630,37 +669,63 @@
                 "endLesson": endLesson,
                 "address": address
             });
-            var url;
-            var method;
-            if (id != '' && id != null) {
-                url = '/course/timeTable';
-                method = 'PUT';
-            } else {
-                url = '/course/timeTable';
-                method = 'POST';
-            }
             $.ajax({
-                url: url,
-                type: method,
-                data: param,
+                url: '/course/timeTable/isConflict',
+                type: 'post',
+                data: JSON.stringify({
+                    "id": id,
+                    "courseId": courseId,
+                    "dayOfWeek": dayOfWeek - 1,
+                    "startWeekNum": startWeekNum,
+                    "endWeekNum": endWeekNum,
+                    "startLesson": startLesson,
+                    "endLesson": endLesson
+                }),
                 contentType: 'application/json;charset=UTF-8',
-                success: function (data) {
-                    layer.closeAll('loading');
-                    if (data.code == 200) {
-                        layer.msg('操作成功', {
-                            icon: 1
-                        });
+                success: function (res) {
+                    if (res.code == 200) {
+                        if (res.data == true) {
+                            layer.msg('上课时间冲突，请检查！', {
+                                icon: 2
+                            });
+                            var loadIndex = layer.load(0, {shade: false});
+                            layer.close(loadIndex);
+                        } else {
+                            var url;
+                            var method;
+                            if (id != '' && id != null) {
+                                url = '/course/timeTable';
+                                method = 'PUT';
+                            } else {
+                                url = '/course/timeTable';
+                                method = 'POST';
+                            }
+                            $.ajax({
+                                url: url,
+                                type: method,
+                                data: param,
+                                contentType: 'application/json;charset=UTF-8',
+                                success: function (data) {
+                                    layer.closeAll('loading');
+                                    if (data.code == 200) {
+                                        layer.msg('操作成功', {
+                                            icon: 1
+                                        });
+                                    }
+                                    if (data.code == 500) {
+                                        layer.msg('操作失败', {
+                                            icon: 2
+                                        });
+                                    }
+                                    // 关闭当前弹出层
+                                    layer.close(index);
+                                    //获取课程表
+                                    searchTimeTableList();
+                                },
+                            });
+                        }
                     }
-                    if (data.code == 500) {
-                        layer.msg('操作失败', {
-                            icon: 2
-                        });
-                    }
-                    // 关闭当前弹出层
-                    layer.close(index);
-                    //获取课程表
-                    searchTimeTableList();
-                },
+                }
             });
             return false;
         });

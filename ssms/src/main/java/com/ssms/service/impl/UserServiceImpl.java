@@ -47,16 +47,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public PageInfo<User> list(int pageNum, int pageSize, boolean showDelete, Integer collegeId, Integer subjectId, Integer classId, Integer gradeId, String column, String value, Integer loginUserId) {
         Wrapper<User> wrapper = new EntityWrapper<>();
-        if(collegeId != null){
+        if (collegeId != null) {
             wrapper.eq("college_id", collegeId);
         }
-        if(subjectId != null){
+        if (subjectId != null) {
             wrapper.eq("subject_id", subjectId);
         }
-        if(classId != null){
+        if (classId != null) {
             wrapper.eq("class_id", classId);
         }
-        if(gradeId != null){
+        if (gradeId != null) {
             wrapper.eq("grade_id", gradeId);
         }
         wrapper.ne("user_id", loginUserId);
@@ -66,7 +66,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (!showDelete) {  // 不显示锁定的用户
             wrapper.eq("state", 0);
         }
-        PageHelper.startPage(pageNum,pageSize);
+        PageHelper.startPage(pageNum, pageSize);
         List<User> userList = baseMapper.selectList(wrapper.orderBy("person_type", true).orderBy("create_time", true));
         if (userList != null && userList.size() > 0) {
             // 查询user的角色
@@ -205,22 +205,22 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public boolean delete(Integer userId) {
         try {
             User user = baseMapper.selectById(userId);
-            if(user == null){
+            if (user == null) {
                 return false;
             }
-            if(user.getPersonType().equals(3)){
+            if (user.getPersonType().equals(3)) {
                 //学生
-                scoreMapper.delete(new EntityWrapper<Score>().eq("student_id",userId));
-            }else if(user.getPersonType().equals(2)){
+                scoreMapper.delete(new EntityWrapper<Score>().eq("student_id", userId));
+            } else if (user.getPersonType().equals(2)) {
                 //教师
-                courseTimeTableMapper.delete(new EntityWrapper<CourseTimeTable>().eq("teacher_id",userId));
+                courseTimeTableMapper.delete(new EntityWrapper<CourseTimeTable>().eq("teacher_id", userId));
             }
             baseMapper.deleteById(userId);
             return true;
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        return  false;
+        return false;
     }
 
     @Override
@@ -255,12 +255,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         List<Object> data = EasyExcelFactory.read(inputStream, new Sheet(1, 1, UserModel.class));
         inputStream.close();
         //存储id和name键值对，减轻数据库查询次数
-        Map<String,Integer> idMap = new HashMap<>();
-        for (Object o:data){
-            if(o instanceof UserModel){
-                UserModel userModel = (UserModel)o;
+        Map<String, Integer> idMap = new HashMap<>();
+        for (Object o : data) {
+            if (o instanceof UserModel) {
+                UserModel userModel = (UserModel) o;
                 if (baseMapper.selectByUsername(userModel.getUsername()) != null) {
-                    throw new BusinessException("账号【"+userModel.getUsername()+"】已经存在");
+                    throw new BusinessException("账号【" + userModel.getUsername() + "】已经存在");
                 }
                 Role role = new Role();
                 if (personType.equals(3)) {
@@ -282,47 +282,47 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                 user.setPhone(userModel.getPhone());
                 String collegeName = userModel.getCollegeName();
                 Integer collegeId = idMap.get(collegeName);
-                if(collegeId == null){
+                if (collegeId == null) {
                     collegeId = collegeSubjectClassMapper.selectIdByName(collegeName);
-                    if(collegeId == null){
-                        throw new BusinessException("【"+collegeName+"】学院不存在！");
+                    if (collegeId == null) {
+                        throw new BusinessException("【" + collegeName + "】学院不存在！");
                     }
-                    idMap.put(collegeName,collegeId);
+                    idMap.put(collegeName, collegeId);
                 }
                 String subjectName = userModel.getSubjectName();
                 Integer subjectId = idMap.get(subjectName);
-                if(subjectId == null){
+                if (subjectId == null) {
                     subjectId = collegeSubjectClassMapper.selectIdByName(subjectName);
-                    if(subjectId == null){
-                        throw new BusinessException("【"+subjectName+"】专业不存在！");
+                    if (subjectId == null) {
+                        throw new BusinessException("【" + subjectName + "】专业不存在！");
                     }
-                    idMap.put(subjectName,subjectId);
+                    idMap.put(subjectName, subjectId);
                 }
                 user.setCollegeId(collegeId);
                 user.setSubjectId(subjectId);
-                if(personType.equals(3)){
+                if (personType.equals(3)) {
                     //学生
                     String className = userModel.getClassName();
-                    Integer classId = idMap.get(subjectName+className);
-                    if(classId == null){
+                    Integer classId = idMap.get(subjectName + className);
+                    if (classId == null) {
                         CollegeSubjectClass collegeSubjectClass = new CollegeSubjectClass();
                         collegeSubjectClass.setName(className);
                         collegeSubjectClass.setParentId(subjectId);
                         collegeSubjectClass = collegeSubjectClassMapper.selectOne(collegeSubjectClass);
-                        if(collegeSubjectClass == null){
-                            throw new BusinessException("【"+className+"】班级不存在！");
+                        if (collegeSubjectClass == null) {
+                            throw new BusinessException("【" + className + "】班级不存在！");
                         }
                         classId = collegeSubjectClass.getId();
-                        idMap.put(subjectName+className,classId);
+                        idMap.put(subjectName + className, classId);
                     }
                     String gradeName = userModel.getGradeName();
                     Integer gradeId = idMap.get(gradeName);
-                    if(gradeId == null){
+                    if (gradeId == null) {
                         gradeId = gradeMapper.selectIdByName(gradeName);
-                        if(gradeId == null){
-                            throw new BusinessException("【"+gradeName+"】年级不存在！");
+                        if (gradeId == null) {
+                            throw new BusinessException("【" + gradeName + "】年级不存在！");
                         }
-                        idMap.put(gradeName,gradeId);
+                        idMap.put(gradeName, gradeId);
                     }
                     user.setClassId(classId);
                     user.setGradeId(gradeId);
@@ -332,12 +332,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                 user.setCreateTime(new Date());
 
                 boolean rs = baseMapper.insert(user) > 0;
-                if(rs){
+                if (rs) {
                     UserRole userRole = new UserRole();
                     userRole.setRoleId(role.getRoleId());
                     userRole.setUserId(user.getUserId());
                     userRole.setCreateTime(new Date());
-                    if(userRoleMapper.insert(userRole)<=0){
+                    if (userRoleMapper.insert(userRole) <= 0) {
                         throw new BusinessException("添加失败，请重试");
                     }
                 }

@@ -8,8 +8,8 @@
 
     <select id="listUserIdAndName" resultType="map">
         select
-          user_id AS id,
-          nick_name AS name
+        user_id AS id,
+        nick_name AS name
         from sys_user
         <where>
             <if test="collegeId != null">

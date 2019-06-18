@@ -98,7 +98,7 @@
 <script type="text/html" id="score-table-bar">
     <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="edit">修改</a>
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
-    <a class="layui-btn layui-btn-xs"  lay-event="show">查看</a>
+    <a class="layui-btn layui-btn-xs" lay-event="show">查看</a>
 </script>
 
 <!-- js部分 -->
@@ -106,7 +106,7 @@
 <script type="text/javascript" src="/assets/js/common.js"></script>
 
 <script>
-    layui.use(['layer', 'form', 'table', 'admin', 'collegeSelect','upload'], function () {
+    layui.use(['layer', 'form', 'table', 'admin', 'collegeSelect', 'upload'], function () {
         var $ = layui.jquery;
         var layer = layui.layer;
         var form = layui.form;
@@ -136,9 +136,11 @@
                 {type: 'numbers', align: 'center', title: '序号'},
                 {field: 'username', align: 'center', sort: true, title: '学号'},
                 {field: 'nickName', align: 'center', sort: true, title: '姓名'},
-                {field: 'totalScore', align: 'center', sort: true,templet: function (d) {
+                {
+                    field: 'totalScore', align: 'center', sort: true, templet: function (d) {
                         return d.totalScore.toFixed(2);
-                    }, title: '总成绩'},
+                    }, title: '成绩'
+                },
                 {field: 'subjectName', align: 'center', sort: true, title: '专业'},
                 {field: 'schoolYear', align: 'center', sort: true, title: '学年'},
                 {
@@ -178,12 +180,12 @@
             if (layEvent === 'edit') {
                 var url = "score/operateScore" +
                     "?studentId=" + data.studentId
-                    +"&collegeId="+data.collegeId
-                    +"&subjectId="+data.subjectId
-                    +"&classId="+data.classId
-                    +"&gradeId="+data.gradeId
-                    +"&schoolYear="+data.schoolYear
-                    +"&semester="+data.semester;
+                    + "&collegeId=" + data.collegeId
+                    + "&subjectId=" + data.subjectId
+                    + "&classId=" + data.classId
+                    + "&gradeId=" + data.gradeId
+                    + "&schoolYear=" + data.schoolYear
+                    + "&semester=" + data.semester;
                 top.layui.index.loadView({
                     menuPath: url,
                     menuName: '修改学生成绩'
@@ -191,7 +193,7 @@
             } else if (layEvent === 'del') {
                 doDelete(data);
                 table.reload('score-table');
-            }else if (layEvent === 'show') {
+            } else if (layEvent === 'show') {
                 //查看成绩信息
                 top.layui.admin.open({
                     type: 2,
@@ -199,13 +201,13 @@
                     btn: ['确定'],
                     area: ['450px', '420px'],
                     content: "/score/showForm"
-                    +"?studentId=" + data.studentId
-                    +"&collegeId="+data.collegeId
-                    +"&subjectId="+data.subjectId
-                    +"&classId="+data.classId
-                    +"&gradeId="+data.gradeId
-                    +"&schoolYear="+data.schoolYear
-                    +"&semester="+data.semester
+                    + "?studentId=" + data.studentId
+                    + "&collegeId=" + data.collegeId
+                    + "&subjectId=" + data.subjectId
+                    + "&classId=" + data.classId
+                    + "&gradeId=" + data.gradeId
+                    + "&schoolYear=" + data.schoolYear
+                    + "&semester=" + data.semester
                 });
             }
         });
@@ -237,19 +239,19 @@
                 }
             });
         }
+
         //上传成绩
         upload.render({
             elem: '#btnUpload'
-            ,url: '/score/addScores'
-            ,accept: 'file' //普通文件
-            ,multiple: true
-            ,done: function(res){
-                console.log(res);
-                if(res.code == 200){
-                    layer.msg(res.message,{icon:1});
+            , url: '/score/addScores'
+            , accept: 'file' //普通文件
+            , multiple: true
+            , done: function (res) {
+                if (res.code == 200) {
+                    layer.msg(res.message, {icon: 1});
                     table.reload('score-table');  // 成功刷新表格
-                }else {
-                    layer.msg(res.message,{icon:2})
+                } else {
+                    layer.msg(res.message, {icon: 2})
                 }
             }
         });

@@ -5,7 +5,8 @@
         <ul class="layui-nav layui-nav-tree" lay-accordion="true" lay-filter="admin-side-nav" style="margin-top: 15px;">
             <% for(menu in menus) { %>
             <li class="layui-nav-item">
-                <a lay-href="${menu.menuUrl}" href="javascript:;"><i class="layui-icon ${menu.menuIcon}"></i>&emsp;<cite>${menu.menuName}</cite></a>
+                <a lay-href="${menu.menuUrl}" href="javascript:;"><i
+                        class="layui-icon ${menu.menuIcon}"></i>&emsp;<cite>${menu.menuName}</cite></a>
                 <% if(menu.subMenus.~size>0) { %>
                 <dl class="layui-nav-child">
                     <% for(subMenu in menu.subMenus) { %>
@@ -26,12 +27,12 @@
             <% } %>
 
             <% if(loginUser.personType == 1){ %>
-                <li class="layui-nav-item">
-                    <a href="javascript:;"><i class="layui-icon layui-icon-engine"></i>&emsp;<cite>系统监控</cite></a>
-                    <dl class="layui-nav-child">
-                        <dd><a lay-href="/druid/" href="javascript:;">Druid监控</a></dd>
-                    </dl>
-                </li>
+            <li class="layui-nav-item">
+                <a href="javascript:;"><i class="layui-icon layui-icon-engine"></i>&emsp;<cite>系统监控</cite></a>
+                <dl class="layui-nav-child">
+                    <dd><a lay-href="/druid/" href="javascript:;">Druid监控</a></dd>
+                </dl>
+            </li>
             <% } %>
         </ul>
 

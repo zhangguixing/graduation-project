@@ -27,15 +27,15 @@ public class CollegeSubjectClassController extends BaseController {
 
     @RequiresPermissions("college:view")
     @GetMapping
-    public String college(Model model){
+    public String college(Model model) {
         Integer personType = this.getLoginUser().getPersonType();
-        model.addAttribute("personType",personType);
+        model.addAttribute("personType", personType);
         return "system/college.html";
     }
 
     @ResponseBody
     @GetMapping("getCollegeSubjectClassByParentId/{parentId}")
-    public CommonResponse getCollegeSubjectClassByParentId(@PathVariable Integer parentId){
+    public CommonResponse getCollegeSubjectClassByParentId(@PathVariable Integer parentId) {
         return ResponseUtil.generateResponse(collegeSubjectClassService.getCollegeSubjectClassByParentId(parentId));
     }
 

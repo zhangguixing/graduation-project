@@ -47,7 +47,7 @@ public class ScoreController extends BaseController {
             collegeInfo.put("collegeId", loginUser.getCollegeId());
             collegeInfo.put("subjectId", loginUser.getSubjectId());
             collegeInfo.put("classId", loginUser.getClassId());
-        }else if(loginUser.getPersonType() != null && loginUser.getPersonType().equals(User.TEACHER_TYPE)) {
+        } else if (loginUser.getPersonType() != null && loginUser.getPersonType().equals(User.TEACHER_TYPE)) {
             //教师展示默认展示本专业
             collegeInfo.put("collegeId", loginUser.getCollegeId());
             collegeInfo.put("subjectId", loginUser.getSubjectId());
@@ -58,12 +58,12 @@ public class ScoreController extends BaseController {
     }
 
     @GetMapping("operateScore")
-    public String operateScore(Model model,Integer studentId,Integer collegeId,Integer subjectId,Integer classId,Integer gradeId,String schoolYear,Integer semester){
-        Map<String,Object> collegeAndScore = new HashMap<>();
-        if(studentId!=null && collegeId!=null && subjectId!=null && classId!=null && schoolYear!=null && semester!=null){
-            collegeAndScore = scoreService.getCollegeInfo(studentId,collegeId,subjectId,classId,gradeId,schoolYear,semester);
+    public String operateScore(Model model, Integer studentId, Integer collegeId, Integer subjectId, Integer classId, Integer gradeId, String schoolYear, Integer semester) {
+        Map<String, Object> collegeAndScore = new HashMap<>();
+        if (studentId != null && collegeId != null && subjectId != null && classId != null && schoolYear != null && semester != null) {
+            collegeAndScore = scoreService.getCollegeInfo(studentId, collegeId, subjectId, classId, gradeId, schoolYear, semester);
         }
-        model.addAttribute("collegeAndScore",collegeAndScore);
+        model.addAttribute("collegeAndScore", collegeAndScore);
         return "score/operateScore.html";
     }
 
@@ -73,12 +73,12 @@ public class ScoreController extends BaseController {
     }
 
     @GetMapping("showForm")
-    public String showForm(Model model,Integer studentId,Integer collegeId,Integer subjectId,Integer classId,Integer gradeId,String schoolYear,Integer semester){
-        Map<String,Object> collegeNameAndScore = new HashMap<>();
-        if(studentId!=null && collegeId!=null && subjectId!=null && classId!=null && schoolYear!=null && semester!=null){
-            collegeNameAndScore = scoreService.getCollegeNameAndScore(studentId,collegeId,subjectId,classId,gradeId,schoolYear,semester);
+    public String showForm(Model model, Integer studentId, Integer collegeId, Integer subjectId, Integer classId, Integer gradeId, String schoolYear, Integer semester) {
+        Map<String, Object> collegeNameAndScore = new HashMap<>();
+        if (studentId != null && collegeId != null && subjectId != null && classId != null && schoolYear != null && semester != null) {
+            collegeNameAndScore = scoreService.getCollegeNameAndScore(studentId, collegeId, subjectId, classId, gradeId, schoolYear, semester);
         }
-        model.addAttribute("collegeNameAndScore",collegeNameAndScore);
+        model.addAttribute("collegeNameAndScore", collegeNameAndScore);
         return "score/showForm.html";
     }
 
@@ -90,39 +90,39 @@ public class ScoreController extends BaseController {
 
     @ResponseBody
     @PostMapping("export")
-    public CommonResponse export(@RequestBody List<Map<String,Object>> list){
+    public CommonResponse export(@RequestBody List<Map<String, Object>> list) {
         return ResponseUtil.generateResponse(scoreService.export(list));
     }
 
     @ResponseBody
     @DeleteMapping("delete")
-    public CommonResponse delete(@RequestBody Map<String,Object> map){
+    public CommonResponse delete(@RequestBody Map<String, Object> map) {
         return ResponseUtil.generateResponse(scoreService.delete(map));
     }
 
     @ResponseBody
     @PostMapping("add")
-    public CommonResponse add(@RequestBody Map<String,Object> map){
+    public CommonResponse add(@RequestBody Map<String, Object> map) {
         return ResponseUtil.generateResponse(scoreService.saveOrUpdate(map));
     }
 
     @ResponseBody
     @GetMapping("chartsData")
-    public CommonResponse getChartsData(){
+    public CommonResponse getChartsData() {
         return ResponseUtil.generateResponse(scoreService.getChartsData(getLoginUserId()));
     }
 
     @GetMapping("chartsData2")
-    public String getChartsData2(Model model,Integer userId,String nickName){
+    public String getChartsData2(Model model, Integer userId, String nickName) {
         Map<String, Object> chartsData = scoreService.getChartsData(userId);
         model.addAttribute("chartsData", JSON.toJSONString(chartsData));
-        model.addAttribute("nickName",nickName);
+        model.addAttribute("nickName", nickName);
         return "/system/scoreTrend.html";
     }
 
     @ResponseBody
     @GetMapping("personScore")
-    public CommonResponse getPersonScore(String schoolYear,Integer semester) {
+    public CommonResponse getPersonScore(String schoolYear, Integer semester) {
         User user = this.getLoginUser();
         if (user.getPersonType() == User.STUDENT_TYPE) {
             //学生--查询所在班级
@@ -131,14 +131,14 @@ public class ScoreController extends BaseController {
             Integer subjectId = user.getSubjectId();
             Integer classId = user.getClassId();
             Integer studentId = user.getUserId();
-            return ResponseUtil.generateResponse(scoreService.getPersonScore(gradeId,collegeId,subjectId,classId,studentId,schoolYear,semester));
+            return ResponseUtil.generateResponse(scoreService.getPersonScore(gradeId, collegeId, subjectId, classId, studentId, schoolYear, semester));
         }
         return ResponseUtil.generateResponse(true);
     }
 
     @ResponseBody
     @GetMapping("all")
-    public CommonResponse all(Model model,Integer pageNum, Integer pageSize, Integer gradeId, Integer collegeId, Integer subjectId, Integer classId, String schoolYear, Integer semester, String searchKey, String searchValue) {
+    public CommonResponse all(Model model, Integer pageNum, Integer pageSize, Integer gradeId, Integer collegeId, Integer subjectId, Integer classId, String schoolYear, Integer semester, String searchKey, String searchValue) {
         User user = this.getLoginUser();
         if (user.getPersonType() == User.STUDENT_TYPE) {
             //学生--查询所在班级
@@ -146,7 +146,7 @@ public class ScoreController extends BaseController {
             collegeId = user.getCollegeId();
             subjectId = user.getSubjectId();
             classId = user.getClassId();
-        }else if(user.getPersonType() == User.TEACHER_TYPE){
+        } else if (user.getPersonType() == User.TEACHER_TYPE) {
             //教师--查询所在专业
             collegeId = user.getCollegeId();
             subjectId = user.getSubjectId();
@@ -156,13 +156,13 @@ public class ScoreController extends BaseController {
 
     @ResponseBody
     @RequestMapping("addScores")
-    public CommonResponse addScores(@RequestParam MultipartFile file){
+    public CommonResponse addScores(@RequestParam MultipartFile file) {
         try {
             scoreService.addScores(file);
-            return ResponseUtil.generateResponse("添加成功",true);
-        }catch (Exception e){
+            return ResponseUtil.generateResponse("添加成功", true);
+        } catch (Exception e) {
             e.printStackTrace();
-            return ResponseUtil.generateResponse(e.getMessage(),false);
+            return ResponseUtil.generateResponse(e.getMessage(), false);
         }
     }
 }

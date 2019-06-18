@@ -199,8 +199,8 @@
         //渲染学年下拉框(可查看前三年和未来一年课程)
         $('#schoolYearId').html('<option value="">请选择学年</option>');
         var year = new Date().getFullYear();//获取当前年
-        for(var i=4;i>=0;i--){
-            var schoolYear = (year-i)+"-"+(year-i+1)
+        for (var i = 4; i >= 0; i--) {
+            var schoolYear = (year - i) + "-" + (year - i + 1)
             $('#schoolYearId').append('<option value="' + schoolYear + '" >' + schoolYear + '</option>')
         }
         form.render('select');
@@ -210,7 +210,7 @@
             if ($("#schoolYearId option:selected").val() != "") {
                 $("#semesterDiv").show();
                 searchTimeTableList();
-            }else {
+            } else {
                 $("#semesterId").val('');
                 $("#semesterDiv").hide();
                 Timetable.setOption({

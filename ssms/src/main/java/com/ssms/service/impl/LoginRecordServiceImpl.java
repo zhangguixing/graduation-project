@@ -28,8 +28,8 @@ public class LoginRecordServiceImpl implements LoginRecordService {
     @Override
     public PageInfo<LoginRecord> list(int pageNum, int pageSize,
                                       String startDate, String endDate, String account) {
-        PageHelper.startPage(pageNum,pageSize);
-        List<LoginRecord> records = loginRecordMapper.listFull(startDate,endDate, account);
+        PageHelper.startPage(pageNum, pageSize);
+        List<LoginRecord> records = loginRecordMapper.listFull(startDate, endDate, account);
         return PageInfo.of(records);
     }
 }

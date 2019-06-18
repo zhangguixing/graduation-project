@@ -7,7 +7,7 @@ layui.config({
     dropdown: 'dropdown/dropdown',
     notice: 'notice/notice',
     step: 'step-lay/step',
-    collegeSelect:'collegeSelect'
+    collegeSelect: 'collegeSelect'
 }).use(['layer'], function () {
     var $ = layui.jquery;
     var layer = layui.layer;

@@ -59,10 +59,15 @@
                     </div>
                     <div class="layui-inline">
                         <button id="btnSearch" class="layui-btn icon-btn"><i class="layui-icon">&#xe615;</i>搜索</button>
-                        <button id="btnAdd" class="layui-btn icon-btn"  style="display: none;"><i class="layui-icon">&#xe654;</i>添加</button>
+                        <button id="btnAdd" class="layui-btn icon-btn" style="display: none;"><i class="layui-icon">&#xe654;</i>添加
+                        </button>
                         <button id="btnExp" class="layui-btn icon-btn"><i class="layui-icon">&#xe67d;</i>导出</button>
-                        <button id="btnUploadTeacher" class="layui-btn icon-btn"  style="display: none;"><i class="layui-icon">&#xe67c;</i>导入教师</button>
-                        <button id="btnUploadStudent" class="layui-btn icon-btn" style="margin-left: 10px;display: none;"><i class="layui-icon">&#xe67c;</i>导入学生</button>
+                        <button id="btnUploadTeacher" class="layui-btn icon-btn" style="display: none;"><i
+                                class="layui-icon">&#xe67c;</i>导入教师
+                        </button>
+                        <button id="btnUploadStudent" class="layui-btn icon-btn"
+                                style="margin-left: 10px;display: none;"><i class="layui-icon">&#xe67c;</i>导入学生
+                        </button>
                     </div>
                 </div>
             </div>
@@ -77,11 +82,11 @@
 <!-- 表格操作列 -->
 <script type="text/html" id="tableBar">
     <% if(personType != 3){ %>
-        <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="edit">修改</a>
-        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
-        <a class="layui-btn layui-btn-xs" lay-event="reset">重置密码</a>
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="edit">修改</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    <a class="layui-btn layui-btn-xs" lay-event="reset">重置密码</a>
     <% }else{ %>
-        无
+    无
     <% } %>
 </script>
 
@@ -95,7 +100,7 @@
 <script type="text/javascript" src="/assets/libs/layui/layui.js"></script>
 <script type="text/javascript" src="/assets/js/common.js"></script>
 <script>
-    layui.use(['layer', 'form', 'table', 'util', 'admin','element','upload','collegeSelect'], function () {
+    layui.use(['layer', 'form', 'table', 'util', 'admin', 'element', 'upload', 'collegeSelect'], function () {
         var $ = layui.jquery;
         var layer = layui.layer;
         var form = layui.form;
@@ -110,7 +115,7 @@
         var ins1 = table.render({
             elem: '#userTable',
             url: 'user/list',
-            type:'GET',
+            type: 'GET',
             title: '用户列表',
             page: true,
             cols: [[
@@ -164,14 +169,18 @@
         });
 
         //监听行点击事件
-        table.on('row(userTable)', function(obj){
+        table.on('row(userTable)', function (obj) {
             var data = obj.data;
-            //查看成绩趋势
-            var url = '/score/chartsData2?userId='+data.userId+"&nickName="+data.nickName;
-            top.layui.index.loadView({
-                menuPath: url,
-                menuName: '成绩趋势图'
-            });
+            if (data.personType == 3) {
+                //查看成绩趋势
+                var url = '/score/chartsData2?userId=' + data.userId + "&nickName=" + data.nickName;
+                top.layui.index.loadView({
+                    menuPath: url,
+                    menuName: data.nickName + '的成绩趋势'
+                });
+            } else {
+                layer.msg("仅可查看学生成绩趋势", {icon: 4});
+            }
             //标注选中样式
             obj.tr.addClass('layui-table-click').siblings().removeClass('layui-table-click');
         });
@@ -186,16 +195,16 @@
             var subjectId = '${collegeInfo.subjectId}';
             var classId = null;
             var gradeId = null;
-            if('${personType}' == 3){
+            if ('${personType}' == 3) {
                 //学生登录回显
                 classId = '${collegeInfo.classId}';
                 gradeId = '${collegeInfo.gradeId}';
-            }else {
+            } else {
                 $("#btnAdd").show();
                 $("#btnUploadStudent").show();
             }
             collegeSelect.reshowAll(collegeId, subjectId, classId, gradeId, null, null, true);
-        }else {
+        } else {
             $("#btnAdd").show();
             $("#btnUploadStudent").show();
             $("#btnUploadTeacher").show();
@@ -309,11 +318,11 @@
 
         // 修改user状态
         form.on('switch(ckState)', function (obj) {
-            if('${personType}' == 3){
+            if ('${personType}' == 3) {
                 layer.msg('您无权限修改状态', {icon: 4});
                 $(obj.elem).prop('checked', !obj.elem.checked);
                 form.render('checkbox');
-            }else {
+            } else {
                 layer.load(2);
                 $.post('user/updateState', {
                     userId: obj.elem.value,
@@ -364,30 +373,30 @@
         //上传教师用户
         upload.render({
             elem: '#btnUploadTeacher'
-            ,url: '/system/user/addTeachers'
-            ,accept: 'file' //普通文件
-            ,multiple: true
-            ,done: function(res){
-                if(res.code == 200){
-                    layer.msg(res.msg,{icon:1});
+            , url: '/system/user/addTeachers'
+            , accept: 'file' //普通文件
+            , multiple: true
+            , done: function (res) {
+                if (res.code == 200) {
+                    layer.msg(res.msg, {icon: 1});
                     admin.getTempData('formOk') && table.reload('userTable');  // 成功刷新表格
-                }else {
-                    layer.msg(res.msg,{icon:2})
+                } else {
+                    layer.msg(res.msg, {icon: 2})
                 }
             }
         });
         //上传学生用户信息
         upload.render({
             elem: '#btnUploadStudent'
-            ,url: '/system/user/addStudents'
-            ,accept: 'file' //普通文件
-            ,multiple: true
-            ,done: function(res){
-                if(res.code == 200){
-                    layer.msg(res.msg,{icon:1});
+            , url: '/system/user/addStudents'
+            , accept: 'file' //普通文件
+            , multiple: true
+            , done: function (res) {
+                if (res.code == 200) {
+                    layer.msg(res.msg, {icon: 1});
                     admin.getTempData('formOk') && table.reload('userTable');  // 成功刷新表格
-                }else {
-                    layer.msg(res.msg,{icon:2})
+                } else {
+                    layer.msg(res.msg, {icon: 2})
                 }
             }
         });

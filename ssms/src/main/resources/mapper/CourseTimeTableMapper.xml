@@ -3,68 +3,94 @@
 <mapper namespace="com.ssms.dao.CourseTimeTableMapper">
 
     <select id="listTimeTable" resultType="java.util.HashMap">
-       SELECT
-			ct.day_of_week AS dayOfWeek,
-			ct.start_lesson AS startLesson,
-			ct.end_lesson AS endLesson,
-			ct.address,
-			c.name,
-			ct.teacher_name AS teacherName
-		FROM
-			info_course_timetable ct
-		LEFT JOIN info_course c ON ct.course_id = c.id
-		WHERE
-			c.college_id = #{collegeId}
-		AND c.subject_id = #{subjectId}
-		AND c.class_id = #{classId}
-		AND c.school_year = #{schoolYear}
-		AND c.semester = #{semester}
-		AND start_week_num &lt;= #{weekNum}
-		AND end_week_num &gt;= #{weekNum}
+        SELECT
+        ct.day_of_week AS dayOfWeek,
+        ct.start_lesson AS startLesson,
+        ct.end_lesson AS endLesson,
+        ct.address,
+        c.name,
+        ct.teacher_name AS teacherName
+        FROM
+        info_course_timetable ct
+        LEFT JOIN info_course c ON ct.course_id = c.id
+        WHERE
+        c.college_id = #{collegeId}
+        AND c.subject_id = #{subjectId}
+        AND c.class_id = #{classId}
+        AND c.school_year = #{schoolYear}
+        AND c.semester = #{semester}
+        AND start_week_num &lt;= #{weekNum}
+        AND end_week_num &gt;= #{weekNum}
     </select>
 
     <select id="getMyTimeTable" resultType="java.util.HashMap">
-       SELECT
-			ct.day_of_week AS dayOfWeek,
-			ct.start_lesson AS startLesson,
-			ct.end_lesson AS endLesson,
-			ct.start_week_num AS startWeekNum,
-			ct.end_week_num AS endWeekNum,
-			ct.address,
-			c.name
-		FROM
-			info_course_timetable ct
-		LEFT JOIN info_course c ON ct.course_id = c.id
-		<where>
-			ct.teacher_id=#{teacherId}
-			<if test="schoolYear!='' and schoolYear!=null">
-				AND c.school_year=#{schoolYear}
-			</if>
-			<if test="semester!='' and semester!=null">
-				AND c.semester=#{semester}
-			</if>
-		</where>
+        SELECT
+        ct.day_of_week AS dayOfWeek,
+        ct.start_lesson AS startLesson,
+        ct.end_lesson AS endLesson,
+        ct.start_week_num AS startWeekNum,
+        ct.end_week_num AS endWeekNum,
+        ct.address,
+        c.name
+        FROM
+        info_course_timetable ct
+        LEFT JOIN info_course c ON ct.course_id = c.id
+        <where>
+            ct.teacher_id=#{teacherId}
+            <if test="schoolYear!='' and schoolYear!=null">
+                AND c.school_year=#{schoolYear}
+            </if>
+            <if test="semester!='' and semester!=null">
+                AND c.semester=#{semester}
+            </if>
+        </where>
 
     </select>
 
-	<select id="getCourseInfo" parameterType="Map" resultType="com.ssms.model.CourseTimeTable">
-		SELECT
-			*
-		FROM
-			info_course_timetable ct
-		LEFT JOIN info_course c ON ct.course_id=c.id
-		WHERE
-			c.college_id=#{collegeId}
-			AND c.subject_id=#{subjectId}
-			AND c.class_id=#{classId}
-			AND c.grade_id=#{gradeId}
-			AND c.school_year=#{schoolYear}
-			AND c.semester=#{semester}
-			AND ct.day_of_week=#{dayOfWeek}
-			AND ct.start_lesson=#{startLesson}
-			AND ct.end_lesson=#{endLesson}
-			AND ct.start_week_num &lt;= #{weekNum}
-			AND ct.end_week_num &gt;= #{weekNum}
-		  LIMIT 1
-	</select>
+    <select id="getCourseInfo" parameterType="Map" resultType="com.ssms.model.CourseTimeTable">
+        SELECT
+        *
+        FROM
+        info_course_timetable ct
+        LEFT JOIN info_course c ON ct.course_id=c.id
+        WHERE
+        c.college_id=#{collegeId}
+        AND c.subject_id=#{subjectId}
+        AND c.class_id=#{classId}
+        AND c.grade_id=#{gradeId}
+        AND c.school_year=#{schoolYear}
+        AND c.semester=#{semester}
+        AND ct.day_of_week=#{dayOfWeek}
+        AND ct.start_lesson=#{startLesson}
+        AND ct.end_lesson=#{endLesson}
+        AND ct.start_week_num &lt;= #{weekNum}
+        AND ct.end_week_num &gt;= #{weekNum}
+        LIMIT 1
+    </select>
+
+    <select id="isConflict" parameterType="Map" resultType="java.lang.Long">
+        SELECT
+        count(*)
+        FROM
+        info_course_timetable ct
+        WHERE
+        ct.day_of_week=#{dayOfWeek}
+        AND ct.course_id in ( SELECT c.id from info_course c where c.subject_id=#{subjectId} and c.class_id=#{classId}
+        and c.grade_id=#{gradeId} and c.school_year=#{schoolYear} and c.semester=#{semester})
+        AND
+        (
+        (ct.start_week_num >= #{startWeekNum} AND ct.start_week_num &lt;= #{endWeekNum})
+        OR (ct.end_week_num >= #{startWeekNum} AND ct.end_week_num &lt;= #{endWeekNum})
+        OR (ct.start_week_num &lt;= #{startWeekNum} AND ct.end_week_num >= #{endWeekNum})
+        )
+        AND
+        (
+        (ct.start_lesson >= #{startLesson} AND ct.start_lesson &lt;= #{endLesson})
+        OR (ct.end_lesson >= #{startLesson} AND ct.end_lesson &lt;= #{endLesson})
+        OR (ct.end_lesson &lt;= #{startLesson} AND ct.end_lesson >= #{endLesson})
+        )
+        <if test="id != null and id != ''">
+            AND ct.id != #{id}
+        </if>
+    </select>
 </mapper>

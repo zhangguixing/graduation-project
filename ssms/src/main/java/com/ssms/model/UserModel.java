@@ -5,7 +5,7 @@ import com.alibaba.excel.metadata.BaseRowModel;
 import lombok.Data;
 
 @Data
-public class UserModel extends BaseRowModel{
+public class UserModel extends BaseRowModel {
     //姓名
     @ExcelProperty(index = 0)
     private String username;

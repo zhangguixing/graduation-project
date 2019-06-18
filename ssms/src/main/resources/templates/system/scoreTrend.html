@@ -58,8 +58,8 @@
             if (data.xData.length > 0) {
                 xData = data.xData;
                 yData = data.yData;
-            }else{
-                $('#trendId').css({"text-align":"center"});
+            } else {
+                $('#trendId').css({"text-align": "center"});
                 $('#trendId').html("暂无成绩！");
             }
         }
@@ -73,17 +73,17 @@
                 trigger: "axis"
             },
             xAxis: [{
-                name:'考试学期',
+                name: '考试学期',
                 type: "category",
                 boundaryGap: !1,
                 data: xData
             }],
             yAxis: [{
-                name:'总成绩',
+                name: '成绩/学期',
                 type: "value"
             }],
             series: [{
-                name: "总成绩",
+                name: "成绩",
                 type: "line",
                 smooth: !0,
                 itemStyle: {

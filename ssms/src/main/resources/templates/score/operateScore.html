@@ -118,7 +118,8 @@
                                 <div class="layui-input-inline" style="padding-left: 20px;">
                                     <input name="nickName" id="nickName" placeholder="请输入名称"
                                            type="text" class="layui-input" maxlength="20"
-                                           lay-verify="required|studentName" required value="${collegeAndScore.nickName}"/>
+                                           lay-verify="required|studentName" required
+                                           value="${collegeAndScore.nickName}"/>
                                 </div>
                             </div>
                         </div>
@@ -192,7 +193,7 @@
 <script type="text/javascript" src="/assets/libs/layui/layui.js"></script>
 <script type="text/javascript" src="/assets/js/common.js"></script>
 <script>
-    layui.use(['layer', 'form', 'laytpl', 'step','admin', 'collegeSelect','element'], function () {
+    layui.use(['layer', 'form', 'laytpl', 'step', 'admin', 'collegeSelect', 'element'], function () {
         var $ = layui.jquery;
         var layer = layui.layer;
         var form = layui.form;
@@ -256,23 +257,23 @@
                 schoolYear: schoolYear,
                 semester: semester,
                 studentId: studentId,
-                scoreList:scoreMap
+                scoreList: scoreMap
             };
             $.ajax({
-                url:'/score/add',
-                type:'POST',
-                contentType:'application/json;charset=utf-8',
+                url: '/score/add',
+                type: 'POST',
+                contentType: 'application/json;charset=utf-8',
                 dataType: "json",
-                async:false,
-                data:JSON.stringify(jsonData),
-                success:function (res) {
-                    if(res.code == 200){
+                async: false,
+                data: JSON.stringify(jsonData),
+                success: function (res) {
+                    if (res.code == 200) {
                         step.next('#taskForm');
-                    }else {
+                    } else {
                         top.layer.msg("操作失败", {icon: 2});
                     }
                 },
-                error:function () {
+                error: function () {
                     top.layer.msg("操作失败", {icon: 2});
                 }
             })
@@ -332,7 +333,7 @@
             var gradeId = '${collegeAndScore.gradeId}';
             var schoolYear = '${collegeAndScore.schoolYear}';
             var semester = '${collegeAndScore.semester}';
-            collegeSelect.reshowAll(collegeId, subjectId, classId, gradeId,null,null, true);
+            collegeSelect.reshowAll(collegeId, subjectId, classId, gradeId, null, null, true);
             $('#schoolYearId').val(schoolYear);
             $('#semesterDiv').show();
             $('#semesterId').val(semester);
@@ -434,7 +435,9 @@
                 var gradeId = $('#gradeId option:selected').val();
                 var schoolYear = $('#schoolYearId option:selected').val();
                 var semester = $('#semesterId option:selected').val();
+                var studentId = $('#studentId').val();
                 var jsonData = {
+                    studentId: studentId,
                     collegeId: collegeId,
                     subjectId: subjectId,
                     classId: classId,

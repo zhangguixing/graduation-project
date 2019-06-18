@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="/assets/libs/layui/css/layui.css"/>
     <link rel="stylesheet" href="/assets/css/admin.css"/>
     <style>
-        td{
+        td {
             padding-top: 20px
         }
     </style>
@@ -46,10 +46,10 @@
             </td>
         </tr>
         <% for(nameAndScore in collegeNameAndScore.scoreList){ %>
-            <tr>
-                <td style="width: 80%;" colspan="2">${nameAndScore.name}:</td>
-                <td style="width: 20%;" colspan="2">${nameAndScore.score}</td>
-            </tr>
+        <tr>
+            <td style="width: 80%;" colspan="2">${nameAndScore.name}:</td>
+            <td style="width: 20%;" colspan="2">${nameAndScore.score}</td>
+        </tr>
         <% } %>
     </table>
 </form>
@@ -58,7 +58,7 @@
 <script type="text/javascript" src="/assets/libs/layui/layui.js"></script>
 <script type="text/javascript" src="/assets/js/common.js"></script>
 <script>
-    layui.use(['layer', 'form',  'admin','element'], function () {
+    layui.use(['layer', 'form', 'admin', 'element'], function () {
         var $ = layui.jquery;
         var layer = layui.layer;
         var form = layui.form;

@@ -90,7 +90,7 @@
 <script type="text/javascript" src="/assets/js/common.js"></script>
 
 <script>
-    layui.use(['layer', 'form', 'table', 'collegeSelect','admin'], function () {
+    layui.use(['layer', 'form', 'table', 'collegeSelect', 'admin'], function () {
         var $ = layui.jquery;
         var layer = layui.layer;
         var form = layui.form;
@@ -133,9 +133,11 @@
                         }
                     }, title: '学期'
                 },
-                {field: 'totalScore', align: 'center', sort: true,templet: function (d) {
+                {
+                    field: 'totalScore', align: 'center', sort: true, templet: function (d) {
                         return d.totalScore.toFixed(2);
-                    },  title: '总成绩'}
+                    }, title: '成绩'
+                }
             ]],
             response: {
                 statusCode: 200
@@ -154,7 +156,7 @@
         });
 
         //监听行点击事件
-        table.on('row(score-table)', function(obj){
+        table.on('row(score-table)', function (obj) {
             var data = obj.data;
 
             //查看成绩信息
@@ -164,13 +166,13 @@
                 btn: ['确定'],
                 area: ['450px', '420px'],
                 content: "/score/showForm"
-                +"?studentId=" + data.studentId
-                +"&collegeId="+data.collegeId
-                +"&subjectId="+data.subjectId
-                +"&classId="+data.classId
-                +"&gradeId="+data.gradeId
-                +"&schoolYear="+data.schoolYear
-                +"&semester="+data.semester
+                + "?studentId=" + data.studentId
+                + "&collegeId=" + data.collegeId
+                + "&subjectId=" + data.subjectId
+                + "&classId=" + data.classId
+                + "&gradeId=" + data.gradeId
+                + "&schoolYear=" + data.schoolYear
+                + "&semester=" + data.semester
             });
 
             //标注选中样式
@@ -189,19 +191,19 @@
             var semesterId = $('#semesterId option:selected').val();
             if (checkRows.data.length == 0) {
                 layer.msg('请选择要导出的数据', {icon: 2});
-            } else if(rows.length!=1 && (collegeId=="" || subjectId=="" || classId=="" || gradeId=="" || schoolYearId=="" || semesterId=="")) {
+            } else if (rows.length != 1 && (collegeId == "" || subjectId == "" || classId == "" || gradeId == "" || schoolYearId == "" || semesterId == "")) {
                 layer.msg('只可导出指定学年学期的学生', {icon: 2});
             } else {
                 $.ajax({
-                    url:'/score/export',
-                    type:'POST',
-                    contentType:'application/json;charset=utf-8',
-                    async:false,
-                    data:JSON.stringify(rows),
-                    success:function (res) {
-                        if(res.code == 200){
+                    url: '/score/export',
+                    type: 'POST',
+                    contentType: 'application/json;charset=utf-8',
+                    async: false,
+                    data: JSON.stringify(rows),
+                    success: function (res) {
+                        if (res.code == 200) {
                             var data = res.data;
-                            table.exportFile(data.headList, data.bodyList, 'xls','学生成绩单');
+                            table.exportFile(data.headList, data.bodyList, 'xls', '学生成绩单');
                         }
                     }
                 })
@@ -218,12 +220,12 @@
             var subjectId = '${collegeInfo.subjectId}';
             var classId = null;
             var gradeId = null;
-            if('${personType}' == '3'){
+            if ('${personType}' == '3') {
                 //学生
                 classId = '${collegeInfo.classId}';
                 gradeId = '${collegeInfo.gradeId}';
             }
-            collegeSelect.reshowAll(collegeId,subjectId,classId,gradeId,null,null,true);
+            collegeSelect.reshowAll(collegeId, subjectId, classId, gradeId, null, null, true);
         }
 
         //选择学院触发事件

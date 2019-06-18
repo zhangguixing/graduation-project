@@ -9,7 +9,10 @@ import com.github.pagehelper.PageInfo;
 import com.ssms.common.exception.BusinessException;
 import com.ssms.common.util.StringUtil;
 import com.ssms.dao.*;
-import com.ssms.model.*;
+import com.ssms.model.CollegeSubjectClass;
+import com.ssms.model.Course;
+import com.ssms.model.Score;
+import com.ssms.model.User;
 import com.ssms.service.ScoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -96,21 +99,21 @@ public class ScoreServiceImpl implements ScoreService {
     }
 
     @Override
-    public Map<String, Object> getCollegeInfo(Integer studentId,Integer collegeId,Integer subjectId,Integer classId,Integer gradeId,String schoolYear,Integer semester) {
+    public Map<String, Object> getCollegeInfo(Integer studentId, Integer collegeId, Integer subjectId, Integer classId, Integer gradeId, String schoolYear, Integer semester) {
         User user = userMapper.selectById(studentId);
-        if(user == null){
-            throw new BusinessException("无此用户信息studentId="+studentId);
+        if (user == null) {
+            throw new BusinessException("无此用户信息studentId=" + studentId);
         }
         Map<String, Object> collegeInfo = new HashMap<>();
-        collegeInfo.put("studentId",studentId);
-        collegeInfo.put("collegeId",collegeId);
-        collegeInfo.put("subjectId",subjectId);
-        collegeInfo.put("classId",classId);
-        collegeInfo.put("gradeId",gradeId);
-        collegeInfo.put("schoolYear",schoolYear);
-        collegeInfo.put("semester",semester);
-        collegeInfo.put("nickName",user.getNickName());
-        collegeInfo.put("username",user.getUsername());
+        collegeInfo.put("studentId", studentId);
+        collegeInfo.put("collegeId", collegeId);
+        collegeInfo.put("subjectId", subjectId);
+        collegeInfo.put("classId", classId);
+        collegeInfo.put("gradeId", gradeId);
+        collegeInfo.put("schoolYear", schoolYear);
+        collegeInfo.put("semester", semester);
+        collegeInfo.put("nickName", user.getNickName());
+        collegeInfo.put("username", user.getUsername());
         List<Map<String, Object>> scoreList = scoreMapper.getStudentScore(collegeInfo);
         Map<String, Object> result = new HashMap<>();
         if (collegeInfo != null) {
@@ -189,7 +192,7 @@ public class ScoreServiceImpl implements ScoreService {
             }
             List<String> courseList = scoreMapper.listCourseInfo(gradeId, collegeId, subjectId, classId, schoolYear, semester);
             headList.addAll(courseList);
-            headList.add("总成绩");
+            headList.add("成绩");
             List<List<Object>> bodyList = new ArrayList<>();
 
             List<Object> row = new ArrayList<>();
@@ -199,7 +202,6 @@ public class ScoreServiceImpl implements ScoreService {
             String collegeName = collegeSubjectClassMapper.selectNameById(collegeId);
             String subjectName = collegeSubjectClassMapper.selectNameById(subjectId);
             String className = collegeSubjectClassMapper.selectNameById(classId);
-
 
             row.add(username);
             row.add(nickName);
@@ -234,6 +236,7 @@ public class ScoreServiceImpl implements ScoreService {
         return result;
     }
 
+    @Transactional
     @Override
     public void addScores(MultipartFile file) throws Exception {
         InputStream inputStream = file.getInputStream();
@@ -354,16 +357,16 @@ public class ScoreServiceImpl implements ScoreService {
 
     @Override
     public Map<String, Object> getCollegeNameAndScore(Integer studentId, Integer collegeId, Integer subjectId, Integer classId, Integer gradeId, String schoolYear, Integer semester) {
-        Map<String,Object> collegeNameAndScore = new HashMap<>();
+        Map<String, Object> collegeNameAndScore = new HashMap<>();
 
         Map<String, Object> collegeInfo = new HashMap<>();
-        collegeInfo.put("studentId",studentId);
-        collegeInfo.put("collegeId",collegeId);
-        collegeInfo.put("subjectId",subjectId);
-        collegeInfo.put("classId",classId);
-        collegeInfo.put("gradeId",gradeId);
-        collegeInfo.put("schoolYear",schoolYear);
-        collegeInfo.put("semester",semester);
+        collegeInfo.put("studentId", studentId);
+        collegeInfo.put("collegeId", collegeId);
+        collegeInfo.put("subjectId", subjectId);
+        collegeInfo.put("classId", classId);
+        collegeInfo.put("gradeId", gradeId);
+        collegeInfo.put("schoolYear", schoolYear);
+        collegeInfo.put("semester", semester);
         List<Map<String, Object>> scoreList = scoreMapper.getStudentScore(collegeInfo);
 
         String collegeName = collegeSubjectClassMapper.selectNameById(collegeId);
@@ -374,13 +377,13 @@ public class ScoreServiceImpl implements ScoreService {
         String username = user.getUsername();
         String nickName = user.getNickName();
 
-        collegeNameAndScore.put("collegeName",collegeName);
-        collegeNameAndScore.put("subjectName",subjectName);
-        collegeNameAndScore.put("className",className);
-        collegeNameAndScore.put("gradeName",gradeName);
-        collegeNameAndScore.put("username",username);
-        collegeNameAndScore.put("nickName",nickName);
-        collegeNameAndScore.put("scoreList",scoreList);
+        collegeNameAndScore.put("collegeName", collegeName);
+        collegeNameAndScore.put("subjectName", subjectName);
+        collegeNameAndScore.put("className", className);
+        collegeNameAndScore.put("gradeName", gradeName);
+        collegeNameAndScore.put("username", username);
+        collegeNameAndScore.put("nickName", nickName);
+        collegeNameAndScore.put("scoreList", scoreList);
         return collegeNameAndScore;
     }
 }

@@ -79,6 +79,7 @@
                     </div>
                     <div class="layui-inline">
                         <button id="btnExp" class="layui-btn icon-btn"><i class="layui-icon">&#xe67d;</i>导出</button>
+                        <button id="btnUpload" class="layui-btn icon-btn"><i class="layui-icon">&#xe67c;</i>导入</button>
                     </div>
                 </div>
             </div>
@@ -99,11 +100,12 @@
 <script type="text/javascript" src="/assets/js/common.js"></script>
 
 <script>
-    layui.use(['layer', 'form', 'table', 'admin', 'collegeSelect'], function () {
+    layui.use(['layer', 'form', 'table', 'admin', 'collegeSelect', 'upload'], function () {
         var $ = layui.jquery;
         var layer = layui.layer;
         var form = layui.form;
         var table = layui.table;
+        var upload = layui.upload;
         var admin = layui.admin;
         var collegeSelect = layui.collegeSelect;
 
@@ -180,6 +182,22 @@
                 layer.msg('请选择要导出的数据', {icon: 2});
             } else {
                 table.exportFile(ins1.config.id, checkRows.data, 'xls');
+            }
+        });
+        //导入课程
+        upload.render({
+            elem: '#btnUpload'
+            , url: '/course/addCourses'
+            , accept: 'file' //普通文件
+            , multiple: true
+            , done: function (res) {
+                console.log(res);
+                if (res.code == 200) {
+                    layer.msg(res.message, {icon: 1});
+                    table.reload('course-table');  // 成功刷新表格
+                } else {
+                    layer.msg(res.message, {icon: 2})
+                }
             }
         });
 

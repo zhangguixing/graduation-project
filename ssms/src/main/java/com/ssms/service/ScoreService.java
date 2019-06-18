@@ -17,7 +17,7 @@ public interface ScoreService {
 
     boolean delete(Map<String, Object> map);
 
-    Map<String, Object> getCollegeInfo(Integer studentId,Integer collegeId,Integer subjectId,Integer classId,Integer gradeId,String schoolYear,Integer semester);
+    Map<String, Object> getCollegeInfo(Integer studentId, Integer collegeId, Integer subjectId, Integer classId, Integer gradeId, String schoolYear, Integer semester);
 
     boolean saveOrUpdate(Map<String, Object> map);
 
@@ -25,5 +25,5 @@ public interface ScoreService {
 
     void addScores(MultipartFile file) throws IOException, Exception;
 
-    Map<String,Object> getCollegeNameAndScore(Integer studentId, Integer collegeId, Integer subjectId, Integer classId, Integer gradeId, String schoolYear, Integer semester);
+    Map<String, Object> getCollegeNameAndScore(Integer studentId, Integer collegeId, Integer subjectId, Integer classId, Integer gradeId, String schoolYear, Integer semester);
 }

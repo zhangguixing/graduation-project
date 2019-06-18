@@ -104,8 +104,8 @@
 
         // 删除
         function doDelete(obj) {
-            layer.confirm('确定要删除吗？',{
-                skin : 'layui-layer-admin'
+            layer.confirm('确定要删除吗？', {
+                skin: 'layui-layer-admin'
             }, function (index) {
                 layer.load(2);
                 $.post('role/delete', {

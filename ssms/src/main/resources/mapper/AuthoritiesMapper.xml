@@ -3,11 +3,11 @@
 <mapper namespace="com.ssms.dao.AuthoritiesMapper">
 
     <select id="listByUserId" resultType="com.ssms.model.Authorities">
-      select * from sys_authorities where authority_id in (
-          select authority_id from sys_role_authorities where role_id in (
-            select role_id from sys_user_role where user_id = #{userId}
-          )
-      ) order by order_number asc
+        select * from sys_authorities where authority_id in (
+        select authority_id from sys_role_authorities where role_id in (
+        select role_id from sys_user_role where user_id = #{userId}
+        )
+        ) order by order_number asc
     </select>
 
     <select id="listByRoleIds" resultType="com.ssms.model.Authorities">
@@ -22,7 +22,7 @@
 
     <select id="listByRoleId" resultType="com.ssms.model.Authorities">
         select * from sys_authorities where authority_id in (
-          select authority_id from sys_role_authorities where role_id = #{roleId}
+        select authority_id from sys_role_authorities where role_id = #{roleId}
         )
     </select>
 </mapper>

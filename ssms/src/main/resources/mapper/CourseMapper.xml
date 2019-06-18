@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.ssms.dao.CourseMapper">
-    
+
     <select id="listByCollege" resultType="java.util.HashMap">
         SELECT
-            c.id AS courseId,
-            c. name,
-            s.score
+        c.id AS courseId,
+        c. name,
+        s.score
         FROM
-            info_course c
-          LEFT JOIN info_score s ON c.id = s.course_id
+        info_course c
+        LEFT JOIN info_score s ON c.id = s.course_id AND s.student_id = #{studentId}
         WHERE
         c.college_id = #{collegeId}
         AND c.subject_id = #{subjectId}
@@ -21,10 +21,10 @@
 
     <select id="listCourseIdAndName" resultType="java.util.HashMap">
         SELECT
-            c.id,
-            c. name
+        c.id,
+        c. name
         FROM
-            info_course c
+        info_course c
         WHERE
         c.college_id = #{collegeId}
         AND c.subject_id = #{subjectId}
@@ -36,20 +36,20 @@
 
     <select id="all" resultType="java.util.HashMap">
         SELECT
-            c.id,
-            c.college_id AS collegeId,
-            c.subject_id AS subjectId,
-            c.class_id AS classId,
-            c.grade_id AS gradeId,
-            co.name AS collegeName,
-            su.name AS subjectName,
-            cl.name AS className,
-            g.name AS gradeName,
-            c.school_year AS schoolYear,
-            c.semester,
-            c.name
+        c.id,
+        c.college_id AS collegeId,
+        c.subject_id AS subjectId,
+        c.class_id AS classId,
+        c.grade_id AS gradeId,
+        co.name AS collegeName,
+        su.name AS subjectName,
+        cl.name AS className,
+        g.name AS gradeName,
+        c.school_year AS schoolYear,
+        c.semester,
+        c.name
         FROM
-            info_course c
+        info_course c
         LEFT JOIN info_college_subject_class co ON c.college_id=co.id
         LEFT JOIN info_college_subject_class su ON c.subject_id=su.id
         LEFT JOIN info_college_subject_class cl ON c.class_id=cl.id
@@ -74,7 +74,7 @@
                 AND c.semester=#{semester}
             </if>
             <if test="searchKey != null and searchKey != '' and searchValue != null and searchValue != ''">
-               AND c.name LIKE '%${searchValue}%'
+                AND c.name LIKE '%${searchValue}%'
             </if>
         </where>
         ORDER BY c.create_time DESC

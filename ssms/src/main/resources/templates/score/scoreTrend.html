@@ -52,18 +52,18 @@
         var yData = [350, 400, 450, 550, 620, 650, 680, 700];
         //查询指定格式学生成绩信息
         $.ajax({
-            url:'/score/chartsData',
-            type:'GET',
-            async:false,
-            success:function (res) {
-                if(res.code == 200){
+            url: '/score/chartsData',
+            type: 'GET',
+            async: false,
+            success: function (res) {
+                if (res.code == 200) {
                     var data = res.data;
-                    if(data != null){
+                    if (data != null) {
                         if (data.xData.length > 0) {
                             xData = data.xData;
                             yData = data.yData;
-                        }else{
-                            $('#trendId').css({"text-align":"center"});
+                        } else {
+                            $('#trendId').css({"text-align": "center"});
                             $('#trendId').html("暂无成绩信息！");
                         }
                     }
@@ -80,17 +80,17 @@
                 trigger: "axis"
             },
             xAxis: [{
-                name:'考试学期',
+                name: '考试学期',
                 type: "category",
                 boundaryGap: !1,
                 data: xData
             }],
             yAxis: [{
-                name:'总成绩',
+                name: '成绩/学期',
                 type: "value"
             }],
             series: [{
-                name: "总成绩",
+                name: "成绩",
                 type: "line",
                 smooth: !0,
                 itemStyle: {

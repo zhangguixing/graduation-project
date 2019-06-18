@@ -20,13 +20,13 @@ public class GradeServiceImpl implements GradeService {
 
     @Override
     public List<Grade> list() {
-        return gradeMapper.selectList(new EntityWrapper<Grade>().setSqlSelect("id,name").eq("status",1).orderBy("name",true).last("limit 5"));
+        return gradeMapper.selectList(new EntityWrapper<Grade>().setSqlSelect("id,name").eq("status", 1).orderBy("name", true).last("limit 5"));
     }
 
     @Override
     public String findNameById(Integer gradeId) {
         Grade grade = gradeMapper.selectById(gradeId);
-        if(grade != null){
+        if (grade != null) {
             return grade.getName();
         }
         return null;
@@ -34,8 +34,8 @@ public class GradeServiceImpl implements GradeService {
 
     @Override
     public PageInfo<Grade> all(Integer pageNum, Integer pageSize) {
-        PageHelper.startPage(pageNum,pageSize);
-        return PageInfo.of(gradeMapper.selectList(new EntityWrapper<Grade>().eq("status",1).orderBy("name",false)));
+        PageHelper.startPage(pageNum, pageSize);
+        return PageInfo.of(gradeMapper.selectList(new EntityWrapper<Grade>().eq("status", 1).orderBy("name", false)));
     }
 
     @Override
@@ -43,17 +43,17 @@ public class GradeServiceImpl implements GradeService {
         Grade grade = new Grade();
         grade.setId(id);
         grade.setStatus(0);
-        return gradeMapper.updateById(grade)>0;
+        return gradeMapper.updateById(grade) > 0;
     }
 
     @Override
     public boolean update(Grade grade) {
-        return gradeMapper.updateById(grade)>0;
+        return gradeMapper.updateById(grade) > 0;
     }
 
     @Override
     public boolean add(Grade grade) {
         grade.setCreateTime(new Date());
-        return gradeMapper.insert(grade)>0;
+        return gradeMapper.insert(grade) > 0;
     }
 }

@@ -2,254 +2,254 @@
 <html>
 
 <head>
-<meta charset="utf-8" />
-<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-<meta name="viewport"
-	content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>权限管理</title>
-<base href="${ctxPath}">
-<link rel="stylesheet" href="/assets/libs/layui/css/layui.css" />
-<link rel="stylesheet" href="/assets/css/admin.css" />
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>权限管理</title>
+    <base href="${ctxPath}">
+    <link rel="stylesheet" href="/assets/libs/layui/css/layui.css"/>
+    <link rel="stylesheet" href="/assets/css/admin.css"/>
 </head>
 
 <body>
 
-	<!-- 页面加载loading -->
-	<% include("../layout/loading.html"){} %>
+<!-- 页面加载loading -->
+<% include("../layout/loading.html"){} %>
 
-	<!-- 正文开始 -->
-	<div class="layui-fluid">
-		<div class="layui-card">
-			<div class="layui-card-body">
+<!-- 正文开始 -->
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-body">
 
-				<div class="layui-form toolbar">
-					<div class="layui-form-item">
-						<div class="layui-inline">
-							<label class="layui-form-label w-auto">搜索：</label>
-							<div class="layui-input-inline mr0">
-								<input id="edtSearch" class="layui-input" type="text"
-									placeholder="输入关键字" />
-							</div>
-						</div>
-						<div class="layui-inline">
-							<button id="btnSearch" class="layui-btn icon-btn">
-								<i class="layui-icon">&#xe615;</i>搜索
-							</button>
-							<button id="btnAdd" class="layui-btn icon-btn">
-								<i class="layui-icon">&#xe654;</i>添加
-							</button>
-						</div>
-					</div>
-				</div>
+            <div class="layui-form toolbar">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label w-auto">搜索：</label>
+                        <div class="layui-input-inline mr0">
+                            <input id="edtSearch" class="layui-input" type="text"
+                                   placeholder="输入关键字"/>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <button id="btnSearch" class="layui-btn icon-btn">
+                            <i class="layui-icon">&#xe615;</i>搜索
+                        </button>
+                        <button id="btnAdd" class="layui-btn icon-btn">
+                            <i class="layui-icon">&#xe654;</i>添加
+                        </button>
+                    </div>
+                </div>
+            </div>
 
-				<table class="layui-table" id="authTable" lay-filter="authTable"></table>
+            <table class="layui-table" id="authTable" lay-filter="authTable"></table>
 
-			</div>
-		</div>
+        </div>
+    </div>
 
-	</div>
+</div>
 
-	<!-- 表格操作列 -->
-	<script type="text/html" id="tableBar">
+<!-- 表格操作列 -->
+<script type="text/html" id="tableBar">
     <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="edit">修改</a>
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
 </script>
 
-	<!-- js部分 -->
-	<script type="text/javascript" src="/assets/libs/layui/layui.js"></script>
-	<script type="text/javascript" src="/assets/js/common.js"></script>
-	<script>
-		layui
-				.use(
-						[ 'layer', 'form', 'table', 'admin', 'treetable' ],
-						function() {
-							var $ = layui.jquery;
-							var layer = layui.layer;
-							var form = layui.form;
-							var table = layui.table;
-							var admin = layui.admin;
-							var treetable = layui.treetable;
+<!-- js部分 -->
+<script type="text/javascript" src="/assets/libs/layui/layui.js"></script>
+<script type="text/javascript" src="/assets/js/common.js"></script>
+<script>
+    layui
+        .use(
+            ['layer', 'form', 'table', 'admin', 'treetable'],
+            function () {
+                var $ = layui.jquery;
+                var layer = layui.layer;
+                var form = layui.form;
+                var table = layui.table;
+                var admin = layui.admin;
+                var treetable = layui.treetable;
 
-							// 渲染表格
-							function renderTable() {
-								treetable
-										.render({
-											treeColIndex : 1,
-											treeSpid : -1,
-											treeIdName : 'authorityId',
-											treePidName : 'parentId',
-											elem : '#authTable',
-											url : 'authorities/list',
-											cols : [ [
-													{
-														type : 'numbers'
-													},
-													{
-														field : 'authorityName',
-														minWidth : 200,
-														title : '权限名称'
-													},
-													{
-														field : 'authority',
-														title : '权限标识'
-													},
-													{
-														field : 'menuUrl',
-														title : '菜单url'
-													},
-													{
-														field : 'orderNumber',
-														width : 80,
-														align : 'center',
-														title : '排序号'
-													},
-													{
-														width : 80,
-														align : 'center',
-														templet : function(d) {
-															if (d.isMenu == 1) {
-																return '<span class="layui-badge layui-bg-gray">按钮</span>';
-															}
-															if (d.parentId == -1) {
-																return '<span class="layui-badge layui-bg-blue">目录</span>';
-															} else {
-																return '<span class="layui-badge-rim">菜单</span>';
-															}
-														},
-														title : '类型'
-													}, {
-														templet : '#tableBar',
-														width : 120,
-														align : 'center',
-														title : '操作'
-													} ] ]
-										});
-							}
+                // 渲染表格
+                function renderTable() {
+                    treetable
+                        .render({
+                            treeColIndex: 1,
+                            treeSpid: -1,
+                            treeIdName: 'authorityId',
+                            treePidName: 'parentId',
+                            elem: '#authTable',
+                            url: 'authorities/list',
+                            cols: [[
+                                {
+                                    type: 'numbers'
+                                },
+                                {
+                                    field: 'authorityName',
+                                    minWidth: 200,
+                                    title: '权限名称'
+                                },
+                                {
+                                    field: 'authority',
+                                    title: '权限标识'
+                                },
+                                {
+                                    field: 'menuUrl',
+                                    title: '菜单url'
+                                },
+                                {
+                                    field: 'orderNumber',
+                                    width: 80,
+                                    align: 'center',
+                                    title: '排序号'
+                                },
+                                {
+                                    width: 80,
+                                    align: 'center',
+                                    templet: function (d) {
+                                        if (d.isMenu == 1) {
+                                            return '<span class="layui-badge layui-bg-gray">按钮</span>';
+                                        }
+                                        if (d.parentId == -1) {
+                                            return '<span class="layui-badge layui-bg-blue">目录</span>';
+                                        } else {
+                                            return '<span class="layui-badge-rim">菜单</span>';
+                                        }
+                                    },
+                                    title: '类型'
+                                }, {
+                                    templet: '#tableBar',
+                                    width: 120,
+                                    align: 'center',
+                                    title: '操作'
+                                }]]
+                        });
+                }
 
-							renderTable();
+                renderTable();
 
-							// 添加按钮点击事件
-							$('#btnAdd').click(function() {
-								showEditModel();
-							});
+                // 添加按钮点击事件
+                $('#btnAdd').click(function () {
+                    showEditModel();
+                });
 
-							// 工具条点击事件
-							table.on('tool(authTable)', function(obj) {
-								var data = obj.data;
-								var layEvent = obj.event;
+                // 工具条点击事件
+                table.on('tool(authTable)', function (obj) {
+                    var data = obj.data;
+                    var layEvent = obj.event;
 
-								if (layEvent === 'edit') { // 修改
-									showEditModel(data);
-								} else if (layEvent === 'del') { // 删除
-									doDelete(obj.data.authorityId);
-								}
-							});
+                    if (layEvent === 'edit') { // 修改
+                        showEditModel(data);
+                    } else if (layEvent === 'del') { // 删除
+                        doDelete(obj.data.authorityId);
+                    }
+                });
 
-							// 删除
-							function doDelete(authorityId) {
-								layer.confirm('确定删除此权限吗？', {
-									skin : 'layui-layer-admin'
-								}, function(index) {
-									layer.load(2);
-									$.post('authorities/delete', {
-										authorityId : authorityId
-									}, function(data) {
-										layer.closeAll('loading');
-										if (data.code == 200) {
-											layer.msg(data.msg, {
-												icon : 1
-											});
-											renderTable();
-										} else {
-											layer.msg(data.msg, {
-												icon : 2
-											});
-										}
-										layer.close(index);
-									});
-								});
-							}
+                // 删除
+                function doDelete(authorityId) {
+                    layer.confirm('确定删除此权限吗？', {
+                        skin: 'layui-layer-admin'
+                    }, function (index) {
+                        layer.load(2);
+                        $.post('authorities/delete', {
+                            authorityId: authorityId
+                        }, function (data) {
+                            layer.closeAll('loading');
+                            if (data.code == 200) {
+                                layer.msg(data.msg, {
+                                    icon: 1
+                                });
+                                renderTable();
+                            } else {
+                                layer.msg(data.msg, {
+                                    icon: 2
+                                });
+                            }
+                            layer.close(index);
+                        });
+                    });
+                }
 
-							// 显示表单弹窗
-							function showEditModel(data) {
-								admin.putTempData('t_authoritie', data);
-								admin.putTempData('formOk', false);
-								top.layui.admin.open({
-									type : 2,
-									title : data ? '修改权限' : '添加权限',
-									area : [ '380px', '500px' ],
-									content : 'system/authorities/editForm',
-									end : function() {
-										admin.getTempData('formOk')
-												&& renderTable(); // 成功刷新表格
-									}
-								});
-							}
+                // 显示表单弹窗
+                function showEditModel(data) {
+                    admin.putTempData('t_authoritie', data);
+                    admin.putTempData('formOk', false);
+                    top.layui.admin.open({
+                        type: 2,
+                        title: data ? '修改权限' : '添加权限',
+                        area: ['380px', '500px'],
+                        content: 'system/authorities/editForm',
+                        end: function () {
+                            admin.getTempData('formOk')
+                            && renderTable(); // 成功刷新表格
+                        }
+                    });
+                }
 
-							// 搜索按钮点击事件
-							$('#btnSearch')
-									.click(
-											function() {
-												var keyword = $('#edtSearch')
-														.val();
-												var $tds = $('#authTable')
-														.next('.treeTable')
-														.find(
-																'.layui-table-body tbody tr td');
-												if (!keyword) {
-													$tds.css(
-															'background-color',
-															'transparent');
-													layer.msg("请输入关键字", {
-														icon : 5
-													});
-													return;
-												}
-												var searchCount = 0;
-												$tds
-														.each(function() {
-															$(this)
-																	.css(
-																			'background-color',
-																			'transparent');
-															if ($(this)
-																	.text()
-																	.indexOf(
-																			keyword) >= 0) {
-																$(this)
-																		.css(
-																				'background-color',
-																				'rgba(250,230,160,0.5)');
-																if (searchCount == 0) {
-																	$(
-																			'body,html')
-																			.stop(
-																					true);
-																	$(
-																			'body,html')
-																			.animate(
-																					{
-																						scrollTop : $(
-																								this)
-																								.offset().top - 150
-																					},
-																					500);
-																}
-																searchCount++;
-															}
-														});
-												if (searchCount == 0) {
-													layer.msg("没有匹配结果", {
-														icon : 5
-													});
-												} else {
-													treetable
-															.expandAll('#authTable');
-												}
-											});
+                // 搜索按钮点击事件
+                $('#btnSearch')
+                    .click(
+                        function () {
+                            var keyword = $('#edtSearch')
+                                .val();
+                            var $tds = $('#authTable')
+                                .next('.treeTable')
+                                .find(
+                                    '.layui-table-body tbody tr td');
+                            if (!keyword) {
+                                $tds.css(
+                                    'background-color',
+                                    'transparent');
+                                layer.msg("请输入关键字", {
+                                    icon: 5
+                                });
+                                return;
+                            }
+                            var searchCount = 0;
+                            $tds
+                                .each(function () {
+                                    $(this)
+                                        .css(
+                                            'background-color',
+                                            'transparent');
+                                    if ($(this)
+                                            .text()
+                                            .indexOf(
+                                                keyword) >= 0) {
+                                        $(this)
+                                            .css(
+                                                'background-color',
+                                                'rgba(250,230,160,0.5)');
+                                        if (searchCount == 0) {
+                                            $(
+                                                'body,html')
+                                                .stop(
+                                                    true);
+                                            $(
+                                                'body,html')
+                                                .animate(
+                                                    {
+                                                        scrollTop: $(
+                                                            this)
+                                                            .offset().top - 150
+                                                    },
+                                                    500);
+                                        }
+                                        searchCount++;
+                                    }
+                                });
+                            if (searchCount == 0) {
+                                layer.msg("没有匹配结果", {
+                                    icon: 5
+                                });
+                            } else {
+                                treetable
+                                    .expandAll('#authTable');
+                            }
+                        });
 
-						});
-	</script>
+            });
+</script>
 
 </body>
 </html>

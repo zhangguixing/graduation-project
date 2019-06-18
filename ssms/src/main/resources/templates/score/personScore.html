@@ -48,7 +48,7 @@
 <script type="text/javascript" src="/assets/js/common.js"></script>
 
 <script>
-    layui.use(['form', 'table','collegeSelect'], function () {
+    layui.use(['form', 'table', 'collegeSelect'], function () {
         var $ = layui.jquery;
         var form = layui.form;
         var table = layui.table;
@@ -63,12 +63,22 @@
             url: '/score/personScore',
             cols: [[
                 {type: 'numbers', align: 'center'},
-                {field: 'scoreName', align: 'center', sort: true, title: '课程',fixed: 'left',unresize:true, totalRowText: '总成绩'},
-                {field: 'score', align: 'center', sort: true, templet: function (d) {
-                    return d.score.toFixed(2);
-                    },title: '成绩',totalRow:true,unresize:true},
+                {
+                    field: 'scoreName',
+                    align: 'center',
+                    sort: true,
+                    title: '课程',
+                    fixed: 'left',
+                    unresize: true,
+                    totalRowText: '总成绩'
+                },
+                {
+                    field: 'score', align: 'center', sort: true, templet: function (d) {
+                        return d.score.toFixed(2);
+                    }, title: '成绩', totalRow: true, unresize: true
+                },
             ]],
-            totalRow:true,
+            totalRow: true,
             response: {
                 statusCode: 200
             }
@@ -81,7 +91,7 @@
         form.on('select(schoolYearId)', function (data) {
             if ($("#schoolYearId option:selected").val() != "") {
                 $('#semesterDiv').show();
-            }else {
+            } else {
                 $('#semesterDiv').hide();
                 $('#semesterId').val('');
             }
@@ -98,8 +108,8 @@
             var semesterId = $('#semesterId option:selected').val();
             table.reload('score-table', {
                 where: {
-                    schoolYear:schoolYearId,
-                    semester:semesterId
+                    schoolYear: schoolYearId,
+                    semester: semesterId
                 }
             });
         }

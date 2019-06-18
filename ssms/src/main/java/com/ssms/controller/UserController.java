@@ -46,7 +46,7 @@ public class UserController extends BaseController {
             //教师默认展示本专业成绩
             collegeInfo.put("collegeId", loginUser.getCollegeId());
             collegeInfo.put("subjectId", loginUser.getSubjectId());
-        }else if (loginUser.getPersonType() != null && loginUser.getPersonType().equals(User.STUDENT_TYPE)) {
+        } else if (loginUser.getPersonType() != null && loginUser.getPersonType().equals(User.STUDENT_TYPE)) {
             //教师默认展示本专业成绩
             collegeInfo.put("collegeId", loginUser.getCollegeId());
             collegeInfo.put("subjectId", loginUser.getSubjectId());
@@ -67,8 +67,8 @@ public class UserController extends BaseController {
 
     @ResponseBody
     @RequestMapping("/existsName")
-    public CommonResponse existsName(Integer gradeId, Integer collegeId, Integer subjectId, Integer classId,String username,String nickName) {
-        return ResponseUtil.generateResponse(userService.existsName(gradeId,collegeId,subjectId,classId,username,nickName));
+    public CommonResponse existsName(Integer gradeId, Integer collegeId, Integer subjectId, Integer classId, String username, String nickName) {
+        return ResponseUtil.generateResponse(userService.existsName(gradeId, collegeId, subjectId, classId, username, nickName));
     }
 
     /**
@@ -77,7 +77,7 @@ public class UserController extends BaseController {
     @RequiresPermissions("user:view")
     @ResponseBody
     @RequestMapping("/list")
-    public CommonResponse list(Integer pageNum, Integer pageSize,Integer collegeId,Integer subjectId, Integer classId,Integer gradeId, String searchKey, String searchValue) {
+    public CommonResponse list(Integer pageNum, Integer pageSize, Integer collegeId, Integer subjectId, Integer classId, Integer gradeId, String searchKey, String searchValue) {
         if (StringUtil.isBlank(searchValue)) {
             searchKey = null;
         }
@@ -88,12 +88,12 @@ public class UserController extends BaseController {
             subjectId = user.getSubjectId();
             gradeId = user.getGradeId();
             classId = user.getClassId();
-        }else if(user.getPersonType() == User.TEACHER_TYPE){
+        } else if (user.getPersonType() == User.TEACHER_TYPE) {
             //教师--查询所在专业
             collegeId = user.getCollegeId();
             subjectId = user.getSubjectId();
         }
-        return ResponseUtil.generateResponse(userService.list(pageNum, pageSize, true, collegeId,subjectId,classId,gradeId,searchKey, searchValue,this.getLoginUserId()));
+        return ResponseUtil.generateResponse(userService.list(pageNum, pageSize, true, collegeId, subjectId, classId, gradeId, searchKey, searchValue, this.getLoginUserId()));
     }
 
     /**
@@ -118,11 +118,11 @@ public class UserController extends BaseController {
     @RequiresPermissions("user:add")
     @ResponseBody
     @RequestMapping("/addTeachers")
-    public JsonResult addTeachers(@RequestParam MultipartFile file){
+    public JsonResult addTeachers(@RequestParam MultipartFile file) {
         try {
-            userService.addUsers(file,User.TEACHER_TYPE);
+            userService.addUsers(file, User.TEACHER_TYPE);
             return JsonResult.ok("添加成功");
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return JsonResult.error(e.getMessage());
         }
@@ -134,11 +134,11 @@ public class UserController extends BaseController {
     @RequiresPermissions("user:add")
     @ResponseBody
     @RequestMapping("/addStudents")
-    public JsonResult addStudents(@RequestParam MultipartFile file){
+    public JsonResult addStudents(@RequestParam MultipartFile file) {
         try {
-            userService.addUsers(file,User.STUDENT_TYPE);
+            userService.addUsers(file, User.STUDENT_TYPE);
             return JsonResult.ok("添加成功");
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return JsonResult.error(e.getMessage());
         }
@@ -151,7 +151,7 @@ public class UserController extends BaseController {
     @ResponseBody
     @RequestMapping("/delete")
     public JsonResult delete(Integer userId) {
-        if ( userService.deleteUserRoleByUserId(userId) && userService.delete(userId)) {
+        if (userService.deleteUserRoleByUserId(userId) && userService.delete(userId)) {
             return JsonResult.ok("删除成功");
         } else {
             return JsonResult.error("删除失败");

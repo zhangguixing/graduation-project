@@ -137,12 +137,12 @@ public class MainController extends BaseController implements ErrorController {
     }
 
     @RequestMapping("system/platformInfo")
-    public String platformInfo(){
+    public String platformInfo() {
         return "system/platformInfo.html";
     }
 
     @RequestMapping("system/welcome")
-    public String welcome(){
+    public String welcome() {
         return "system/welcome.html";
     }
 

@@ -25,7 +25,7 @@ public class UserRole implements Serializable {
 
     private Integer roleId;  // 角色id
 
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date createTime;  // 创建时间
 
     @TableField(exist = false)

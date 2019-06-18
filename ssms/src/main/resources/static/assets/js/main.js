@@ -43,8 +43,8 @@ layui.use(['layer', 'element', 'admin', 'index'], function () {
     // 退出登录点击事件
     $('#btnLogout').click(function () {
         top.layer.confirm('确定退出登录？', {
-                skin: 'layui-layer-admin'
-            }, function () {
+            skin: 'layui-layer-admin'
+        }, function () {
             location.replace('/logout');
         });
     });

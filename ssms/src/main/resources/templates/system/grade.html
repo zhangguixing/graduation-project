@@ -59,22 +59,22 @@
         var ins1 = table.render({
             elem: '#gradeTable',
             url: '/grade/all',
-            title:'年级列表',
+            title: '年级列表',
             page: true,
             cols: [[
                 {type: 'checkbox'},
-                {field: 'id', hide:true},
+                {field: 'id', hide: true},
                 {type: 'numbers', align: 'center', title: '序号'},
-                {field: 'name', sort: true,align: 'center',title: '年级'},
+                {field: 'name', sort: true, align: 'center', title: '年级'},
                 {
                     sort: true, templet: function (d) {
                         return util.toDateString(d.createTime);
-                    },align: 'center', title: '创建时间'
+                    }, align: 'center', title: '创建时间'
                 },
                 {
                     sort: true, templet: function (d) {
                         return util.toDateString(d.updateTime);
-                    },align: 'center', title: '更新时间'
+                    }, align: 'center', title: '更新时间'
                 },
                 {align: 'center', toolbar: '#tableBar', title: '操作'}
             ]],
@@ -116,8 +116,8 @@
 
         // 删除年级
         function doDelete(obj) {
-            layer.confirm('确定要删除吗？',{
-                skin : 'layui-layer-admin'
+            layer.confirm('确定要删除吗？', {
+                skin: 'layui-layer-admin'
             }, function (index) {
                 layer.load(2);
                 $.post('/grade/delete', {

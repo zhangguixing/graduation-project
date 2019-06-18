@@ -4,7 +4,7 @@
 
     <select id="selectByUserId" resultType="com.ssms.model.Role">
         SELECT * FROM sys_role WHERE role_id IN(
-            SELECT role_id FROM sys_user_role WHERE user_id=#{userId}
+        SELECT role_id FROM sys_user_role WHERE user_id=#{userId}
         )
     </select>
 </mapper>

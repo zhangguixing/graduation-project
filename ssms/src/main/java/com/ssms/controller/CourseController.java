@@ -2,6 +2,7 @@ package com.ssms.controller;
 
 import com.ssms.common.BaseController;
 import com.ssms.common.CommonResponse;
+import com.ssms.common.ResponseCode;
 import com.ssms.common.ResponseUtil;
 import com.ssms.model.Course;
 import com.ssms.model.CourseTimeTable;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -74,8 +76,8 @@ public class CourseController extends BaseController {
 
     @ResponseBody
     @GetMapping("listByCollege")
-    public CommonResponse listByCollege(Integer gradeId, Integer collegeId, Integer subjectId, Integer classId, String schoolYear, Integer semester) {
-        return ResponseUtil.generateResponse(courseService.listByCollege(gradeId, collegeId, subjectId, classId, schoolYear, semester));
+    public CommonResponse listByCollege(Integer gradeId, Integer collegeId, Integer subjectId, Integer classId, String schoolYear, Integer semester, Integer studentId) {
+        return ResponseUtil.generateResponse(courseService.listByCollege(gradeId, collegeId, subjectId, classId, schoolYear, semester, studentId));
     }
 
     @ResponseBody
@@ -106,6 +108,19 @@ public class CourseController extends BaseController {
     @PutMapping("timeTable")
     public CommonResponse updateTimeTable(@RequestBody CourseTimeTable courseTimeTable) {
         return ResponseUtil.generateResponse(courseTimeTableService.updateTimeTable(courseTimeTable));
+    }
+
+    @ResponseBody
+    @PostMapping("timeTable/isConflict")
+    public CommonResponse isConflict(@RequestBody CourseTimeTable courseTimeTable) {
+        CommonResponse commonResponse = new CommonResponse();
+        try {
+            commonResponse.setData(courseTimeTableService.isConflict(courseTimeTable));
+            commonResponse.setCode(ResponseCode.SUCCESS);
+        } catch (Exception e) {
+            commonResponse.setCode(ResponseCode.INTERNAL_SERVER_ERROR);
+        }
+        return commonResponse;
     }
 
     @ResponseBody
@@ -149,6 +164,30 @@ public class CourseController extends BaseController {
     @DeleteMapping("delete/{id}")
     public CommonResponse delete(@PathVariable Integer id) {
         return ResponseUtil.generateResponse(courseService.delete(id));
+    }
+
+    @ResponseBody
+    @RequestMapping("addCourses")
+    public CommonResponse addCourses(@RequestParam MultipartFile file) {
+        try {
+            courseService.addCourses(file);
+            return ResponseUtil.generateResponse("添加成功", true);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseUtil.generateResponse(e.getMessage(), false);
+        }
+    }
+
+    @ResponseBody
+    @RequestMapping("addTimeTables")
+    public CommonResponse addTimeTables(@RequestParam MultipartFile file) {
+        try {
+            courseTimeTableService.addTimeTables(file);
+            return ResponseUtil.generateResponse("添加成功", true);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseUtil.generateResponse(e.getMessage(), false);
+        }
     }
 
 }
