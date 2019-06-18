@@ -10,6 +10,75 @@
     <link rel="stylesheet" href="/assets/css/admin.css" media="all"/>
 </head>
 
+<style type="text/css">
+    #main {
+        height: 500px;
+        border: 1px red solid;
+        width: 100%;
+    }
+
+    #main1 {
+        height: 500px;
+        border: 1px red solid;
+        width: 100%;
+    }
+
+    #main2 {
+        height: 500px;
+        border: 1px red solid;
+        width: 100%;
+    }
+
+    #box1 {
+        border: 1px #E8E8E8 solid;
+        overflow: hidden;
+        float: left;
+        width: 99%;
+
+    }
+
+    #box2 {
+        border: 1px #E8E8E8 solid;
+        overflow: hidden;
+        float: right;
+        width: 49%;
+
+    }
+
+    #box4 {
+        border: 1px #E8E8E8 solid;
+        height: 550px;
+    }
+
+    .child {
+        height: 330px;
+        width: 49%;
+        border: 1px #778899 solid;
+        float: left;
+    }
+
+    .child1 {
+        height: 330px;
+        width: 49%;
+        border: 1px #778899 solid;
+        float: right;
+    }
+
+    .top {
+        width: 99%;
+        text-align: center;
+        margin-top: 20px;
+        float: left;
+    }
+
+    .mid {
+        border: 1px black solid;
+        float: left;
+        margin-top: 10px;
+        width: 100%;
+    }
+</style>
+
 <body>
 
 <!-- 加载动画，移除位置在common.js中 -->
@@ -64,156 +133,34 @@
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <div class="layui-inline" style="padding-left: 20px;width: 120px;">
-                        <select id="sltKey">
-                            <option value="">-搜索条件-</option>
-                            <option value="username">学号</option>
-                            <option value="nick_name">姓名</option>
-                        </select>
-                    </div>
-                    <div class="layui-inline">
-                        <input id="edtSearch" class="layui-input" type="text" placeholder="输入关键字"/>
-                    </div>
-                    <div class="layui-inline">
-                        <button id="btnSearch" class="layui-btn icon-btn">
-                            <i class="layui-icon">&#xe615;</i>搜索
-                        </button>
-                    </div>
-                    <div class="layui-inline">
-                        <button id="btnExp" class="layui-btn icon-btn"><i class="layui-icon">&#xe67d;</i>导出</button>
+                    <div class="layui-card">
+                        <div class="layui-card-header">成绩分布图</div>
+                        <div class="layui-card-body" style="height: 416px;overflow: hidden;">
+                            <div id="distributeId" style="width: 100%;height:100%;"></div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <table class="layui-table" id="score-table" lay-filter="score-table"></table>
         </div>
     </div>
-
 </div>
 
 <!-- js部分 -->
 <script type="text/javascript" src="/assets/libs/layui/layui.js"></script>
+<script type="text/javascript" src="/assets/libs/echarts/echarts.min.js"></script>
+<script type="text/javascript" src="/assets/libs/echarts/echartsTheme.js"></script>
 <script type="text/javascript" src="/assets/js/common.js"></script>
 
 <script>
-    layui.use(['layer', 'form', 'table', 'collegeSelect', 'admin'], function () {
+    layui.use(['layer', 'form', 'table', 'admin', 'collegeSelect', 'upload'], function () {
         var $ = layui.jquery;
         var layer = layui.layer;
         var form = layui.form;
-        var admin = layui.admin;
         var table = layui.table;
+        var upload = layui.upload;
+        var admin = layui.admin;
         var collegeSelect = layui.collegeSelect;
-
         form.render('select');
-
-        // 渲染表格
-        var ins1 = table.render({
-            elem: '#score-table',
-            method: 'GET',
-            url: '/score/all',
-            page: true,
-            cols: [[
-                {type: 'checkbox'},
-                {field: 'id', hide: true},
-                {field: 'collegeId', hide: true},
-                {field: 'subjectId', hide: true},
-                {field: 'classId', hide: true},
-                {field: 'gradeId', hide: true},
-                {field: 'studentId', hide: true},
-                {type: 'numbers', align: 'center', title: '排名'},
-                {field: 'username', align: 'center', sort: true, title: '学号'},
-                {field: 'nickName', align: 'center', sort: true, title: '姓名'},
-                {field: 'collegeName', align: 'center', sort: true, title: '学院'},
-                {field: 'subjectName', align: 'center', sort: true, title: '专业'},
-                {field: 'className', align: 'center', sort: true, title: '班级'},
-                {field: 'gradeName', align: 'center', sort: true, title: '年级'},
-                {field: 'schoolYear', align: 'center', sort: true, title: '学年'},
-                {
-                    align: 'center', sort: true, templet: function (d) {
-                        if (d.semester == 1) {
-                            return '上学期';
-                        } else if (d.semester == 2) {
-                            return '下学期';
-                        } else {
-                            return '未知';
-                        }
-                    }, title: '学期'
-                },
-                {
-                    field: 'totalScore', align: 'center', sort: true, templet: function (d) {
-                        return d.totalScore.toFixed(2);
-                    }, title: '成绩'
-                }
-            ]],
-            response: {
-                statusCode: 200
-            },
-            parseData: function (res) {
-                return {
-                    "count": res.data.total,
-                    "code": res.code,
-                    "data": res.data.list
-                };
-            },
-            request: {
-                pageName: 'pageNum', // 页码的参数名称，默认：page
-                limitName: 'pageSize' // 每页数据量的参数名，默认：limit
-            }
-        });
-
-        //监听行点击事件
-        table.on('row(score-table)', function (obj) {
-            var data = obj.data;
-
-            //查看成绩信息
-            top.layui.admin.open({
-                type: 2,
-                title: "成绩详情",
-                btn: ['确定'],
-                area: ['450px', '420px'],
-                content: "/score/showForm"
-                + "?studentId=" + data.studentId
-                + "&collegeId=" + data.collegeId
-                + "&subjectId=" + data.subjectId
-                + "&classId=" + data.classId
-                + "&gradeId=" + data.gradeId
-                + "&schoolYear=" + data.schoolYear
-                + "&semester=" + data.semester
-            });
-
-            //标注选中样式
-            obj.tr.addClass('layui-table-click').siblings().removeClass('layui-table-click');
-        });
-
-        // 导出excel
-        $('#btnExp').click(function () {
-            var checkRows = table.checkStatus('score-table');
-            var rows = checkRows.data;
-            var collegeId = $('#collegeId option:selected').val();
-            var subjectId = $('#subjectId option:selected').val();
-            var classId = $('#classId option:selected').val();
-            var gradeId = $('#gradeId option:selected').val();
-            var schoolYearId = $('#schoolYearId option:selected').val();
-            var semesterId = $('#semesterId option:selected').val();
-            if (checkRows.data.length == 0) {
-                layer.msg('请选择要导出的数据', {icon: 2});
-            } else if (rows.length != 1 && (collegeId == "" || subjectId == "" || classId == "" || gradeId == "" || schoolYearId == "" || semesterId == "")) {
-                layer.msg('只可导出指定学年学期的学生', {icon: 2});
-            } else {
-                $.ajax({
-                    url: '/score/export',
-                    type: 'POST',
-                    contentType: 'application/json;charset=utf-8',
-                    async: false,
-                    data: JSON.stringify(rows),
-                    success: function (res) {
-                        if (res.code == 200) {
-                            var data = res.data;
-                            table.exportFile(data.headList, data.bodyList, 'xls', '学生成绩单');
-                        }
-                    }
-                })
-            }
-        });
 
         //加载学院下拉框
         collegeSelect.renderCollegeList();
@@ -232,7 +179,7 @@
             }
             collegeSelect.reshowAll(collegeId, subjectId, classId, gradeId, null, null, true);
         }
-        
+
         function getJsonData() {
             var collegeId = $('#collegeId option:selected').val();
             var subjectId = $('#subjectId option:selected').val();
@@ -240,12 +187,10 @@
             var gradeId = $('#gradeId option:selected').val();
             var schoolYearId = $('#schoolYearId option:selected').val();
             var semesterId = $('#semesterId option:selected').val();
-            var courseName = $('#courseNameId option:selected').val();
-            if(courseName == '请选择课程'){
-                courseName='';
+            var courseName = $('#courseNameId option:selected').text();
+            if( $('#courseNameId option:selected').text() == "请选择课程"){
+                courseName = '';
             }
-            var key = $('#sltKey').val();
-            var value = $('#edtSearch').val();
             var jsonData = {
                 collegeId: collegeId,
                 subjectId: subjectId,
@@ -253,13 +198,10 @@
                 gradeId: gradeId,
                 schoolYear: schoolYearId,
                 semester: semesterId,
-                courseName:courseName,
-                searchKey: key,
-                searchValue: value
+                courseName: courseName
             };
             return jsonData;
         }
-
         //加载课程下拉框
         function listCorese(jsonData) {
             $('#courseNameId').html('<option value="">请选择课程</option>');
@@ -279,7 +221,8 @@
                 }
             })
         }
-        listCorese(getJsonData())
+        listCorese(getJsonData());
+        searchPersonNum();
 
         //选择学院触发事件
         form.on('select(collegeId)', function (data) {
@@ -299,7 +242,7 @@
             $('#schoolYearId').val('');
             $('#semesterId').val('');
             form.render('select')
-            searchScoreList();
+            searchPersonNum();
         });
 
         //选择专业触发事件
@@ -318,7 +261,7 @@
             $('#schoolYearId').val('');
             $('#semesterId').val('');
             form.render('select')
-            searchScoreList();
+            searchPersonNum();
         });
         //选择班级触发事件
         form.on('select(classId)', function (data) {
@@ -327,15 +270,15 @@
                 collegeSelect.renderGradeList();
                 $('#gradeDiv').show();
             } else {
-                $('#gradeDiv').hide();
                 $('#gradeId').val('');
+                $('#gradeDiv').hide();
             }
             $('#schoolYearDiv').hide();
             $('#semesterDiv').hide();
             $('#schoolYearId').val('');
             $('#semesterId').val('');
             form.render('select')
-            searchScoreList();
+            searchPersonNum();
         });
         //选择年级触发事件
         form.on('select(gradeId)', function (data) {
@@ -346,13 +289,13 @@
                     $('#schoolYearDiv').show();
                 }
             } else {
-                $('#schoolYearDiv').hide();
                 $('#schoolYearId').val('');
+                $('#schoolYearDiv').hide();
             }
-            $('#semesterDiv').hide();
             $('#semesterId').val('');
+            $('#semesterDiv').hide();
             form.render('select')
-            searchScoreList();
+            searchPersonNum();
         });
         //选择学年触发事件
         form.on('select(schoolYearId)', function (data) {
@@ -363,46 +306,125 @@
                 $('#semesterId').val('');
             }
             form.render('select')
-            searchScoreList();
+            searchPersonNum();
         });
         //选择学期触发事件
         form.on('select(semesterId)', function (data) {
-            searchScoreList();
+            searchPersonNum();
         });
         //选择课程触发事件
         form.on('select(courseNameId)', function (data) {
-            searchScoreList();
+            searchPersonNum();
         });
 
-        // 搜索按钮点击事件
-        $('#btnSearch').click(function () {
-            var key = $('#sltKey').val();
-            var value = $('#edtSearch').val();
-            if (key != '' && value != '') {
-                if (key == 'username') {
-                    if (!/^[0-9]*$/.test(value)) {
-                        layer.msg("学号必须为数字", {icon: 2});
-                        $('#edtSearch').focus();
-                        return;
+        //渲染趋势图
+        var distributeChart = echarts.init(document.getElementById('distributeId'), myEchartsTheme);
+        //查询指定格式学生成绩信息
+        var allPersonNum = [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0];
+        var conditionPersonNum = [2.6, 5.9, 9.0, 26.4, 28.7, 70.7, 175.6, 182.2, 48.7, 18.8];
+
+        function searchPersonNum() {
+            var jsonData = getJsonData();
+            listCorese(jsonData);
+            $('#courseNameId').val(jsonData.courseName);
+            form.render('select');
+            $.ajax({
+                url: '/score/searchPersonNum',
+                type: 'get',
+                data: jsonData,
+                async: true,
+                success: function (res) {
+                    if (res.code == 200) {
+                        var data = res.data;
+                        if (data != null) {
+                            allPersonNum = data.allPersonNum;
+                            conditionPersonNum = data.conditionPersonNum;
+                            distributeChart.setOption({
+                                series: [
+                                    {
+                                        data: allPersonNum
+                                    },
+                                    {
+                                        data: conditionPersonNum
+                                    },
+                                    {
+                                        data: conditionPersonNum
+                                    }
+                                ]
+                            });
+                        }
                     }
                 }
-                searchScoreList();
-            }
-        });
-
-        //根据条件获取成绩列表
-        function searchScoreList() {
-            var jsonData = getJsonData();
-            table.reload('score-table', {
-                where: jsonData
-            });
+            })
         }
 
-        // 选择数据源树取消按钮
-        $('.closeDialog').click(function () {
-            layer.close(index);
-        });
+        var option = {
+            tooltip: {
+                trigger: 'axis'
+            },
+            toolbox: {
+                show: true,
+                feature: {
+                    mark: {show: true},
+                    dataView: {show: true, readOnly: false},
+                    magicType: {show: true, type: ['line', 'bar']},
+                    restore: {show: true},
+                    saveAsImage: {show: true}
+                }
+            },
+            calculable: true,
+            legend: {
+                data: ['整体平均人数', '条件平均人数', '条件正态分布']
+            },
+            xAxis: [
+                {
+                    type: 'category',
+                    data: ['0-10分', '10-20分', '20-30分', '30-40分', '40-50分', '50-60分', '60-70分', '70-80分', '80-90分', '90-100分']
+                }
+            ],
+            yAxis: [
+                {
+                    type: 'value',
+                    name: '整体平均人数',
+                    axisLabel: {
+                        formatter: '{value} 人'
+                    }
+                },
+                {
+                    type: 'value',
+                    name: '条件平均人数',
+                    axisLabel: {
+                        formatter: '{value} 人'
+                    }
+                }
+            ],
+            series: [
+                {
+                    name: '整体平均人数',
+                    type: 'bar',
+                    data: allPersonNum
+                },
+                {
+                    name: '条件平均人数',
+                    type: 'bar',
+                    data: conditionPersonNum
+                },
+                {
+                    name: '条件正态分布',
+                    type: 'line',
+                    yAxisIndex: 1,
+                    data: conditionPersonNum
+                }
+            ]
+        };
+        distributeChart.setOption(option);
+
+        //趋势图适配界面
+        window.onresize = function () {
+            distributeChart.resize();
+        }
     });
+
 </script>
 </body>
 </html>

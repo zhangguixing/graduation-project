@@ -45,6 +45,9 @@
             <if test="semester != null and semester != ''">
                 AND s.semester=#{semester}
             </if>
+            <if test="courseName != null and courseName != ''">
+                AND s.course_id IN (SELECT c.id from info_course c where c.name=#{courseName})
+            </if>
             <if test="searchKey != null and searchKey != '' and searchValue != null and searchValue != ''">
                 <choose>
                     <when test="searchKey == 'username'">
@@ -134,7 +137,7 @@
             <if test="studentId != null">
                 AND s.student_id=#{studentId}
             </if>
-            <if test="schoolYear != null">
+            <if test="schoolYear != null and schoolYear != ''">
                 AND s.school_year=#{schoolYear}
             </if>
             <if test="semester != null">
@@ -160,7 +163,7 @@
             <if test="classId != null">
                 AND c.class_id=#{classId}
             </if>
-            <if test="schoolYear != null">
+            <if test="schoolYear != null and schoolYear != ''">
                 AND c.school_year=#{schoolYear}
             </if>
             <if test="semester != null">
@@ -169,6 +172,40 @@
         </where>
         ORDER BY c.name
     </select>
+
+    <select id="getConditionPersonNum" parameterType="Map" resultType="java.util.HashMap">
+        SELECT
+        FLOOR(s.score / 10) scoreA,
+        count(DISTINCT s.student_id) personNum
+        FROM
+        info_score s
+        <where>
+            <if test="gradeId != null">
+                AND s.grade_id=#{gradeId}
+            </if>
+            <if test="collegeId != null">
+                AND s.college_id=#{collegeId}
+            </if>
+            <if test="subjectId != null">
+                AND s.subject_id=#{subjectId}
+            </if>
+            <if test="classId != null">
+                AND s.class_id=#{classId}
+            </if>
+            <if test="schoolYear != null and schoolYear != ''">
+                AND s.school_year=#{schoolYear}
+            </if>
+            <if test="semester != null">
+                AND s.semester=#{semester}
+            </if>
+            <if test="courseName != null and courseName != ''">
+                AND s.course_id IN (SELECT c.id from info_course c where c.name=#{courseName})
+            </if>
+        </where>
+        GROUP BY scoreA
+        ORDER BY scoreA
+    </select>
+
 
     <delete id="deleteByCollegeInfo">
         DELETE FROM info_score

@@ -39,13 +39,13 @@ public class ScoreServiceImpl implements ScoreService {
     private CourseMapper courseMapper;
 
     @Override
-    public PageInfo<Map<String, Object>> listScore(Integer pageNum, Integer pageSize, Integer gradeId, Integer collegeId, Integer subjectId, Integer classId, String schoolYear, Integer semester, String searchKey, String searchValue) {
+    public PageInfo<Map<String, Object>> listScore(Integer pageNum, Integer pageSize, Integer gradeId, Integer collegeId, Integer subjectId, Integer classId, String schoolYear, Integer semester,String courseName, String searchKey, String searchValue) {
         PageHelper.startPage(pageNum, pageSize);
         List<Map<String, Object>> listScore = null;
         if (StringUtil.isBlank(searchKey)) {
             searchKey = null;
         }
-        listScore = scoreMapper.listScore(gradeId, collegeId, subjectId, classId, schoolYear, semester, searchKey, searchValue);
+        listScore = scoreMapper.listScore(gradeId, collegeId, subjectId, classId, schoolYear, semester,courseName, searchKey, searchValue);
         //表中无符合条件数据
         if (CollectionUtils.isEmpty(listScore) || CollectionUtils.isEmpty(listScore.get(0))) {
             listScore = new ArrayList<>();
@@ -385,5 +385,24 @@ public class ScoreServiceImpl implements ScoreService {
         collegeNameAndScore.put("nickName", nickName);
         collegeNameAndScore.put("scoreList", scoreList);
         return collegeNameAndScore;
+    }
+
+    @Override
+    public Map<String, Object> searchPersonNum(Integer gradeId, Integer collegeId, Integer subjectId, Integer classId, String schoolYear, Integer semester, String courseName) {
+        List<Map<String, Object>> conditionPersonNumMapList = scoreMapper.getConditionPersonNum(gradeId, collegeId, subjectId, classId, schoolYear, semester, courseName);
+        List<Map<String, Object>> allPersonNumMapList = scoreMapper.getConditionPersonNum(null, null, null, null, null, null, courseName);
+        List<Integer> conditionPersonNum = new ArrayList<>(Collections.nCopies(10, 0));
+        List<Integer> allPersonNum = new ArrayList<>(Collections.nCopies(10, 0));
+
+        for (Map<String, Object> conditionPersonNumMap : conditionPersonNumMapList) {
+            conditionPersonNum.set(Integer.valueOf(conditionPersonNumMap.get("scoreA").toString()), Integer.valueOf(conditionPersonNumMap.get("personNum").toString()));
+        }
+        for (Map<String, Object> allPersonNumMap : allPersonNumMapList) {
+            allPersonNum.set(Integer.valueOf(allPersonNumMap.get("scoreA").toString()), Integer.valueOf(allPersonNumMap.get("personNum").toString()));
+        }
+        Map result = new HashMap();
+        result.put("allPersonNum", allPersonNum);
+        result.put("conditionPersonNum", conditionPersonNum);
+        return result;
     }
 }

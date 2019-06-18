@@ -37,6 +37,26 @@ public class ScoreController extends BaseController {
         return "score/scoreManage.html";
     }
 
+    @GetMapping("distribdution")
+    public String scoreDistribution(Model model) {
+        User loginUser = getLoginUser();
+        Map<String, Integer> collegeInfo = new HashMap<>();
+        if (loginUser.getPersonType() != null && loginUser.getPersonType().equals(User.STUDENT_TYPE)) {
+            //学生展示默认展示本班级成绩
+            collegeInfo.put("gradeId", loginUser.getGradeId());
+            collegeInfo.put("collegeId", loginUser.getCollegeId());
+            collegeInfo.put("subjectId", loginUser.getSubjectId());
+            collegeInfo.put("classId", loginUser.getClassId());
+        } else if (loginUser.getPersonType() != null && loginUser.getPersonType().equals(User.TEACHER_TYPE)) {
+            //教师展示默认展示本专业
+            collegeInfo.put("collegeId", loginUser.getCollegeId());
+            collegeInfo.put("subjectId", loginUser.getSubjectId());
+        }
+        model.addAttribute("personType", loginUser.getPersonType());
+        model.addAttribute("collegeInfo", collegeInfo);
+        return "score/scoreDistribution.html";
+    }
+
     @GetMapping("class")
     public String classScore(Model model) {
         User loginUser = getLoginUser();
@@ -86,6 +106,11 @@ public class ScoreController extends BaseController {
     public String scoreTrend(Model model) {
         model.addAttribute("loginUser", getLoginUser());
         return "score/scoreTrend.html";
+    }
+
+    @GetMapping("compare")
+    public String scoreompare(Model model) {
+        return "score/scoreCompare.html";
     }
 
     @ResponseBody
@@ -138,7 +163,7 @@ public class ScoreController extends BaseController {
 
     @ResponseBody
     @GetMapping("all")
-    public CommonResponse all(Model model, Integer pageNum, Integer pageSize, Integer gradeId, Integer collegeId, Integer subjectId, Integer classId, String schoolYear, Integer semester, String searchKey, String searchValue) {
+    public CommonResponse all(Model model, Integer pageNum, Integer pageSize, Integer gradeId, Integer collegeId, Integer subjectId, Integer classId, String schoolYear, Integer semester,String courseName, String searchKey, String searchValue) {
         User user = this.getLoginUser();
         if (user.getPersonType() == User.STUDENT_TYPE) {
             //学生--查询所在班级
@@ -151,7 +176,7 @@ public class ScoreController extends BaseController {
             collegeId = user.getCollegeId();
             subjectId = user.getSubjectId();
         }
-        return ResponseUtil.generateResponse(scoreService.listScore(pageNum, pageSize, gradeId, collegeId, subjectId, classId, schoolYear, semester, searchKey, searchValue));
+        return ResponseUtil.generateResponse(scoreService.listScore(pageNum, pageSize, gradeId, collegeId, subjectId, classId, schoolYear, semester,courseName, searchKey, searchValue));
     }
 
     @ResponseBody
@@ -164,5 +189,11 @@ public class ScoreController extends BaseController {
             e.printStackTrace();
             return ResponseUtil.generateResponse(e.getMessage(), false);
         }
+    }
+
+    @ResponseBody
+    @GetMapping("searchPersonNum")
+    public CommonResponse searchPersonNum(Integer collegeId, Integer subjectId, Integer classId, Integer gradeId, String schoolYear, Integer semester,String courseName){
+        return ResponseUtil.generateResponse(scoreService.searchPersonNum(gradeId,collegeId,subjectId,classId,schoolYear,semester,courseName));
     }
 }

@@ -25,13 +25,52 @@
         c. name
         FROM
         info_course c
-        WHERE
-        c.college_id = #{collegeId}
-        AND c.subject_id = #{subjectId}
-        AND c.class_id = #{classId}
-        AND c.grade_id = #{gradeId}
-        AND c.school_year = #{schoolYear}
-        AND c.semester = #{semester}
+        <where>
+            <if test="gradeId != null and gradeId != ''">
+                AND c.grade_id=#{gradeId}
+            </if>
+            <if test="collegeId != null and collegeId != ''">
+                AND c.college_id=#{collegeId}
+            </if>
+            <if test="subjectId != null and subjectId != ''">
+                AND c.subject_id=#{subjectId}
+            </if>
+            <if test="classId != null and classId != ''">
+                AND c.class_id=#{classId}
+            </if>
+            <if test="schoolYear != null and schoolYear != ''">
+                AND c.school_year=#{schoolYear}
+            </if>
+            <if test="semester != null and semester != ''">
+                AND c.semester=#{semester}
+            </if>
+        </where>
+    </select>
+    <select id="listCourseName" resultType="java.util.HashMap">
+        SELECT
+        DISTINCT c. name
+        FROM
+        info_course c
+        <where>
+            <if test="gradeId != null and gradeId != ''">
+                AND c.grade_id=#{gradeId}
+            </if>
+            <if test="collegeId != null and collegeId != ''">
+                AND c.college_id=#{collegeId}
+            </if>
+            <if test="subjectId != null and subjectId != ''">
+                AND c.subject_id=#{subjectId}
+            </if>
+            <if test="classId != null and classId != ''">
+                AND c.class_id=#{classId}
+            </if>
+            <if test="schoolYear != null and schoolYear != ''">
+                AND c.school_year=#{schoolYear}
+            </if>
+            <if test="semester != null and semester != ''">
+                AND c.semester=#{semester}
+            </if>
+        </where>
     </select>
 
     <select id="all" resultType="java.util.HashMap">

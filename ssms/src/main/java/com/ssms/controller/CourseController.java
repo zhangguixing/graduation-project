@@ -99,6 +99,12 @@ public class CourseController extends BaseController {
     }
 
     @ResponseBody
+    @GetMapping("listCourseName")
+    public CommonResponse listCourseName(Integer gradeId, Integer collegeId, Integer subjectId, Integer classId, String schoolYear, Integer semester) {
+        return ResponseUtil.generateResponse(courseService.listCourseName(gradeId, collegeId, subjectId, classId, schoolYear, semester));
+    }
+
+    @ResponseBody
     @PostMapping("timeTable")
     public CommonResponse addTimeTable(@RequestBody CourseTimeTable courseTimeTable) {
         return ResponseUtil.generateResponse(courseTimeTableService.addTimeTable(courseTimeTable));

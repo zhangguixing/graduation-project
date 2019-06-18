@@ -93,6 +93,11 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    public List<Map<String, Object>> listCourseName(Integer gradeId, Integer collegeId, Integer subjectId, Integer classId, String schoolYear, Integer semester) {
+        return courseMapper.listCourseName(gradeId, collegeId, subjectId, classId, schoolYear, semester);
+    }
+
+    @Override
     public PageInfo<Map<String, Object>> all(Integer pageNum, Integer pageSize, Integer gradeId, Integer collegeId, Integer subjectId, Integer classId, String schoolYear, Integer semester, String searchKey, String searchValue) {
         PageHelper.startPage(pageNum, pageSize);
         List<Map<String, Object>> courseList = null;

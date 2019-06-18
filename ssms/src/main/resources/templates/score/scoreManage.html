@@ -38,13 +38,13 @@
                             <option value="">请选择班级</option>
                         </select>
                     </div>
-                </div>
-                <div class="layui-form-item">
                     <div id="gradeDiv" class="layui-inline" style="padding-left: 20px;display:none">
                         <select id="gradeId" name="gradeId" lay-filter="gradeId">
                             <option value="">请选择年级</option>
                         </select>
                     </div>
+                </div>
+                <div class="layui-form-item">
                     <div id="schoolYearDiv" class="layui-inline" style="padding-left: 20px;display:none">
                         <select id="schoolYearId" name="schoolYearId" lay-filter="schoolYearId">
                             <option value="">请选择学年</option>
@@ -55,6 +55,11 @@
                             <option value="">请选择学期</option>
                             <option value="1">上学期</option>
                             <option value="2">下学期</option>
+                        </select>
+                    </div>
+                    <div id="courseNameDiv" class="layui-inline" style="padding-left: 20px;">
+                        <select id="courseNameId" name="courseNameId" lay-filter="courseNameId">
+                            <option value="">请选择课程</option>
                         </select>
                     </div>
                 </div>
@@ -297,6 +302,53 @@
             var subjectId = '${collegeInfo.subjectId}';
             collegeSelect.reshowAll(collegeId, subjectId, null, null, null, null, true);
         }
+        function getJsonData() {
+            var collegeId = $('#collegeId option:selected').val();
+            var subjectId = $('#subjectId option:selected').val();
+            var classId = $('#classId option:selected').val();
+            var gradeId = $('#gradeId option:selected').val();
+            var schoolYearId = $('#schoolYearId option:selected').val();
+            var semesterId = $('#semesterId option:selected').val();
+            var courseName = $('#courseNameId option:selected').val();
+            if(courseName == '请选择课程'){
+                courseName='';
+            }
+            var key = $('#sltKey').val();
+            var value = $('#edtSearch').val();
+            var jsonData = {
+                collegeId: collegeId,
+                subjectId: subjectId,
+                classId: classId,
+                gradeId: gradeId,
+                schoolYear: schoolYearId,
+                semester: semesterId,
+                courseName:courseName,
+                searchKey: key,
+                searchValue: value
+            };
+            return jsonData;
+        }
+
+        //加载课程下拉框
+        function listCorese(jsonData) {
+            $('#courseNameId').html('<option value="">请选择课程</option>');
+            $.ajax({
+                url: '/course/listCourseName',
+                type: 'get',
+                data: jsonData,
+                async: false,
+                success: function (res) {
+                    var dataList = res.data;
+                    $.each(dataList, function (key, val) {
+                        var option = $("<option>").val(val.name).text(
+                            val.name);
+                        $('#courseNameId').append(option);
+                    });
+                    form.render('select');
+                }
+            })
+        }
+        listCorese(getJsonData())
 
         //选择学院触发事件
         form.on('select(collegeId)', function (data) {
@@ -386,6 +438,10 @@
         form.on('select(semesterId)', function (data) {
             searchScoreList();
         });
+        //选择课程触发事件
+        form.on('select(courseNameId)', function (data) {
+            searchScoreList();
+        });
 
         // 搜索按钮点击事件
         $('#btnSearch').click(function () {
@@ -405,25 +461,9 @@
 
         //根据条件获取成绩列表
         function searchScoreList() {
-            var collegeId = $('#collegeId option:selected').val();
-            var subjectId = $('#subjectId option:selected').val();
-            var classId = $('#classId option:selected').val();
-            var gradeId = $('#gradeId option:selected').val();
-            var schoolYearId = $('#schoolYearId option:selected').val();
-            var semesterId = $('#semesterId option:selected').val();
-            var key = $('#sltKey').val();
-            var value = $('#edtSearch').val();
+            var jsonData = getJsonData();
             table.reload('score-table', {
-                where: {
-                    collegeId: collegeId,
-                    subjectId: subjectId,
-                    classId: classId,
-                    gradeId: gradeId,
-                    schoolYear: schoolYearId,
-                    semester: semesterId,
-                    searchKey: key,
-                    searchValue: value
-                }
+                where: jsonData
             });
         }
 

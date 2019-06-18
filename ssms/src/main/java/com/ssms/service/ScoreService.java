@@ -9,7 +9,7 @@ import java.util.Map;
 
 public interface ScoreService {
 
-    PageInfo<Map<String, Object>> listScore(Integer pageNum, Integer pageSize, Integer gradeId, Integer collegeId, Integer subjectId, Integer classId, String schoolYear, Integer semester, String searchKey, String searchValue);
+    PageInfo<Map<String, Object>> listScore(Integer pageNum, Integer pageSize, Integer gradeId, Integer collegeId, Integer subjectId, Integer classId, String schoolYear, Integer semester,String courseName, String searchKey, String searchValue);
 
     List<Map<String, Object>> getPersonScore(Integer gradeId, Integer collegeId, Integer subjectId, Integer classId, Integer studentId, String schoolYear, Integer semester);
 
@@ -26,4 +26,6 @@ public interface ScoreService {
     void addScores(MultipartFile file) throws IOException, Exception;
 
     Map<String, Object> getCollegeNameAndScore(Integer studentId, Integer collegeId, Integer subjectId, Integer classId, Integer gradeId, String schoolYear, Integer semester);
+
+    Map<String, Object> searchPersonNum(Integer gradeId, Integer collegeId, Integer subjectId, Integer classId, String schoolYear, Integer semester, String courseName);
 }

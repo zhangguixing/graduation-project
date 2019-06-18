@@ -15,6 +15,8 @@ public interface CourseService {
 
     List<Map<String, Object>> listCourseIdAndName(Integer gradeId, Integer collegeId, Integer subjectId, Integer classId, String schoolYear, Integer semester);
 
+    List<Map<String, Object>> listCourseName(Integer gradeId, Integer collegeId, Integer subjectId, Integer classId, String schoolYear, Integer semester);
+
     PageInfo<Map<String, Object>> all(Integer pageNum, Integer pageSize, Integer gradeId, Integer collegeId, Integer subjectId, Integer classId, String schoolYear, Integer semester, String searchKey, String searchValue);
 
     boolean add(Course course);
