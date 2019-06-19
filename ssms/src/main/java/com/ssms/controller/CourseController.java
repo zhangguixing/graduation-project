@@ -105,6 +105,12 @@ public class CourseController extends BaseController {
     }
 
     @ResponseBody
+    @GetMapping("listCourseNameByAAndB")
+    public CommonResponse listCourseNameByAAndB(Integer gradeIdA, Integer collegeIdA, Integer subjectIdA, Integer classIdA,Integer gradeIdB, Integer collegeIdB, Integer subjectIdB, Integer classIdB) {
+        return ResponseUtil.generateResponse(courseService.listCourseNameAAndB(gradeIdA, collegeIdA, subjectIdA, classIdA,gradeIdB, collegeIdB, subjectIdB, classIdB));
+    }
+
+    @ResponseBody
     @PostMapping("timeTable")
     public CommonResponse addTimeTable(@RequestBody CourseTimeTable courseTimeTable) {
         return ResponseUtil.generateResponse(courseTimeTableService.addTimeTable(courseTimeTable));

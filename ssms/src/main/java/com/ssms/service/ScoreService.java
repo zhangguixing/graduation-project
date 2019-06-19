@@ -28,4 +28,7 @@ public interface ScoreService {
     Map<String, Object> getCollegeNameAndScore(Integer studentId, Integer collegeId, Integer subjectId, Integer classId, Integer gradeId, String schoolYear, Integer semester);
 
     Map<String, Object> searchPersonNum(Integer gradeId, Integer collegeId, Integer subjectId, Integer classId, String schoolYear, Integer semester, String courseName);
+
+    Map<String,Object> searchNameAndScore(Integer gradeIdA, Integer collegeIdA, Integer subjectIdA, Integer classIdA, Integer gradeIdB, Integer collegeIdB, Integer subjectIdB, Integer classIdB, String courseName);
+
 }

@@ -196,4 +196,9 @@ public class ScoreController extends BaseController {
     public CommonResponse searchPersonNum(Integer collegeId, Integer subjectId, Integer classId, Integer gradeId, String schoolYear, Integer semester,String courseName){
         return ResponseUtil.generateResponse(scoreService.searchPersonNum(gradeId,collegeId,subjectId,classId,schoolYear,semester,courseName));
     }
+    @ResponseBody
+    @GetMapping("searchNameAndScore")
+    public CommonResponse searchNameAndScore(Integer gradeIdA, Integer collegeIdA, Integer subjectIdA, Integer classIdA, Integer gradeIdB, Integer collegeIdB, Integer subjectIdB, Integer classIdB,String courseName){
+        return ResponseUtil.generateResponse(scoreService.searchNameAndScore(gradeIdA, collegeIdA, subjectIdA, classIdA,gradeIdB, collegeIdB, subjectIdB, classIdB,courseName));
+    }
 }

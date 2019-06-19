@@ -405,4 +405,22 @@ public class ScoreServiceImpl implements ScoreService {
         result.put("conditionPersonNum", conditionPersonNum);
         return result;
     }
+
+    @Override
+    public Map<String, Object> searchNameAndScore(Integer gradeIdA, Integer collegeIdA, Integer subjectIdA, Integer classIdA, Integer gradeIdB, Integer collegeIdB, Integer subjectIdB, Integer classIdB, String courseName) {
+        Map<String,Object> scoreAAndName = scoreMapper.searchNameAndAvgScore(gradeIdA, collegeIdA, subjectIdA, classIdA,courseName);
+        Map<String,Object> scoreBAndName = scoreMapper.searchNameAndAvgScore(gradeIdB, collegeIdB, subjectIdB, classIdB,courseName);
+        BigDecimal scoreA = new BigDecimal("0");
+        BigDecimal scoreB = new BigDecimal("0");
+        if(scoreAAndName !=null){
+            scoreA = new BigDecimal(scoreAAndName.get("scoreAvg")==null?"0":scoreAAndName.get("scoreAvg").toString());
+        }
+        if(scoreBAndName != null){
+            scoreB = new BigDecimal(scoreBAndName.get("scoreAvg")==null?"0":scoreBAndName.get("scoreAvg").toString());
+        }
+        Map<String,Object> result = new HashMap<>();
+        result.put("scoreA",scoreA);
+        result.put("scoreB",scoreB);
+        return result;
+    }
 }

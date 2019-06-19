@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>分析型成绩管理系统</title>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="/assets/libs/layui/css/layui.css"/>
+    <link rel="stylesheet" href="/assets/css/admin.css" media="all"/>
+</head>
+
+<style type="text/css">
+    #main {
+        height: 500px;
+        border: 1px red solid;
+        width: 100%;
+    }
+
+    #main1 {
+        height: 500px;
+        border: 1px red solid;
+        width: 100%;
+    }
+
+    #main2 {
+        height: 500px;
+        border: 1px red solid;
+        width: 100%;
+    }
+
+    #box1 {
+        border: 1px #E8E8E8 solid;
+        overflow: hidden;
+        float: left;
+        width: 99%;
+
+    }
+
+    #box2 {
+        border: 1px #E8E8E8 solid;
+        overflow: hidden;
+        float: right;
+        width: 49%;
+
+    }
+
+    #box4 {
+        border: 1px #E8E8E8 solid;
+        height: 550px;
+    }
+
+    .child {
+        height: 330px;
+        width: 49%;
+        border: 1px #778899 solid;
+        float: left;
+    }
+
+    .child1 {
+        height: 330px;
+        width: 49%;
+        border: 1px #778899 solid;
+        float: right;
+    }
+
+    .top {
+        width: 99%;
+        text-align: center;
+        margin-top: 20px;
+        float: left;
+    }
+
+    .mid {
+        border: 1px black solid;
+        float: left;
+        margin-top: 10px;
+        width: 100%;
+    }
+</style>
+
+<body>
+
+<!-- 加载动画，移除位置在common.js中 -->
+<div class="page-loading">
+    <div class="rubik-loader"></div>
+</div>
+
+<!-- 正文开始 -->
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <div class="layui-form toolbar">
+                <div class="layui-form-item">
+                    <div class="layui-inline" style="padding-left: 20px;">
+                        条件一：
+                    </div>
+                    <div class="layui-inline">
+                        <select id="collegeIdA" name="collegeIdA" lay-filter="collegeIdA">
+                            <option value="">请选择学院</option>
+                        </select>
+                    </div>
+                    <div id="subjectDivA" class="layui-inline" style="padding-left: 20px;display:none;">
+                        <select id="subjectIdA" name="subjectIdA" lay-filter="subjectIdA">
+                            <option value="">请选择专业</option>
+                        </select>
+                    </div>
+                    <div id="classDivA" class="layui-inline" style="padding-left: 20px;display:none;">
+                        <select id="classIdA" name="classIdA" lay-filter="classIdA">
+                            <option value="">请选择班级</option>
+                        </select>
+                    </div>
+                    <div id="gradeDivA" class="layui-inline" style="padding-left: 20px;display:none">
+                        <select id="gradeIdA" name="gradeIdA" lay-filter="gradeIdA">
+                            <option value="">请选择年级</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-inline" style="padding-left: 20px;">
+                        条件二：
+                    </div>
+                    <div class="layui-inline">
+                        <select id="collegeIdB" name="collegeIdB" lay-filter="collegeIdB">
+                            <option value="">请选择学院</option>
+                        </select>
+                    </div>
+                    <div id="subjectDivB" class="layui-inline" style="padding-left: 20px;display:none;">
+                        <select id="subjectIdB" name="subjectIdB" lay-filter="subjectIdB">
+                            <option value="">请选择专业</option>
+                        </select>
+                    </div>
+                    <div id="classDivB" class="layui-inline" style="padding-left: 20px;display:none;">
+                        <select id="classIdB" name="classIdB" lay-filter="classIdB">
+                            <option value="">请选择班级</option>
+                        </select>
+                    </div>
+                    <div id="gradeDivB" class="layui-inline" style="padding-left: 20px;display:none">
+                        <select id="gradeIdB" name="gradeIdB" lay-filter="gradeIdB">
+                            <option value="">请选择年级</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-inline" style="padding-left: 5px;">
+                       对比课程：
+                    </div>
+                    <div id="courseNameDiv" class="layui-inline">
+                        <select id="courseNameId" name="courseNameId" lay-filter="courseNameId">
+                            <option value="">请选择课程</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-card">
+                        <div class="layui-card-body" style="height: 416px;overflow: hidden;">
+                            <div id="compareId" style="width: 100%;height:100%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- js部分 -->
+<script type="text/javascript" src="/assets/libs/layui/layui.js"></script>
+<script type="text/javascript" src="/assets/libs/echarts/echarts.min.js"></script>
+<script type="text/javascript" src="/assets/libs/echarts/echartsTheme.js"></script>
+<script type="text/javascript" src="/assets/js/common.js"></script>
+
+<script>
+    layui.use(['layer', 'form', 'table', 'admin', 'collegeSelect', 'upload'], function () {
+        var $ = layui.jquery;
+        var layer = layui.layer;
+        var form = layui.form;
+        var table = layui.table;
+        var upload = layui.upload;
+        var admin = layui.admin;
+        var collegeSelect = layui.collegeSelect;
+        form.render('select');
+
+        //加载学院下拉框
+        $('#collegeIdA').html('<option value="" selected="selected">请选择学院</option>');
+        $('#subjectIdA').html('<option value="" selected="selected">请选择专业</option>');
+        $('#classIdA').html('<option value="" selected="selected">请选择班级</option>');
+        collegeSelect.getCollegeSubjectClass($('#collegeIdA'), 0);
+
+        $('#collegeIdB').html('<option value="" selected="selected">请选择学院</option>');
+        $('#subjectIdB').html('<option value="" selected="selected">请选择专业</option>');
+        $('#classIdB').html('<option value="" selected="selected">请选择班级</option>');
+        collegeSelect.getCollegeSubjectClass($('#collegeIdB'), 0);
+
+        function getJsonData() {
+            var collegeIdA = $('#collegeIdA option:selected').val();
+            var subjectIdA = $('#subjectIdA option:selected').val();
+            var classIdA = $('#classIdA option:selected').val();
+            var gradeIdA = $('#gradeIdA option:selected').val();
+            var collegeIdB = $('#collegeIdB option:selected').val();
+            var subjectIdB = $('#subjectIdB option:selected').val();
+            var classIdB = $('#classIdB option:selected').val();
+            var gradeIdB = $('#gradeIdB option:selected').val();
+            var courseName = $('#courseNameId option:selected').text();
+            if( $('#courseNameId option:selected').text() == "请选择课程"){
+                courseName = '';
+            }
+            var jsonData = {
+                collegeIdA: collegeIdA,
+                subjectIdA: subjectIdA,
+                classIdA: classIdA,
+                gradeIdA: gradeIdA,
+                collegeIdB: collegeIdB,
+                subjectIdB: subjectIdB,
+                classIdB: classIdB,
+                gradeIdB: gradeIdB,
+                courseName: courseName
+            };
+            return jsonData;
+        }
+        //加载课程下拉框
+        function listCorese(jsonData) {
+            $('#courseNameId').html('<option value="">请选择课程</option>');
+            $.ajax({
+                url: '/course/listCourseNameByAAndB',
+                type: 'get',
+                data: jsonData,
+                async: false,
+                success: function (res) {
+                    var dataList = res.data;
+                    $.each(dataList, function (key, val) {
+                        var option = $("<option>").val(val.name).text(
+                            val.name);
+                        $('#courseNameId').append(option);
+                    });
+                    form.render('select');
+                }
+            })
+        }
+        listCorese(getJsonData());
+        searchPersonNum();
+
+        //选择学院触发事件
+        form.on('select(collegeIdA)', function (data) {
+            if ($("#collegeIdA option:selected").val() != "") {
+                $('#subjectDivA').show();
+                var collegeId = data.value;
+                $('#subjectIdA').html('<option value="" selected="selected">请选择专业</option>');
+                $('#classIdA').html('<option value="" selected="selected">请选择班级</option>');
+                if (collegeId != undefined && collegeId != "") {
+                    collegeSelect.getCollegeSubjectClass($('#subjectIdA'), collegeId);
+                }
+            } else {
+                $('#subjectDivA').hide();
+                $('#subjectIdA').val('');
+            }
+            $('#classDivA').hide();
+            $('#gradeDivA').hide();
+            $('#classIdA').val('');
+            $('#gradeIdA').val('');
+            form.render('select')
+            searchPersonNum();
+        });
+
+        //选择专业触发事件
+        form.on('select(subjectIdA)', function (data) {
+            if ($("#subjectIdA option:selected").val() != "") {
+                $('#classDivA').show();
+                var subjectId = data.value;
+                $('#classIdA').html('<option value="" selected="selected">请选择班级</option>');
+                if (subjectId != undefined && subjectId != "") {
+                    collegeSelect.getCollegeSubjectClass($('#classIdA'), subjectId);
+                }
+                $('#classDiv').show();
+            } else {
+                $('#classDiv').hide();
+                $('#classId').val('');
+            }
+            $('#gradeDiv').hide();
+            $('#gradeId').val('');
+            form.render('select')
+            searchPersonNum();
+        });
+        //选择班级触发事件
+        form.on('select(classIdA)', function (data) {
+            if (data.value != "") {
+                //加载年级下拉框
+                $('#gradeIdA').html('<option value="">请选择年级</option>');
+                $.ajax({
+                    url: '/grade/list',
+                    type: 'GET',
+                    async: false,
+                    success: function (res) {
+                        if (res.code == 200) {
+                            $.each(res.data, function (index, grade) {
+                                $('#gradeIdA').append($('<option>').val(grade.id).text(grade.name))
+                            })
+                            form.render("select");
+                        }
+                    }
+                });
+                $('#gradeDivA').show();
+            } else {
+                $('#gradeIdA').val('');
+                $('#gradeDivA').hide();
+            }
+            form.render('select')
+            searchPersonNum();
+        });
+        //选择年级触发事件
+        form.on('select(gradeIdA)', function (data) {
+            searchPersonNum();
+        });
+
+        //选择学院触发事件B
+        form.on('select(collegeIdB)', function (data) {
+            if ($("#collegeIdB option:selected").val() != "") {
+                $('#subjectDivB').show();
+                var collegeId = data.value;
+                $('#subjectIdB').html('<option value="" selected="selected">请选择专业</option>');
+                $('#classIdB').html('<option value="" selected="selected">请选择班级</option>');
+                if (collegeId != undefined && collegeId != "") {
+                    collegeSelect.getCollegeSubjectClass($('#subjectIdB'), collegeId);
+                }
+            } else {
+                $('#subjectDivB').hide();
+                $('#subjectIdB').val('');
+            }
+            $('#classDivB').hide();
+            $('#gradeDivB').hide();
+            $('#classIdB').val('');
+            $('#gradeIdB').val('');
+            form.render('select')
+            searchPersonNum();
+        });
+
+        //选择专业触发事件
+        form.on('select(subjectIdB)', function (data) {
+            if ($("#subjectIdB option:selected").val() != "") {
+                var subjectId = data.value;
+                $('#classIdB').html('<option value="" selected="selected">请选择班级</option>');
+                if (subjectId != undefined && subjectId != "") {
+                    collegeSelect.getCollegeSubjectClass($('#classIdB'), subjectId);
+                }
+                $('#classDivB').show();
+            } else {
+                $('#classDivB').hide();
+                $('#classIdB').val('');
+            }
+            $('#gradeDivB').hide();
+            $('#gradeIdB').val('');
+            form.render('select')
+            searchPersonNum();
+        });
+        //选择班级触发事件
+        form.on('select(classIdB)', function (data) {
+            if (data.value != "") {
+                //加载年级下拉框
+                $('#gradeIdB').html('<option value="">请选择年级</option>');
+                $.ajax({
+                    url: '/grade/list',
+                    type: 'GET',
+                    async: false,
+                    success: function (res) {
+                        if (res.code == 200) {
+                            $.each(res.data, function (index, grade) {
+                                $('#gradeIdB').append($('<option>').val(grade.id).text(grade.name))
+                            })
+                            form.render("select");
+                        }
+                    }
+                });
+                $('#gradeDivB').show();
+            } else {
+                $('#gradeIdB').val('');
+                $('#gradeDivB').hide();
+            }
+            form.render('select')
+            searchPersonNum();
+        });
+        //选择年级触发事件
+        form.on('select(gradeIdB)', function (data) {
+            searchPersonNum();
+        });
+
+        //选择课程触发事件
+        form.on('select(courseNameId)', function (data) {
+            searchPersonNum();
+        });
+
+        //渲染趋势图
+        var compareChart = echarts.init(document.getElementById('compareId'), myEchartsTheme);
+
+        function searchPersonNum() {
+            var jsonData = getJsonData();
+            listCorese(jsonData);
+            $('#courseNameId').val(jsonData.courseName);
+            form.render('select');
+            $.ajax({
+                url: '/score/searchNameAndScore',
+                type: 'get',
+                data: jsonData,
+                async: true,
+                success: function (res) {
+                    if (res.code == 200) {
+                        var data = res.data;
+                        if (data != null) {
+                            var scoreAName = "条件一平均成绩";
+                            var scoreBName = "条件二平均成绩";
+                            var scoreA = data.scoreA.toFixed(2);
+                            var scoreB = data.scoreB.toFixed(2);
+                            compareChart.setOption({
+                                title: {
+                                    subtext: scoreAName+' VS '+scoreBName
+                                },
+                                xAxis: [
+                                    {
+                                        data: [scoreAName, scoreBName]
+                                    }
+                                ],
+                                series: [
+                                    {
+                                        data: [scoreA,scoreB],
+                                        markPoint: {
+                                            data: [
+                                                {name:scoreAName},
+                                                {name:scoreBName},
+                                            ]
+                                        }
+                                    }
+                                ]
+                            });
+                        }
+                    }
+                }
+            })
+        }
+
+        var option = {
+            title: {
+                x: 'center',
+                text: '成绩对比结果',
+                subtext: 'A VS B'
+            },
+            tooltip: {
+                trigger: 'item'
+            },
+            toolbox: {
+                show: true,
+                feature: {
+                    dataView: {show: true, readOnly: false},
+                    restore: {show: true},
+                    saveAsImage: {show: true}
+                }
+            },
+            calculable: true,
+            grid: {
+                borderWidth: 0,
+                y: 80,
+                y2: 60
+            },
+            xAxis: [
+                {
+                    type: 'category',
+                    show: false,
+                    data: ['ScoreA', 'ScoreB']
+                }
+            ],
+            yAxis: [
+                {
+                    type: 'value',
+                    show: false
+                }
+            ],
+            series: [
+                {
+                    name: '成绩平均分',
+                    type: 'bar',
+                    itemStyle: {
+                        normal: {
+                            color: function(params) {
+                                // build a color map as your need.
+                                var colorList = [
+                                    '#C1232B','#27727B'
+                                ];
+                                return colorList[params.dataIndex]
+                            },
+                            label: {
+                                show: true,
+                                position: 'top',
+                                formatter: '{b}\n{c}'
+                            }
+                        }
+                    },
+                    data: [12,21],
+                    markPoint: {
+                        tooltip: {
+                            trigger: 'item',
+                            backgroundColor: 'rgba(0,0,0,0)',
+                            formatter: function(params){
+                                return '<img src="'
+                                    + params.data.symbol.replace('image://', '')
+                                    + '"/>';
+                            }
+                        },
+                        data: [
+                            {xAxis:0, y: 350, name:'Line', symbolSize:20, symbol: 'image://../asset/ico/折线图.png'},
+                            {xAxis:1, y: 350, name:'Bar', symbolSize:20, symbol: 'image://../asset/ico/柱状图.png'},
+                        ]
+                    }
+                }
+            ]
+        };
+        compareChart.setOption(option);
+
+        //趋势图适配界面
+        window.onresize = function () {
+            compareChart.resize();
+        }
+    });
+
+</script>
+</body>
+</html>

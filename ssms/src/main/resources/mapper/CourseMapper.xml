@@ -72,6 +72,26 @@
             </if>
         </where>
     </select>
+    <select id="listCourseNameAAndB" resultType="java.util.HashMap">
+        SELECT
+        DISTINCT c. name
+        FROM
+        info_course c
+        <where>
+            <if test="gradeId != null and gradeId != ''">
+                AND c.grade_id=#{gradeId}
+            </if>
+            <if test="collegeId != null and collegeId != ''">
+                AND c.college_id=#{collegeId}
+            </if>
+            <if test="subjectId != null and subjectId != ''">
+                AND c.subject_id=#{subjectId}
+            </if>
+            <if test="classId != null and classId != ''">
+                AND c.class_id=#{classId}
+            </if>
+        </where>
+    </select>
 
     <select id="all" resultType="java.util.HashMap">
         SELECT

@@ -223,4 +223,12 @@ public class CourseServiceImpl implements CourseService {
             }
         }
     }
+
+    @Override
+    public List<Map<String, String>> listCourseNameAAndB(Integer gradeIdA, Integer collegeIdA, Integer subjectIdA, Integer classIdA, Integer gradeIdB, Integer collegeIdB, Integer subjectIdB, Integer classIdB) {
+        List<Map<String, String>> mapsA = courseMapper.listCourseNameAAndB(gradeIdA, collegeIdA, subjectIdA, classIdA);
+        List<Map<String, String>> mapsB = courseMapper.listCourseNameAAndB(gradeIdB, collegeIdB, subjectIdB, classIdB);
+        mapsA.retainAll(mapsB);
+        return mapsA;
+    }
 }

@@ -206,6 +206,29 @@
         ORDER BY scoreA
     </select>
 
+    <select id="searchNameAndAvgScore" resultType="java.util.HashMap">
+        SELECT
+        avg(s.score) scoreAvg
+        FROM
+        info_score s
+        <where>
+            <if test="gradeId != null">
+                AND s.grade_id=#{gradeId}
+            </if>
+            <if test="collegeId != null">
+                AND s.college_id=#{collegeId}
+            </if>
+            <if test="subjectId != null">
+                AND s.subject_id=#{subjectId}
+            </if>
+            <if test="classId != null">
+                AND s.class_id=#{classId}
+            </if>
+            <if test="courseName != null and courseName != ''">
+                AND s.course_id IN (SELECT c.id from info_course c where c.name=#{courseName})
+            </if>
+        </where>
+    </select>
 
     <delete id="deleteByCollegeInfo">
         DELETE FROM info_score

@@ -26,4 +26,6 @@ public interface CourseService {
     boolean delete(Integer id);
 
     void addCourses(MultipartFile file) throws IOException;
+
+    List<Map<String, String>> listCourseNameAAndB(Integer gradeIdA, Integer collegeIdA, Integer subjectIdA, Integer classIdA, Integer gradeIdB, Integer collegeIdB, Integer subjectIdB, Integer classIdB);
 }
